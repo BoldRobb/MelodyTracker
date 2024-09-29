@@ -1,0 +1,74 @@
+from sqlalchemy import Column, Integer, BigInteger, String, Text, Date, Double, ForeignKey, LargeBinary
+from sqlalchemy.orm import relationship
+from app.database import Base
+
+
+class Album(Base):
+    __tablename__ = "album"
+
+    id_album = Column(BigInteger, primary_key=True, index=True)
+    name = Column(String(255), nullable=False)
+    id_artist = Column(BigInteger, ForeignKey('artist.id_artist'), nullable=False)
+    photo = Column(LargeBinary)
+    released = Column(Date, nullable=False)
+    language = Column(String(255), nullable=False)
+
+    artist = relationship("Artist", back_populates="albums")
+    songs = relationship("SongsOnAlbum", back_populates="album")
+
+
+class FavoriteAlbumsOfUser(Base):
+    __tablename__ = "favorite_albums_of_user"
+
+    id_user = Column(BigInteger, ForeignKey('users.id_user'), primary_key=True)
+    id_album = Column(BigInteger, ForeignKey('album.id_album'), primary_key=True)
+
+
+class LikedAlbums(Base):
+    __tablename__ = "liked_albums"
+
+    id_user = Column(BigInteger, ForeignKey('users.id_user'), primary_key=True)
+    id_album = Column(BigInteger, ForeignKey('album.id_album'), primary_key=True)
+
+
+class ListenedAlbums(Base):
+    __tablename__ = "listened_albums"
+
+    id_user = Column(BigInteger, ForeignKey('users.id_user'), primary_key=True)
+    id_album = Column(BigInteger, ForeignKey('album.id_album'), primary_key=True)
+    date = Column(Date, nullable=False)
+
+
+class RankedAlbums(Base):
+    __tablename__ = "ranked_albums"
+
+    id_user = Column(BigInteger, ForeignKey('users.id_user'), primary_key=True)
+    id_album = Column(BigInteger, ForeignKey('album.id_album'), primary_key=True)
+    score = Column(Double, nullable=False)
+    date = Column(Date, nullable=False)
+
+
+class ReviewedAlbums(Base):
+    __tablename__ = "reviewed_albums"
+
+    id_user = Column(BigInteger, ForeignKey('users.id_user'), primary_key=True)
+    id_album = Column(BigInteger, ForeignKey('album.id_album'), primary_key=True)
+    comment = Column(Text, nullable=False)
+    date = Column(Date, nullable=False)
+
+
+class WatchlistAlbums(Base):
+    __tablename__ = "watchlist_albums"
+
+    id_user = Column(BigInteger, ForeignKey('users.id_user'), primary_key=True)
+    id_album = Column(BigInteger, ForeignKey('album.id_album'), primary_key=True)
+
+
+class SongsOnAlbum(Base):
+    __tablename__ = "songs_on_album"
+
+    id_album = Column(BigInteger, ForeignKey('album.id_album'), primary_key=True)
+    id_song = Column(BigInteger, ForeignKey('songs.id_song'), primary_key=True)
+
+    album = relationship("Album", back_populates="songs")
+    song = relationship("Song", back_populates="albums")
