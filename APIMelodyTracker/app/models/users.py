@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, BigInteger, String, Text, Date, Double, ForeignKey, LargeBinary
+from sqlalchemy import Column, BigInteger, String, Text, LargeBinary, ForeignKey, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -11,12 +11,19 @@ class User(Base):
     password = Column(String(255), nullable=False)
     role = Column(String(255), nullable=False)
 
+    profile = relationship("Profile", back_populates="user")  # Relación uno a uno
+    followers = relationship("Followers", back_populates="user")  # Relación con seguidores
+
+
 class Profile(Base):
     __tablename__ = "profile"
 
-    id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
+    id_user = Column(BigInteger, ForeignKey('users.id_user'), primary_key=True, nullable=False)  # Definimos id_user como clave primaria
     bio = Column(Text)
     photo = Column(LargeBinary)
+
+    user = relationship("User", back_populates="profile")  # Relación inversa
+
 
 class Followers(Base):
     __tablename__ = "followers"
@@ -24,3 +31,10 @@ class Followers(Base):
     id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
     id_follower = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
 
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_user', 'id_follower'),  # Clave primaria compuesta
+    )
+
+    user = relationship("User", foreign_keys=[id_user])  # Relación con el usuario
+    follower = relationship("User", foreign_keys=[id_follower])  # Relación con el seguidor

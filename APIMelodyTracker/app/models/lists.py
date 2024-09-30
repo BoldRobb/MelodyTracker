@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, BigInteger, String, Text, Date, Double, ForeignKey, LargeBinary
+from sqlalchemy import Column, Integer, BigInteger, String, Text, Date, Double, ForeignKey, LargeBinary, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -17,7 +17,12 @@ class LikedLists(Base):
 
     id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
     id_list = Column(BigInteger, ForeignKey('list.id_list'), nullable=False)
-    date = Column(Date, nullable=False)
+
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_user', 'id_list'),  # Clave primaria compuesta
+    )
+
 
 class SongsOnList(Base):
     __tablename__ = "songs_on_list"
@@ -25,6 +30,11 @@ class SongsOnList(Base):
     id_list = Column(BigInteger, ForeignKey('list.id_list'), nullable=False)
     id_song = Column(BigInteger, ForeignKey('songs.id_song'), nullable=False)
     date = Column(Date, nullable=False)
+
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_list', 'id_song'),  # Clave primaria compuesta
+    )
 
 
 class RankedLists(Base):
@@ -35,6 +45,11 @@ class RankedLists(Base):
     score = Column(Double, nullable=False)
     date = Column(Date, nullable=False)
 
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_user', 'id_list'),  # Clave primaria compuesta
+    )
+
 
 class ReviewedLists(Base):
     __tablename__ = "reviewed_lists"
@@ -43,3 +58,8 @@ class ReviewedLists(Base):
     id_list = Column(BigInteger, ForeignKey('list.id_list'), nullable=False)
     comment = Column(Text, nullable=False)
     date = Column(Date, nullable=False)
+
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_user', 'id_list'),  # Clave primaria compuesta
+    )

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, BigInteger, String, Text, Date, Double, ForeignKey, LargeBinary, DateTime, Float
+from sqlalchemy import Column, Integer, BigInteger, String, Text, Date, Double, ForeignKey, LargeBinary, DateTime, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
@@ -27,6 +27,11 @@ class FavoriteSongsOfUser(Base):
     id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
     id_song = Column(BigInteger, ForeignKey('songs.id_song'), nullable=False)
 
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_user', 'id_song'),  # Clave primaria compuesta
+    )
+
 
 class LikedSongs(Base):
     __tablename__ = "liked_songs"
@@ -34,6 +39,11 @@ class LikedSongs(Base):
     id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
     id_song = Column(BigInteger, ForeignKey('songs.id_song'), nullable=False)
     date = Column(Date, nullable=False)
+
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_user', 'id_song'),  # Clave primaria compuesta
+    )
 
 
 class ListenedSongs(Base):
@@ -43,6 +53,11 @@ class ListenedSongs(Base):
     id_song = Column(BigInteger, ForeignKey('songs.id_song'), nullable=False)
     date = Column(Date, nullable=False)
 
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_user', 'id_song'),  # Clave primaria compuesta
+    )
+
 
 class RankedSongs(Base):
     __tablename__ = "ranked_songs"
@@ -51,6 +66,11 @@ class RankedSongs(Base):
     id_song = Column(BigInteger, ForeignKey('songs.id_song'), nullable=False)
     score = Column(Double, nullable=False)
     date = Column(Date, nullable=False)
+
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_user', 'id_song'),  # Clave primaria compuesta
+    )
 
 
 class ReviewedSongs(Base):
@@ -70,6 +90,12 @@ class WatchlistSongs(Base):
     id_song = Column(BigInteger, ForeignKey('songs.id_song'), nullable=False)
     date = Column(DateTime, default=func.now(), nullable=False)
 
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_user', 'id_song'),  # Clave primaria compuesta
+    )
+
+
 class CommentReviewedSong(Base):
     __tablename__ = "comment_reviewed_song"
 
@@ -77,17 +103,34 @@ class CommentReviewedSong(Base):
     id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
     comment = Column(String(255), nullable=False)
     date = Column(Date, nullable=False)
-    
+
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_reviewed_song', 'id_user'),  # Clave primaria compuesta
+    )
+
+
 class LikedReviewedSongs(Base):
     __tablename__ = "liked_reviewed_songs"
 
     id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
     id_reviewed_album = Column(BigInteger, ForeignKey('reviewed_songs.id_reviewed_songs'), nullable=False)
 
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_user', 'id_reviewed_album'),  # Clave primaria compuesta
+    )
+
+
 class RankedReviewedSong(Base):
     __tablename__ = "ranked_reviewed_song"
 
     id_reviewed_song = Column(BigInteger, ForeignKey('reviewed_songs.id_reviewed_songs'), nullable=False)
     id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
-    score = Column(Float, nullable=False)
+    score = Column(Double, nullable=False)
     date = Column(Date, nullable=False)
+
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_reviewed_song', 'id_user'),  # Clave primaria compuesta
+    )

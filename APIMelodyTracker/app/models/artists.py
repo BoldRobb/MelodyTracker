@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, BigInteger, String, Text, Date, Double, ForeignKey, LargeBinary
+from sqlalchemy import Column, Integer, BigInteger, String, Text, Date, Double, ForeignKey, LargeBinary, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -21,3 +21,7 @@ class FeaturedArtists(Base):
     id_artist = Column(BigInteger, ForeignKey('artist.id_artist'), nullable=False)
     id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
 
+    # Definimos la clave primaria compuesta
+    __table_args__ = (
+        PrimaryKeyConstraint('id_artist', 'id_user'),  # Clave primaria compuesta
+    )

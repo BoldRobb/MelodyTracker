@@ -28,11 +28,10 @@ app.include_router(auth_router, prefix="/auth")
 
 
 #INCIAR EL VENV
-#   .\.venv\Scripts\activate
+#   APIMelodyTracker\.venv\Scripts\activate
 
 #ENCENDER EL SERVIDOR
-#   uvicorn app.main:app --reload
-
+#   python -m uvicorn app.main:app --reload
 
 #INSTALAR VENV
 #   python -m venv .venv
