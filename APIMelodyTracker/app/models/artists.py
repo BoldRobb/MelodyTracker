@@ -13,7 +13,7 @@ class Artist(Base):
 
     songs = relationship("Song", back_populates="artist")
     albums = relationship("Album", back_populates="artist")
-
+    
 
 class FeaturedArtists(Base):
     __tablename__ = "featured_artists"

@@ -18,3 +18,9 @@ class UpdateSong(BaseModel):
 
 class AddToWatchlist(BaseModel):
     id_song: int
+
+
+class SongListened(BaseModel):
+    id_user: int
+    id_song: int
+

@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 
+
 class Album(Base):
     __tablename__ = "album"
 
@@ -16,7 +17,7 @@ class Album(Base):
     artist = relationship("Artist", back_populates="albums")
     songs = relationship("SongsOnAlbum", back_populates="album")
 
-
+    
 class FavoriteAlbumsOfUser(Base):
     __tablename__ = "favorite_albums_of_user"
 
@@ -39,17 +40,6 @@ class LikedAlbums(Base):
         PrimaryKeyConstraint('id_user', 'id_album', 'date'),  # Clave primaria compuesta
     )
 
-
-class ListenedAlbums(Base):
-    __tablename__ = "listened_albums"
-
-    id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
-    id_album = Column(BigInteger, ForeignKey('album.id_album'), nullable=False)
-    date = Column(Date, nullable=False)
-
-    __table_args__ = (
-        PrimaryKeyConstraint('id_user', 'id_album', 'date'),  # Clave primaria compuesta
-    )
 
 
 class RankedAlbums(Base):
@@ -137,4 +127,15 @@ class RankedReviewedAlbum(Base):
 
     __table_args__ = (
         PrimaryKeyConstraint('id_reviewed_album', 'id_user'),  # Clave primaria compuesta
+    )
+
+class ListenedAlbums(Base):
+    __tablename__ = "listened_albums"
+
+    id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
+    id_album = Column(BigInteger, ForeignKey('album.id_album'), nullable=False)  # Cambiado a 'album'
+    date = Column(Date, nullable=False)
+
+    __table_args__ = (
+        PrimaryKeyConstraint('id_user', 'id_album'),  # Clave primaria compuesta
     )

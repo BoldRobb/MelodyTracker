@@ -12,7 +12,9 @@ class User(Base):
     role = Column(String(255), nullable=False)
 
     profile = relationship("Profile", back_populates="user")  # Relación uno a uno
-    followers = relationship("Followers", back_populates="user")  # Relación con seguidores
+    # Especificamos las claves foráneas en la relación con los seguidores
+    followers = relationship("Followers", foreign_keys="[Followers.id_user]", back_populates="user")
+    following = relationship("Followers", foreign_keys="[Followers.id_follower]", back_populates="follower")
 
 
 class Profile(Base):
@@ -36,5 +38,7 @@ class Followers(Base):
         PrimaryKeyConstraint('id_user', 'id_follower'),  # Clave primaria compuesta
     )
 
-    user = relationship("User", foreign_keys=[id_user])  # Relación con el usuario
-    follower = relationship("User", foreign_keys=[id_follower])  # Relación con el seguidor
+    # Especificamos las claves foráneas en las relaciones
+    user = relationship("User", foreign_keys=[id_user], back_populates="followers")  # Relación con el usuario
+    follower = relationship("User", foreign_keys=[id_follower], back_populates="following")  # Relación con el seguidor
+
