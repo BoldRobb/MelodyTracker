@@ -1,13 +1,15 @@
 # app/endpoints/songs.py
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from datetime import date
-
-from app.schemas.Schemasongs import CreateSong, UpdateSong, AddToWatchlist, SongListened
+from datetime import date, datetime
 
 
-from app.models.songs import Song, WatchlistSongs, ListenedSongs
+from app.models.users import User
+from app.models.songs import Song, WatchlistSongs, ListenedSongs, FavoriteSongsOfUser
 from app.models.artists import Artist
+
+from app.schemas.Schemasongs import CreateSong, UpdateSong, SongListened, WatchlistSongRequest, SongResponse, FavoriteSongCreate
+
 
 from app.jwt.auth import get_current_user
 from app.database.database import get_db
@@ -90,35 +92,6 @@ def delete_song(song_id: int, db: Session = Depends(get_db), current_user: dict 
     db.commit()
     return {"detail": "Song deleted"}
 
-
-
-# AGREGAR CANCIONES A WATCHLIST
-@router.post("/add_on_watchlist/")
-def add_to_watchlist(
-    watchlist_item: AddToWatchlist,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
-):
-    user, role = current_user
-    if role == "admin":
-        raise HTTPException(status_code=403, detail="Admins cannot add to watchlist")
-
-    # Verifica si la canción existe
-    song = db.query(Song).filter(Song.id_song == watchlist_item.id_song).first()
-    if not song:
-        raise HTTPException(status_code=404, detail="Song not found")
-
-    # Crea el nuevo elemento de la watchlist
-    new_watchlist_item = WatchlistSongs(
-        id_user=user.id_user,
-        id_song=watchlist_item.id_song,
-        date=func.now()  # Omitir si no deseas guardar la fecha
-    )
-    db.add(new_watchlist_item)
-    db.commit()
-    db.refresh(new_watchlist_item)
-
-    return new_watchlist_item
 
 
 # Cancion Escuchada
@@ -229,3 +202,181 @@ def five_photos_songs(
 
 
 
+# Endpoint para agregar una canción a la watchlist
+@router.post("/add_song_watchlist")
+def add_song_watchlist(request: WatchlistSongRequest, db: Session = Depends(get_db)):
+    # Verificar si el usuario existe
+    user = db.query(User).filter(User.id_user == request.id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Verificar si la canción existe
+    song = db.query(Song).filter(Song.id_song == request.id_song).first()
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+
+    # Verificar si la canción ya está en la watchlist del usuario
+    existing_entry = db.query(WatchlistSongs).filter(
+        WatchlistSongs.id_user == request.id_user, WatchlistSongs.id_song == request.id_song
+    ).first()
+    if existing_entry:
+        raise HTTPException(status_code=400, detail="Song is already in the watchlist")
+
+    # Agregar la canción a la watchlist
+    new_watchlist_entry = WatchlistSongs(
+        id_user=request.id_user, id_song=request.id_song, date=datetime.now()
+    )
+    db.add(new_watchlist_entry)
+    db.commit()
+
+    return {"msg": "Song added to watchlist successfully", "user_id": request.id_user, "song_id": request.id_song}
+
+
+# Endpoint para obtener las canciones de la watchlist de un usuario
+@router.get("/watchlist_user_songs/{id_user}", response_model=list[SongResponse])
+def watchlist_user_songs(id_user: int, db: Session = Depends(get_db)):
+    # Verificar si el usuario existe
+    user = db.query(User).filter(User.id_user == id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Obtener las canciones de la watchlist del usuario
+    watchlist_songs = db.query(WatchlistSongs).filter(WatchlistSongs.id_user == id_user).all()
+
+    if not watchlist_songs:
+        raise HTTPException(status_code=404, detail="No songs found in the user's watchlist")
+
+    # Extraer las canciones y devolver los detalles
+    response = []
+    for watchlist_entry in watchlist_songs:
+        song = db.query(Song).filter(Song.id_song == watchlist_entry.id_song).first()
+        if song:
+            response.append(
+                SongResponse(
+                    id_song=song.id_song,
+                    name=song.name,
+                    photo=song.photo.decode('utf-8') if song.photo else None,  # Decodificar el binario a string
+                    id_artist=song.id_artist,
+                    released=song.released.strftime("%Y-%m-%d") if song.released else None,
+                    language=song.language,
+                    genre=song.genre
+                )
+            )
+
+    # Retornar la lista de canciones
+    return response
+
+
+# Endpoint para obtener la cantidad total de canciones en la watchlist de un usuario
+@router.get("/watchlist_count/{id_user}")
+def watchlist_count(id_user: int, db: Session = Depends(get_db)):
+    # Verificar si el usuario existe
+    user = db.query(User).filter(User.id_user == id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Contar las canciones en la watchlist del usuario
+    count = db.query(WatchlistSongs).filter(WatchlistSongs.id_user == id_user).count()
+
+    # Retornar la cantidad total
+    return {"user_id": id_user, "total_songs_in_watchlist": count}
+
+
+@router.get("/five_songs_watchlist/{id_user}")
+def five_songs_watchlist(
+    id_user: int,
+    db: Session = Depends(get_db),
+):
+    # Consultar las últimas 5 canciones en la watchlist del usuario
+    watched_songs = (
+        db.query(WatchlistSongs)
+        .filter(WatchlistSongs.id_user == id_user)
+        .order_by(desc(WatchlistSongs.date))  # Ordenar por fecha descendente
+        .limit(5)  # Limitar a las últimas 5 canciones
+        .all()
+    )
+
+    if not watched_songs:
+        return {"message": "No songs found in the watchlist for this user."}
+
+    # Obtener la información de las canciones correspondientes
+    songs_info = []
+    for watched in watched_songs:
+        song = db.query(Song).filter(Song.id_song == watched.id_song).first()
+        if song:
+            songs_info.append({
+                "id_song": song.id_song,
+                "name": song.name,
+                "photo": song.photo.decode('utf-8') if song.photo else None,  # Manejar correctamente la foto
+                "id_artist": song.id_artist,
+                "released": song.released.strftime("%Y-%m-%d") if song.released else None,
+                "language": song.language,
+                "genre": song.genre,
+            })
+
+    return {"five_songs": songs_info}
+
+
+
+# Agregar Cancion Favorita
+@router.post("/add_favorite_song")
+def add_favorite_song(
+    favorite_song: FavoriteSongCreate,  # Usar el schema aquí
+    current_user: dict = Depends(get_current_user),  # Obtener el usuario actual
+    db: Session = Depends(get_db),
+):
+    user, role = current_user  # Obtén el usuario y el rol
+    if role != "admin":  # Verifica que el usuario tenga rol de admin
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    # Verificar si la canción ya está en la lista de favoritas
+    existing_favorite = db.query(FavoriteSongsOfUser).filter(
+        FavoriteSongsOfUser.id_user == favorite_song.id_user,
+        FavoriteSongsOfUser.id_song == favorite_song.id_song
+    ).first()
+
+    if existing_favorite:
+        raise HTTPException(status_code=400, detail="Song already in favorites")
+
+    # Agregar la canción a la lista de favoritas
+    new_favorite = FavoriteSongsOfUser(id_user=favorite_song.id_user, id_song=favorite_song.id_song)
+    db.add(new_favorite)
+    db.commit()
+
+    return {"msg": "Song added to favorites successfully"}
+
+
+
+
+# Ver las canciones favoritas del User
+@router.get("/favorite_songs_user/{id_user}")
+def favorite_songs_user(
+    id_user: int,
+    db: Session = Depends(get_db),
+):
+    # Consultar las canciones favoritas del usuario
+    favorite_songs = (
+        db.query(FavoriteSongsOfUser)
+        .filter(FavoriteSongsOfUser.id_user == id_user)
+        .all()
+    )
+
+    if not favorite_songs:
+        return {"message": "No favorite songs found for this user."}
+
+    # Obtener la información de las canciones correspondientes
+    songs_info = []
+    for favorite in favorite_songs:
+        song = db.query(Song).filter(Song.id_song == favorite.id_song).first()
+        if song:
+            songs_info.append({
+                "id_song": song.id_song,
+                "name": song.name,
+                "photo": song.photo.decode('utf-8') if song.photo else None,  # Manejar correctamente la foto
+                "id_artist": song.id_artist,
+                "released": song.released.strftime("%Y-%m-%d") if song.released else None,
+                "language": song.language,
+                "genre": song.genre,
+            })
+
+    return {"favorite_songs": songs_info}

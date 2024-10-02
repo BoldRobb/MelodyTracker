@@ -7,12 +7,12 @@ from app.database.database import get_db
 
 
 from app.models.users import User, Profile
-from app.models.albums import Album, RankedAlbums, ListenedAlbums
+from app.models.albums import Album, RankedAlbums, ListenedAlbums, FavoriteAlbumsOfUser
 from app.models.artists import Artist
 
 
 from app.schemas.users import UserCreate
-from app.schemas.albums import RankedAlbum, BestAlbumsResponse, AlbumResponse, AlbumListened
+from app.schemas.albums import RankedAlbum, BestAlbumsResponse, AlbumResponse, AlbumListened, FavoriteAlbumCreate
 
 from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_current_user  # Asegúrate de importar hash_password
 import traceback
@@ -191,4 +191,65 @@ def five_photos_albums(
             })
 
     return {"five_photos": photos_info}
+
+
+
+@router.post("/add_favorite_album")
+def add_favorite_album(
+    favorite_album: FavoriteAlbumCreate,  # Usar el schema aquí
+    current_user: dict = Depends(get_current_user),  # Obtener el usuario actual
+    db: Session = Depends(get_db),
+):
+    user, role = current_user  # Obtén el usuario y el rol
+    if role != "admin":  # Verifica que el usuario tenga rol de admin
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    # Verificar si el álbum ya está en la lista de favoritos
+    existing_favorite = db.query(FavoriteAlbumsOfUser).filter(
+        FavoriteAlbumsOfUser.id_user == favorite_album.id_user,
+        FavoriteAlbumsOfUser.id_album == favorite_album.id_album
+    ).first()
+
+    if existing_favorite:
+        raise HTTPException(status_code=400, detail="Album already in favorites")
+
+    # Agregar el álbum a la lista de favoritos
+    new_favorite = FavoriteAlbumsOfUser(id_user=favorite_album.id_user, id_album=favorite_album.id_album)
+    db.add(new_favorite)
+    db.commit()
+
+    return {"msg": "Album added to favorites successfully"}
+
+
+# Obtener favorite albums de user
+@router.get("/favorite_albums_user/{id_user}")
+def favorite_albums_user(
+    id_user: int,
+    db: Session = Depends(get_db),
+):
+    # Consultar los álbumes favoritos del usuario
+    favorite_albums = (
+        db.query(FavoriteAlbumsOfUser)
+        .filter(FavoriteAlbumsOfUser.id_user == id_user)
+        .all()
+    )
+
+    if not favorite_albums:
+        return {"message": "No favorite albums found for this user."}
+
+    # Obtener la información de los álbumes correspondientes
+    albums_info = []
+    for favorite in favorite_albums:
+        album = db.query(Album).filter(Album.id_album == favorite.id_album).first()
+        if album:
+            albums_info.append({
+                "id_album": album.id_album,
+                "name": album.name,
+                "photo": album.photo.decode('utf-8') if album.photo else None,  # Manejar correctamente la foto
+                "released": album.released.strftime("%Y-%m-%d") if album.released else None,
+                "language": album.language,
+                # No se incluye el campo genre
+            })
+
+    return {"favorite_albums": albums_info}
 

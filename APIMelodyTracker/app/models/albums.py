@@ -29,6 +29,8 @@ class FavoriteAlbumsOfUser(Base):
     )
 
 
+
+
 class LikedAlbums(Base):
     __tablename__ = "liked_albums"
 

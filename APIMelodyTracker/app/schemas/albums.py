@@ -23,3 +23,10 @@ class RankedAlbum(BaseModel):
 class AlbumListened(BaseModel):
     id_user: int
     id_album: int
+
+
+class FavoriteAlbumCreate(BaseModel):
+    id_user: int
+    id_album: int
+
+

@@ -2,10 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.database.database import get_db
-from app.models.users import User, Profile
-from app.schemas.users import UserCreate, ProfileResponse
-from app.jwt.auth import create_jwt_token, verify_password, hash_password  # Asegúrate de importar hash_password
-import traceback
+
+
+from app.models.users import User, Profile, Followers
+
+from app.schemas.users import UserCreate, ProfileResponse, FollowUserRequest, UserProfileUpdate
+
+from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_current_user  # Asegúrate de importar hash_password
 
 router = APIRouter()
 
@@ -64,3 +67,102 @@ def info_profile(id_user: int, db: Session = Depends(get_db)):
         photo=profile.photo
     )
 
+# Endpoint para seguir a un usuario
+@router.post("/follow_user/")
+def follow_user(
+    request: FollowUserRequest,  # Usamos el modelo para recibir los datos en el cuerpo de la solicitud
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+
+    user, role = current_user
+    if role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    # Validación: Un usuario no puede seguirse a sí mismo
+    if request.id_user == request.id_follower:
+        raise HTTPException(status_code=400, detail="A user cannot follow themselves.")
+
+    # Verificar si el seguidor ya sigue al usuario
+    existing_follow = db.query(Followers).filter(
+        Followers.id_user == request.id_user,
+        Followers.id_follower == request.id_follower
+    ).first()
+
+    if existing_follow:
+        raise HTTPException(status_code=400, detail="User is already followed by this follower.")
+
+    # Crear una nueva instancia de seguidor
+    new_follow = Followers(id_user=request.id_user, id_follower=request.id_follower)
+
+    # Agregar el nuevo seguidor a la base de datos
+    db.add(new_follow)
+    db.commit()
+    db.refresh(new_follow)
+
+    return {"message": f"User {request.id_follower} is now following User {request.id_user}."}
+
+
+# Endpoint para obtener el total de following y followers
+@router.get("/total_stats_follows/{id_user}")
+def total_stats_follows(
+    id_user: int,
+    db: Session = Depends(get_db)
+):
+    # Obtener el total de usuarios que sigo (following)
+    total_following = (
+        db.query(Followers)
+        .filter(Followers.id_follower == id_user)  # Usuarios que sigo
+        .count()  # Contar cuántos sigo
+    )
+    
+    # Obtener el total de usuarios que me siguen (followers)
+    total_followers = (
+        db.query(Followers)
+        .filter(Followers.id_user == id_user)  # Usuarios que me siguen
+        .count()  # Contar cuántos me siguen
+    )
+
+    # Devolver el total de following y followers
+    return {
+        "total_following": total_following,
+        "total_followers": total_followers
+    }
+
+
+
+# Endpoint para actualizar el perfil de un usuario
+@router.put("/updateProfile/{id_user}")
+def update_profile(id_user: int, profile_update: UserProfileUpdate, db: Session = Depends(get_db)):
+    # Obtener el usuario y su perfil por id_user
+    user = db.query(User).filter(User.id_user == id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Verificar si el nuevo username ya existe en otro usuario (si el usuario lo desea cambiar)
+    if profile_update.username and profile_update.username != user.username:
+        existing_user = db.query(User).filter(User.username == profile_update.username).first()
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Username already registered")
+
+        # Actualizar el username
+        user.username = profile_update.username
+
+    # Actualizar el perfil del usuario
+    profile = db.query(Profile).filter(Profile.id_user == id_user).first()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+
+    # Actualizar la bio y la foto si se proporcionan
+    if profile_update.bio is not None:
+        profile.bio = profile_update.bio
+
+    if profile_update.photo is not None:
+        profile.photo = profile_update.photo
+
+    # Guardar los cambios en la base de datos
+    db.commit()
+    db.refresh(user)
+    db.refresh(profile)
+
+    return {"msg": "Profile updated successfully", "user_id": user.id_user}

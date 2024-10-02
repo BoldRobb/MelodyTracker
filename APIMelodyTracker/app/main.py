@@ -1,22 +1,15 @@
-# app/main.py
-from fastapi import FastAPI, Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from sqlalchemy.orm import Session
-from app.database import Base, engine, get_db
-from app.models import albums, artists, lists, songs, users
+from fastapi import FastAPI
+from app.database import Base, engine
 
+
+# Importar Routers
 from app.endpoints.songs import router as songs_router
 from app.endpoints.users import router as auth_router
 from app.endpoints.albums import router as albums_router
+from app.endpoints.artists import router as artists_router
+from app.endpoints.lists import router as lists_router
 
 
-from app.jwt.auth import create_jwt_token, verify_jwt_token
-from app.schemas import albums, artists, lists, Schemasongs, users
-from passlib.context import CryptContext
-from jose import JWTError
 
 # Crear todas las tablas
 Base.metadata.create_all(bind=engine)
@@ -28,6 +21,8 @@ app = FastAPI()
 app.include_router(songs_router, prefix="/songs")
 app.include_router(auth_router, prefix="/users")
 app.include_router(albums_router, prefix="/albums")
+app.include_router(artists_router, prefix="/artists")
+app.include_router(lists_router, prefix="/lists")
 
 
 
