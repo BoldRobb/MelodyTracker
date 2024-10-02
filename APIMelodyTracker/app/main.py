@@ -35,4 +35,5 @@ app.include_router(lists_router, prefix="/lists")
 #INSTALAR VENV
 #   python -m venv .venv
 
-# RELACION ENDPOINT ROL
+#INSTALAR REQUIREMENTS
+#   pip install -r requirements.txt
