@@ -1,0 +1,99 @@
+
+
+
+
+
+GLOBALES
+-photos_songs_by_id
+-photos_albums_by_id
+
+Home Page
+-top_10_ranked_albums (home albums) ✅
+-top_6_popular_reviews_of_the_week (home reviews)
+-top_3_popular_lists_of_the_month (home lists)
+-top_5_best_users_of_the_month (home users)
+
+
+Login
+-login_user ✅
+
+Register
+-register_user ✅
+
+Profile
+-info_user ✅
+-follow_user ✅
+-total_stats_follows ✅
+-info_stats_follow
+-total_ranked_user
+-total_review_user
+-song_listened✅
+-total_songs_listened✅
+-total_songs_listened_info✅
+-five_photos_songs_listened ✅
+
+-album_listened✅
+-total_albums_listened✅
+-total_albums_listened_info✅
+-five_photos_albums_listened ✅
+-lists_created
+-first_five_photos_latest_list
+-watchlist_total✅
+-first_five_photos_on_watchlist✅
+-most_popular_lists
+-first_four_photos_list
+-add_favorite_songs✅
+-favorite_songs_user✅
+-add_favorite_album✅
+-favorite_albums_user✅
+-recent_activity_user
+
+Watch List
+-add_song_on_watchlist ✅
+-songs_on_watchlist_user ✅
+
+Featured Members
+-top_50_users
+
+Reviewed History
+-total_reviews_song_by_user
+-total_reviews_albums_by_user
+-info_reviews_songs
+-info_reviews_albums
+
+Ranked History
+-total_ranked_song_by_user
+-total_ranked_albums_by_user
+-info_ranked_songs
+-info_ranked_albums
+
+Edit Profile
+-update_profile ✅
+
+Songs
+-info_song
+-featured_reviews_of_song
+-status_song_for_user
+-add_review_to_song
+-get_reviews
+
+Albums
+-info_album
+-status_album_for_user
+-get_songs_on_album
+-featured_reviews_of_song
+-add_review_to_album
+-get_reviews
+
+Artist
+-get_artists ✅
+-get_artist ✅
+-get_song_by_artists ✅
+-get_albums_by_artists ✅
+
+Lists
+-info_list
+-status_list_for_user
+-get_songs_on_list
+-add_review_to_list
+-get_reviews
