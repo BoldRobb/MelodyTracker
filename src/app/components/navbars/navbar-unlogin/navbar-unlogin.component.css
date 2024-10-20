@@ -1,0 +1,12 @@
+/* nav-bar-unlogin.component.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Jockey+One&display=swap');
+
+:host {
+    font-family: 'Jockey One', sans-serif; /* Aplica la fuente a todo el componente */
+}
+
+
+.logo{
+    width: 90px;
+}
