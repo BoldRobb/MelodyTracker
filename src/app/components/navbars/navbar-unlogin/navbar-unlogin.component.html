@@ -1,4 +1,17 @@
 <header class="navbar">
-    <p class="nombre"></p>
-    <img src="AAA.jpeg" alt="logo" class="logo">
+
+    <a class="contenedor_logo" href="#">
+        <p class="nombre">MelodyTracker</p>
+        <img src="images/audifonos.png" alt="logo" class="logo">
+    </a>
+
+    <div class="contenedor_input">
+        <i class="fa-solid fa-magnifying-glass logo_lupa" (click)="inputSearch.focus()"></i>
+        <input type="text" class="input_search" #inputSearch>
+      </div>
+      
+    <a href="#" class="nombre">Songs</a>
+    <a href="#" class="nombre">Play Lists</a>
+    <a href="#" class="nombre">Albums</a>
+    <a href="#" class="nombre">Sign In</a>
 </header>
