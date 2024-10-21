@@ -1,4 +1,16 @@
 
+
+
+html {
+    box-sizing: border-box;
+    font-size: 62.5%;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+
+
 body{
     background-color: #040317;
     color: #FFFFFF;

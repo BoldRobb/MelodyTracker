@@ -6,59 +6,147 @@
     font-family: 'Jockey One', sans-serif; /* Aplica la fuente a todo el componente */
 }
 
-
-.navbar{
-    padding-top: 20px;
+.navbar {
+    padding-top: 2rem; /* 20px */
     display: flex;
     background-color: #040317;
-    font-size: 28px;
+    font-size: 2.8rem; /* 28px */
     justify-content: center;
     text-align: center;
     align-items: center;
-    gap: 55px;
+    gap: 5.5rem; /* 55px */
     width: 100%;
-    min-width: 1366px;
+    min-width: 100rem; /* 1100px */
 }
 
-.contenedor_logo{
+.contenedor_logo {
     display: flex;
     align-items: center;  
-    padding-right: 15px;
+    padding-right: 1.5rem; /* 15px */
 }
 
-.logo{
-    width: 112px;
+.logo {
+    width: 7rem; /* 112px */
+    margin-left: 1rem;
 }
 
-.contenedor_input{
+.contenedor_input {
     display: flex;
     align-items: center;
     background-color: rgba(255, 255, 255, 0.27);
-    padding: 4px 0;
-    border-radius: 20px;
+    padding: 0.4rem 0; /* 4px */
+    border-radius: 2rem; /* 20px */
 }
 
-.logo_lupa{
+.logo_lupa {
     color: rgba(255, 255, 255, 0.50);
     opacity: 100%;
-    padding: 0 10px 0 15px;
-    font-size: 20px;
+    padding: 0 1rem 0 1.5rem; /* 10px y 15px */
+    font-size: 2rem; /* 20px */
     cursor: text;
 }
 
-.input_search{
+.input_search {
     font-family: 'Jockey One', sans-serif;
-    width: 275px;
+    width: 27.5rem; /* 275px */
     border: none; 
-    height: 28px;
+    height: 2.8rem; /* 28px */
     background-color: rgba(255, 255, 255, 0);
     outline: none;
-    margin-right: 10px;
+    margin-right: 1rem; /* 10px */
     color: white;
-    font-size: 25px;
+    font-size: 2.5rem; /* 25px */
 }
 
-a{
+a {
     text-decoration: none;
     color: #FFFFFF;
 }
+
+.contenedor_enlaces {
+    display: flex; 
+    gap: 5.5rem; 
+    margin-left: 3rem;
+}
+
+/* MEDIA QUERYS*/
+
+
+/* LAPTOP */
+@media (max-width: 1366px) {
+    .navbar {
+      font-size: 2rem;
+    }
+
+    .contenedor_enlaces {
+        gap: 4rem; 
+    }
+
+    .logo {
+        width: 6rem; /* 112px */
+        margin-left: 1rem;
+    }
+  
+}
+
+/* TABLET */
+@media (max-width: 1025px) {
+    .navbar {
+      font-size: 1.8rem;
+    }
+
+    .contenedor_input {
+        width: 20%;
+    }
+
+    .input_search{
+        width: 80%;
+    }
+
+    .contenedor_enlaces {
+        gap: 3.5rem; 
+    }
+
+    .logo {
+        width: 5rem;
+    }
+  
+}
+
+/* MÓVIL 
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column; 
+        align-items: center; 
+        font-size: 3rem;
+        gap: 2rem;
+        padding-top: 0;
+    }
+
+    .contenedor_input {
+        width: 35%;
+        padding: 0.9rem 0; 
+    }
+
+    .contenedor_enlaces {
+        display: flex; 
+        justify-content: center; 
+        gap: 2rem; 
+        width: 100%; 
+    }
+
+    .navbar > a {
+        margin: 0; 
+    }
+
+    .contenedor_logo{
+       padding: 0;
+    }
+
+    .input_search{
+        width: 90%;
+    }
+}
+
+
+*/

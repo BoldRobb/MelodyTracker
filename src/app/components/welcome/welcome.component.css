@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Jockey+One&display=swap');
+
+:host {
+    font-family: 'Jockey One', sans-serif; /* Aplica la fuente a todo el componente */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+    margin: 0;
+    padding: 0;
+    letter-spacing: 0.2rem
+}
+
+.contenedor{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.welcome{
+    font-size: 4rem;
+}
+
+.melodytracker{
+    font-size: 10rem;
+}
+
+
+.logo{
+    width: 28rem;
+    height: 28.5rem;
+    margin-left: 2rem;
+    margin-bottom: 0rem;
+}
+
+.eslogan{
+    color: #8E90AF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+
+/* MEDIA QUERYS*/
+
+
+/* LAPTOP */
+@media (max-width: 1366px) {
+    .welcome{
+        font-size: 3rem;
+    }
+    
+    .melodytracker{
+        font-size: 8rem;
+    }
+    
+    
+    .logo{
+        width: 25rem;
+        height: auto;
+    }
+    
+    .eslogan{
+        font-size: 1.8rem;
+    }
+}
+
+/* TABLET */
+@media (max-width: 1025px) {
+    .welcome{
+        font-size: 2.4rem;
+    }
+    
+    .melodytracker{
+        font-size: 6.8rem;
+    }
+    
+    
+    .logo{
+        width: 22rem;
+        height: auto;
+    }
+    
+    .eslogan{
+        font-size: 1.6rem;
+    }
+}

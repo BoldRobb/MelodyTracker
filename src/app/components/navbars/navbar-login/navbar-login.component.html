@@ -1,1 +1,22 @@
-<p>navbar-login works!</p>
+<header class="navbar">
+    <a class="contenedor_logo" href="#">
+        <p class="nombre">MelodyTracker</p>
+        <img src="images/audifonos.png" alt="logo" class="logo">
+    </a>
+
+    <div class="contenedor_input">
+        <i class="fa-solid fa-magnifying-glass logo_lupa" (click)="inputSearch.focus()"></i>
+        <input type="text" class="input_search" #inputSearch spellcheck="false">
+    </div>
+
+    <div class="contenedor_enlaces">
+        <a href="#" class="nombre">Songs</a>
+        <a href="#" class="nombre">Play Lists</a>
+        <a href="#" class="nombre">Albums</a>
+        <a href="#" class="nombre">Create List</a>
+        <a href="#" class="contenedor_perfil">
+            <img src="images/teemo.jpg" alt="" class="img_profile">
+            <p class="nombre">Jexbii</p>
+        </a>
+    </div>
+</header>
