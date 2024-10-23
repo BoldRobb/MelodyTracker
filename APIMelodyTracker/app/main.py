@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.database import Base, engine
+from app.cors import configure_cors
 
 
 # Importar Routers
@@ -24,6 +25,9 @@ app.include_router(albums_router, prefix="/albums")
 app.include_router(artists_router, prefix="/artists")
 app.include_router(lists_router, prefix="/lists")
 
+
+# Configurar Cors
+configure_cors(app)
 
 
 #INCIAR EL VENV
