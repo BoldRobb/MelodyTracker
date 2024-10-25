@@ -1,6 +1,39 @@
-.contenedor {
-    display: grid;
-    grid-template-columns: repeat(var(--columns), 1fr);
-    grid-template-rows: repeat(var(--rows), 1fr);
-    gap: 10px;
+
+
+/* Clases para diferentes combinaciones de columnas y filas */
+.contenedor-8x1 {
+display: grid;
+justify-items: center;
+align-items: center;
+max-width: 150rem;
+margin: 0 auto;
+row-gap: 1.1rem;
 }
+
+.imagenPrueba-8x1{
+width: 18rem;
+height: 18rem;
+border-radius: 10px;
+
+}
+
+
+
+.contenedor-4x2 {
+display: grid;
+justify-items: center;
+align-items: center;
+max-width: 1200px;
+margin: 0 auto;
+row-gap: 1.5rem;
+
+}
+
+.imagenPrueba-4x2{
+width: 27.5rem;
+height: 27.5rem;
+margin-bottom: 2.6rem;
+border-radius: 10px;
+}
+
+/* Puedes añadir más clases según las combinaciones que necesites */

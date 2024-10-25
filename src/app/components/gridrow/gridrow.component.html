@@ -1,10 +1,58 @@
-<div>
-    <img src="images/album.jpg" alt="">
-    <img src="images/album.jpg" alt="">
-    <img src="images/album.jpg" alt="">
-    <img src="images/album.jpg" alt="">
-    <img src="images/album.jpg" alt="">
-    <img src="images/album.jpg" alt="">
-    <img src="images/album.jpg" alt="">
-    <img src="images/album.jpg" alt="">
-</div>
+
+
+<div [ngClass]="{
+      'contenedor-8x1': columns === 8 && rows === 1,
+      'imagenes-8x1': columns === 8 && rows === 1,
+
+      'contenedor-4x2': columns === 4 && rows === 2,
+      'imagenes-4x2': columns === 4 && rows === 2
+    }" [ngStyle]="{
+    'grid-template-columns': 'repeat(' + columns + ', 1fr)',
+    'grid-template-rows': 'repeat(' + rows + ', 1fr)',
+    'gap': '10px',
+  }">
+        <img [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-3x3': columns === 3 && rows === 3
+          }" src="images/album.jpg" alt="">
+        <img [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-3x3': columns === 3 && rows === 3
+          }" src="images/album.jpg" alt="">
+        <img [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-3x3': columns === 3 && rows === 3
+          }" src="images/album.jpg" alt="">
+        <img [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-3x3': columns === 3 && rows === 3
+          }" src="images/album.jpg" alt="">
+        <img [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-3x3': columns === 3 && rows === 3
+          }" src="images/album.jpg" alt="">
+        <img [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-3x3': columns === 3 && rows === 3
+          }" src="images/album.jpg" alt="">
+        <img [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-3x3': columns === 3 && rows === 3
+          }" src="images/album.jpg" alt="">
+        <img [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-3x3': columns === 3 && rows === 3
+          }" src="images/album.jpg" alt="">
+
+  </div>
+
+
+  

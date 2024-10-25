@@ -17,11 +17,11 @@ export interface BestAlbumsResponse {
   providedIn: 'root'
 })
 export class AlbumService {
-  private apiUrl = 'https://api.example.com/albums';
+  private apiUrl = 'http://127.0.0.1:8000';
 
   constructor(private http: HttpClient) {}
 
   getBestAlbums(): Observable<BestAlbumsResponse> {
-    return this.http.get<BestAlbumsResponse>(`${this.apiUrl}/best`);
+    return this.http.get<BestAlbumsResponse>(`${this.apiUrl}/albums/home_best_albums`);
   }
 }
