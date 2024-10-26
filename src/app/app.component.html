@@ -7,4 +7,8 @@
 
   <app-gridrow [columns]="8" [rows]="1"></app-gridrow>
 
+
+  <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+
+
 <router-outlet/>

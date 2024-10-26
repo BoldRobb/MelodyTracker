@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { NavbarLoginComponent } from "./components/navbars/navbar-login/navbar-login.component";
 import { GridrowComponent } from "./components/gridrow/gridrow.component";
 
+import { uploadFile } from './firebase/storage'; // Importar la función de almacenamiento
 
 
 
@@ -16,6 +17,21 @@ import { GridrowComponent } from "./components/gridrow/gridrow.component";
 })
 export class AppComponent {
   title = 'MelodyTracker';
+
+  async onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      try {
+        const downloadURL = await uploadFile(file);
+        console.log('File available at', downloadURL);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    }
+  }
+
+
+
 }
 
 
