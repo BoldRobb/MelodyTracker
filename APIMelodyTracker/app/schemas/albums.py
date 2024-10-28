@@ -9,6 +9,7 @@ class AlbumResponse(BaseModel):
     name: str
     artist: str
     score: float
+    photo: str
 
 class BestAlbumsResponse(BaseModel):
     best_albums: List[AlbumResponse]

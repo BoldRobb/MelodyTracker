@@ -3,10 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Album {
+
   id: number;
   title: string;
   artist: string;
   score: number;
+  photo: string;
 }
 
 export interface BestAlbumsResponse {

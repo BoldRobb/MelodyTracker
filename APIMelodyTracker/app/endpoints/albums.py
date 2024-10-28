@@ -64,7 +64,8 @@ def home_best_albums(db: Session = Depends(get_db)):
                 RankedAlbums.id_album,
                 Album.name,
                 Artist.name.label("artist"),
-                RankedAlbums.score
+                RankedAlbums.score,
+                Album.photo  # Incluir el campo `photo`
             )
             .join(Album, RankedAlbums.id_album == Album.id_album)  
             .join(Artist, Album.id_artist == Artist.id_artist)  
@@ -78,7 +79,8 @@ def home_best_albums(db: Session = Depends(get_db)):
                 id_album=album.id_album,
                 name=album.name,
                 artist=album.artist,
-                score=album.score
+                score=album.score,
+                photo=album.photo  # Incluir el campo `photo` en la respuesta
             ) for album in best_albums
         ]
 

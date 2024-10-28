@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Jockey+One&family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+h1, h2, h3, h4, h5, h6,
+p, button{
+  margin: 0;
+  padding: 0;
+}
+
+
+
+body {
+    font-family: 'Roboto', sans-serif; /* Aplica Roboto como fuente principal */
+    font-weight: bold; /* Aplica negrita a todo el texto del body */
+}
+
+.contenedor {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    min-height: 100vh;
+    background-color: white;
+    justify-items: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+}
+
+.datos{
+    display: flex; /* Activa el flexbox */
+    flex-direction: column; /* Alinea los elementos en una columna */
+    align-items: center; /* Centra horizontalmente */
+    color: black;
+}
+
+.text_login{
+    font-size: 5rem;
+    margin: 5rem 0;
+}
+
+.campos{
+    padding: 3rem;
+    background-color: #F2F2F2;
+    width: 60rem;
+    height: 8rem;
+    margin-bottom: 3.3rem;
+    border-radius: 15px;
+    border: none;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 2.8rem;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3); /* Ajusta los valores según desees */
+}
+
+.btn_login{
+    width: 22rem;
+    height: 9rem;
+    border-radius: 2rem;
+    border: none;
+    background-color: #282463;
+    font-size: 3rem;
+    color: white;
+    transition: box-shadow 0.3s ease; /* Añade una transición suave para el efecto */
+}
+
+.btn_login:hover {
+    box-shadow: 1px 5px 10px rgba(40, 36, 99, 0.8); /* Aumenta la sombra al pasar el mouse */
+    cursor: pointer;
+}

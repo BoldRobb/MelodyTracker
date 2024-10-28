@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
 import { NavbarLoginComponent } from "./components/navbars/navbar-login/navbar-login.component";
-import { GridrowComponent } from "./components/gridrow/gridrow.component";
+
 
 import { uploadFile } from './firebase/storage'; // Importar la función de almacenamiento
 
@@ -11,7 +11,7 @@ import { uploadFile } from './firebase/storage'; // Importar la función de alma
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarLoginComponent, GridrowComponent, HttpClientModule],
+  imports: [RouterOutlet, NavbarLoginComponent, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

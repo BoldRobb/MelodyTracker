@@ -1,39 +1,56 @@
 
 
 /* Clases para diferentes combinaciones de columnas y filas */
+/*8X1*/
 .contenedor-8x1 {
-display: grid;
-justify-items: center;
-align-items: center;
-max-width: 150rem;
-margin: 0 auto;
-row-gap: 1.1rem;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    max-width: 150rem;
+    margin: 0 auto;
+    row-gap: 1.1rem;
 }
 
 .imagenPrueba-8x1{
-width: 18rem;
-height: 18rem;
-border-radius: 10px;
-
+    width: 18rem;
+    height: 18rem;
+    border-radius: 10px;
 }
 
-
-
+/*4X2*/
 .contenedor-4x2 {
-display: grid;
-justify-items: center;
-align-items: center;
-max-width: 1200px;
-margin: 0 auto;
-row-gap: 1.5rem;
-
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    row-gap: 1.5rem;
 }
 
 .imagenPrueba-4x2{
-width: 27.5rem;
-height: 27.5rem;
-margin-bottom: 2.6rem;
-border-radius: 10px;
+    width: 27.5rem;
+    height: 27.5rem;
+    margin-bottom: 2.6rem;
+    border-radius: 10px;
+}
+
+
+/*5X2*/
+.contenedor-5x2 {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    max-width: 1500px;
+    margin: 0 auto;
+    row-gap: 1.5rem;
+}
+
+    
+.imagenPrueba-5x2{
+    width: 27.5rem;
+    height: 27.5rem;
+    margin-bottom: 2.6rem;
+    border-radius: 10px;
 }
 
 /* Puedes añadir más clases según las combinaciones que necesites */

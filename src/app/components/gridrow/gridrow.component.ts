@@ -5,13 +5,6 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 
-
-
-
-
-
-
-
 @Component({
   selector: 'app-gridrow',
   standalone: true,
@@ -21,8 +14,10 @@ import { CommonModule } from '@angular/common';
 })
 
 export class GridrowComponent implements OnInit {
+  @Input() type: string = '';  // Tipo de elemento
   @Input() columns: number = 8; // Número de columnas por defecto
   @Input() rows: number = 1;   // Número de filas por defecto
+
 
   bestAlbums: Album[] = [];
 

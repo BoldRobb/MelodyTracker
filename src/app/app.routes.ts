@@ -2,12 +2,19 @@ import { Routes } from '@angular/router';
 import { NavbarUnloginComponent } from './components/navbars/navbar-unlogin/navbar-unlogin.component';
 import { NavbarLoginComponent } from './components/navbars/navbar-login/navbar-login.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
-import { HomepageLoginComponent } from './components/homepages/homepage-login/homepage-login.component';
 import { GridrowComponent } from './components/gridrow/gridrow.component';
+import { HomepageComponent } from './pages/homepage/homepage.component';
+import { LoginComponent } from './pages/login/login.component';
 
 export const routes: Routes = [
-    { path: 'homepage', component: HomepageLoginComponent},
+    /* PAGINAS */
+    { path: 'homepage', component: HomepageComponent},
+    { path: 'login', component: LoginComponent},
 
+
+
+
+    /* COMPONENTES */
     { path: 'navbarlogin', component: NavbarLoginComponent},
     { path: 'navbarunlogin', component: NavbarUnloginComponent},
     { path: 'welcome', component: WelcomeComponent},
