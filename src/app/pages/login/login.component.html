@@ -1,17 +1,29 @@
 <div class="contenedor">
     <div class="datos">
-        <p class="text_login">Login</p>
-        <div>
-            <!-- <i class="fa-regular fa-user icono"></i> -->
-            <input class="campos" type="text" id="username" name="username" placeholder="Username" required>
-        </div>
-        <div>
-            <!-- <i class="fa-regular fa-user icono"></i> -->
-            <input class="campos" type="password" id="password" name="password" placeholder="Password" required>
-        </div>
-        <button class="btn_login" type="submit">Login</button>
+        <p class="text_login">{{ showLogin ? 'Login' : 'Register' }}</p>
+
+        @if (showLogin) {
+            <app-logindata></app-logindata>
+        } 
+
+        @if (!showLogin) {
+            <app-registerdata></app-registerdata>
+        }
+            
     </div>
     <div class="imagen">
-
+        <img src="" alt="">
+        <div class="contenedor_boton">
+            <!-- Botón para cambiar a Register, solo visible si showLogin es verdadero -->
+             @if (showLogin) {
+                <button class="btn_login" id="btnRegister" type="button" (click)="toggleView()">Register</button>
+             }
+            
+            @if (!showLogin) {
+                <button class="btn_login" id="btnLogin" type="button" (click)="toggleView()">Login</button>
+            }
+            <!-- Botón para cambiar a Login, solo visible si showLogin es falso -->
+            
+        </div>
     </div>
 </div>
