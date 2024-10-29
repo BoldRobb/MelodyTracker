@@ -28,6 +28,10 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     return {"access_token": token, "token_type": "bearer"}
 
 
+@router.get("/me")
+def read_users_me(current_user: User = Depends(get_current_user)):
+    return current_user
+
 
 @router.post("/users/createUser")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):

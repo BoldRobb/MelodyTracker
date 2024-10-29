@@ -11,18 +11,18 @@
         }
             
     </div>
-    <div class="imagen">
-        <img src="" alt="">
+    <div class="contenedor_imagen">
+        <img class="imagen_login" src="images/loginImage.jpg" alt="">
         <div class="contenedor_boton">
-            <!-- Botón para cambiar a Register, solo visible si showLogin es verdadero -->
              @if (showLogin) {
+                <p class="texto_boton">If you don't have an account you can register here:</p>
                 <button class="btn_login" id="btnRegister" type="button" (click)="toggleView()">Register</button>
              }
             
             @if (!showLogin) {
+                <p class="texto_boton">If you already have an account, log in here:</p>
                 <button class="btn_login" id="btnLogin" type="button" (click)="toggleView()">Login</button>
             }
-            <!-- Botón para cambiar a Login, solo visible si showLogin es falso -->
             
         </div>
     </div>

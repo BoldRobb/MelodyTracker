@@ -8,6 +8,14 @@ export interface LoginResponse {
   token_type: string;
 }
 
+export interface RegisterData {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  role: string; // Ajusta según el rol que manejes, o elimínalo si no aplica.
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,7 +33,7 @@ export class UsersService {
     body.set('password', password);
 
     return this.http
-      .post<LoginResponse>(`${this.apiUrl}/token`, body.toString(), { headers })
+      .post<LoginResponse>(`${this.apiUrl}/users/token`, body.toString(), { headers })
       .pipe(
         map((response) => {
           // Guardar el token en el almacenamiento local si se desea
@@ -33,6 +41,10 @@ export class UsersService {
           return response.access_token;
         })
       );
+  }
+
+  registerUser(data: RegisterData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/users/createUser`, data);
   }
 
   getToken(): string | null {

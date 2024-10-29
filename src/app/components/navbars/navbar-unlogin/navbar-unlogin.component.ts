@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 
+import { RouterModule } from '@angular/router';
+
 @Component({
   selector: 'app-navbar-unlogin',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './navbar-unlogin.component.html',
   styleUrl: './navbar-unlogin.component.css'
 })

@@ -1,5 +1,11 @@
-<app-navbar-login></app-navbar-login>
 
+@if (isLoggedIn) {
+  <app-navbar-login></app-navbar-login>
+} @else {
+  <app-navbar-unlogin></app-navbar-unlogin>
+}
+
+<router-outlet/>
 
 
   <!-- Mostrar canciones populares -->
@@ -11,4 +17,3 @@
    <!-- <input type="file" (change)="onFileSelected($event)" accept="image/*" />-->
 
 
-<router-outlet/>

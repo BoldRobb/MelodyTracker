@@ -1,19 +1,18 @@
-<div>
-    <!-- <i class="fa-regular fa-user icono"></i> -->
-    <input class="campos" type="text" id="username" name="username" placeholder="Username" required>
-</div>
-<div>
-    <!-- <i class="fa-regular fa-user icono"></i> -->
-    <input class="campos" type="email" id="email" name="email" placeholder="Email" required>
-</div>
-<div>
-    <!-- <i class="fa-regular fa-user icono"></i> -->
-    <input class="campos" type="password" id="password" name="password" placeholder="Password" required>
-</div>
-<div>
-    <!-- <i class="fa-regular fa-user icono"></i> -->
-    <input class="campos" type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
-</div>
-<div class="contenedor_boton">
-    <button class="btn_login" id="btnSignUp" type="submit">Sign Up</button>
-</div>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div>
+      <input formControlName="username" class="campos" type="text" placeholder="Username" required>
+    </div>
+    <div>
+      <input formControlName="email" class="campos" type="email" placeholder="Email" required>
+    </div>
+    <div>
+      <input formControlName="password" class="campos" type="password" placeholder="Password" required>
+    </div>
+    <div>
+      <input formControlName="confirmPassword" class="campos" type="password" placeholder="Confirm Password" required>
+    </div>
+    <div class="contenedor_boton">
+      <button class="btn_login" type="submit">Sign Up</button>
+    </div>
+  </form>
+  

@@ -1,5 +1,5 @@
 <header class="navbar">
-    <a class="contenedor_logo" href="#">
+    <a class="contenedor_logo" routerLink="/">
         <p class="nombre">MelodyTracker</p>
         <img src="images/audifonos.png" alt="logo" class="logo">
     </a>
@@ -10,9 +10,9 @@
     </div>
 
     <div class="contenedor_enlaces">
-        <a href="#" class="nombre">Songs</a>
-        <a href="#" class="nombre">Play Lists</a>
-        <a href="#" class="nombre">Albums</a>
-        <a href="#" class="nombre">Sign In</a>
+        <a routerLink="/songs" routerLinkActive="active" class="nombre">Songs</a>
+        <a routerLink="/playlists" routerLinkActive="active" class="nombre">Play Lists</a>
+        <a routerLink="/albums" routerLinkActive="active" class="nombre">Albums</a>
+        <a routerLink="/login" routerLinkActive="active" class="nombre">Sign In</a>
     </div>
 </header>
