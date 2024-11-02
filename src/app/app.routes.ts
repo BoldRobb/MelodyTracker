@@ -5,11 +5,13 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { GridrowComponent } from './components/gridrow/gridrow.component';
 import { HomepageComponent } from './pages/homepage/homepage.component';
 import { LoginComponent } from './pages/login/login.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
     /* PAGINAS */
     { path: 'homepage', component: HomepageComponent},
     { path: 'login', component: LoginComponent},
+    { path: 'profile', component: ProfileComponent},
 
 
 

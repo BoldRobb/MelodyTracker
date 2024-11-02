@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; 
+import { Component, OnInit, signal } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
 import { NavbarLoginComponent } from "./components/navbars/navbar-login/navbar-login.component";
-import { uploadFile } from './firebase/storage'; 
-import { Observable } from 'rxjs';
 import { NavbarUnloginComponent } from "./components/navbars/navbar-unlogin/navbar-unlogin.component";
-
+import { uploadFile } from './firebase/storage';
 
 @Component({
   selector: 'app-root',
@@ -16,21 +14,53 @@ import { NavbarUnloginComponent } from "./components/navbars/navbar-unlogin/navb
 })
 export class AppComponent implements OnInit {
   title = 'MelodyTracker';
-  isLoggedIn = false; 
+  isLoggedIn = signal(false);  // Signal reactivo para el estado de autenticación
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.validar_usuario_token().subscribe(isValid => {
-      this.isLoggedIn = isValid; 
-      if (!isValid) {
-        console.log('El token no es válido. Redirigiendo a la página de inicio de sesión...');
-      } else {
-        console.log('El token es válido.');
-      }
+    this.checkToken();
+  }
+
+  // Método para verificar el token de autenticación
+  checkToken(): void {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      this.isLoggedIn.set(false);
+      return;
+    }
+
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    this.http.get('http://127.0.0.1:8000/users/me', { headers }).subscribe({
+      next: () => this.isLoggedIn.set(true),
+      error: () => this.isLoggedIn.set(false)
     });
   }
 
+  // Método para iniciar sesión
+  login(username: string, password: string): void {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    const body = new URLSearchParams();
+    body.set('username', username);
+    body.set('password', password);
+
+    this.http.post<{ access_token: string }>('http://127.0.0.1:8000/users/token', body.toString(), { headers })
+      .subscribe({
+        next: (response) => {
+          localStorage.setItem('access_token', response.access_token);
+          this.isLoggedIn.set(true);
+        },
+        error: () => this.isLoggedIn.set(false)
+      });
+  }
+
+  // Método para cerrar sesión
+  logout(): void {
+    localStorage.removeItem('access_token');
+    this.isLoggedIn.set(false);
+  }
+
+  // Método para manejar la carga de archivos
   async onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
@@ -41,32 +71,5 @@ export class AppComponent implements OnInit {
         console.error('Error uploading file:', error);
       }
     }
-  }
-
-  validar_usuario_token(): Observable<boolean> {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      return new Observable<boolean>(observer => {
-        observer.next(false); 
-        observer.complete();
-      });
-    }
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
-    return new Observable<boolean>(observer => {
-      this.http.get('http://127.0.0.1:8000/users/me', { headers }).subscribe({
-        next: () => {
-          observer.next(true); 
-          observer.complete();
-        },
-        error: () => {
-          observer.next(false); 
-          observer.complete();
-        }
-      });
-    });
   }
 }

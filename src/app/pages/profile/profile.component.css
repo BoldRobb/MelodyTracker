@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Jockey+One&display=swap');
+
+:host {
+    font-family: 'Jockey One', sans-serif; /* Aplica la fuente a todo el componente */
+}
+
+p{
+    margin: 0;
+    padding: 0;
+}
+
+.contenedor_principal {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+    gap: 3rem;
+    width: 177.5rem;
+    height: 62rem;
+    margin: 0 auto;
+}
+
+.contenedor_datos_user{
+    display: grid;
+    grid-template-rows: 10% 55% 20%;
+    text-align: center;
+    justify-content: center;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+    height: 62rem;
+}
+
+.contenedor_edit_profile{
+    font-size: 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    margin: 1rem 0 0 0;
+    height: 40px;
+}
+
+.foto_engranaje{
+    width: 2.8rem;
+    height: 2.8rem;
+}
+
+.contenedor_foto{
+    display: grid;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+.foto_user{
+    width: 25rem;
+    height: 25rem;
+    border-radius: 50%;
+    border: 0.5rem solid white;
+}
+
+.nombre_user{
+    font-size: 4rem;
+    margin: 2rem;
+    background-color: #0A0824;
+    border-radius: 2rem;
+}
+
+.contenedor_stats_user{
+    background-color: #0A0824;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    gap: 5rem;
+    width: 38rem;
+    height: 8rem;
+    padding: 1rem 0;
+    margin-top: 2rem;
+    border-radius: 2rem;
+    line-height: 1;
+}
+
+.valor_stats{
+    font-size: 3rem;
+}
+
+.titulo_stats{
+    font-size: 2rem;
+    opacity: 60%;
+}
+
+.contenedor_bio_stats{
+    display: flex;
+    flex-direction: column; /* Apila los elementos en una columna */
+    gap: 2.2rem; /* Ajusta este valor para la separación deseada */
+}
+
+.contenedor_biografia{
+    width: 44rem;
+    height: 41.8rem;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+}
+
+
+
+
+
+
+
+.contenedor_stats_bio{
+    width: 44rem;
+    height: 18rem;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+}
