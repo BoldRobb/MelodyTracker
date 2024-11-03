@@ -53,4 +53,29 @@
     border-radius: 10px;
 }
 
+.contenedor-5x2 {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    max-width: 1500px;
+    margin: 0 auto;
+    row-gap: 1.5rem;
+}
+
+
+.contenedor_watchlist{
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    max-width: 1600px;
+    margin: 3.2rem 0;
+    gap: 0rem 2rem;
+}
+
+.imagen_watchlist{
+    width: 18rem;
+    height: 18rem;
+    margin-bottom: 2.6rem;
+    border-radius: 10px;
+}
 /* Puedes añadir más clases según las combinaciones que necesites */

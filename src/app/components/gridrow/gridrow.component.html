@@ -1,12 +1,13 @@
 <div [ngClass]="{
     'contenedor-8x1': columns === 8 && rows === 1,
     'contenedor-4x2': columns === 4 && rows === 2,
-    'contenedor-5x2': columns === 5 && rows === 2
+    'contenedor-5x2': columns === 5 && rows === 2,
+    'contenedor_watchlist': columns === 8 && rows === 4,
   }" 
   [ngStyle]="{
     'grid-template-columns': 'repeat(' + columns + ', 1fr)',
     'grid-template-rows': 'repeat(' + rows + ', 1fr)',
-    'gap': '10px',
+    
   }">
 
 
@@ -16,11 +17,30 @@
       [ngClass]="{
           'imagenPrueba-8x1': columns === 8 && rows === 1,
           'imagenPrueba-4x2': columns === 4 && rows === 2,
-          'imagenPrueba-5x2': columns === 5 && rows === 2
+          'imagenPrueba-5x2': columns === 5 && rows === 2,
+          'imagen_watchlist': columns === 8 && rows === 4,
         }" 
       [src]="album.photo" alt="{{ album.title }}">
     }
   } @else if (this.type == 'song') {
+    <p>Hola</p>
+  }
+
+
+
+  <!-- ----------------- WATCHLIST ------------------ -->
+  @if (this.type == 'watchlist') {
+    @for (album of bestAlbums; track $index) {
+      <img
+      [ngClass]="{
+          'imagenPrueba-8x1': columns === 8 && rows === 1,
+          'imagenPrueba-4x2': columns === 4 && rows === 2,
+          'imagenPrueba-5x2': columns === 5 && rows === 2,
+          'imagen_watchlist': columns === 8 && rows === 4,
+        }" 
+      [src]="album.photo" alt="{{ album.title }}">
+    }
+  } @else if (this.type == 'song_watch_list') {
     <p>Hola</p>
   }
   

@@ -1,0 +1,36 @@
+.contenedor_principal{
+    display: grid;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.contenedor_encabezado{
+    display: flex;
+    justify-content: space-between;
+    width: 150rem;
+    height: 7rem;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.lado_izquierdo{
+    display: flex;
+    align-items: center;
+    
+}
+
+.foto_user{
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    margin: 1rem 1rem 1rem 2rem;
+}
+
+.lado_derecho{
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    margin-right: 4rem;
+}

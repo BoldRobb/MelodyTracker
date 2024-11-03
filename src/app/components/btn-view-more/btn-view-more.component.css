@@ -1,0 +1,36 @@
+.contenedor_principal{
+    display: grid;
+    justify-content: center;
+    margin: 3rem 0;
+}
+
+.contenedor_encabezado{
+    width: 18rem;
+    height: 6rem;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.boton_view_more {
+    font-family: 'Jockey One', sans-serif;
+    width: 18rem;
+    height: 6rem;
+    font-size: 2.5rem;
+    border: none;          
+    border-radius: 0;       
+    background: none; 
+    padding: 0;
+    cursor: pointer;
+    outline: none; 
+    box-shadow: none; 
+    color: white;
+    
+}
+
+.boton_view_more:hover{
+    background-color: #13103d;
+    color: rgba(255, 255, 255);
+    border-radius: 2rem;
+}
