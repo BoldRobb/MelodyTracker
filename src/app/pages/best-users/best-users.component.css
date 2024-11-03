@@ -1,0 +1,86 @@
+.contenedor_principal{
+    width: 141rem;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.titulo{
+    background-color: #0D0B29;
+    width: 20rem;
+    font-size: 3rem;
+    border-radius: 1.2rem;
+    padding: 0.8rem;
+    margin-left: 2.8rem;
+}
+
+.contenedor_users{
+    display: grid;
+    justify-items: center;
+    grid-template-columns: repeat(4, 1fr);
+    row-gap: 3rem;
+}
+
+.user{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #0D0B29;
+    width: 30rem;
+    height: 36rem;
+    border-radius: 2rem;
+}
+
+.foto_user{
+    width: 17.5rem;
+    height: 17.5rem;
+    border-radius: 50%;
+    border: 0.3rem solid white;
+    margin-top: 2rem;
+}
+
+.nombre_user{
+    font-size: 4rem;
+    margin: 0;
+    margin-bottom: 1rem;
+}
+
+
+
+.user_stats{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.contenedor_stat{
+    display: flex;
+    flex-direction: column;
+    width: 8.5rem;
+    height: 6.6rem;
+    justify-items: center;
+    background-color: #050325;
+    border-radius: 1.5rem;
+}
+
+.nombre_stat{
+    font-size: 2rem;
+    margin: 0;
+}
+
+.stat_cantidad{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.imagen_stat{
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.cantidad{
+    font-size: 2.5rem;
+    opacity: 70%;
+    margin: 0;
+}

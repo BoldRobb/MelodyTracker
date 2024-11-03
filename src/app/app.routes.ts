@@ -10,6 +10,8 @@ import { WatchlistComponent } from './pages/watchlist/watchlist.component';
 import { EncabezadoComponent } from './components/encabezado/encabezado.component';
 import { BtnViewMoreComponent } from './components/btn-view-more/btn-view-more.component';
 import { SongsListenedComponent } from './pages/songs-listened/songs-listened.component';
+import { FollowsComponent } from './components/follows/follows.component';
+import { BestUsersComponent } from './pages/best-users/best-users.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -18,6 +20,7 @@ export const routes: Routes = [
     { path: 'profile', component: ProfileComponent},
     { path: 'watchlist', component: WatchlistComponent},
     { path: 'songsListened', component: SongsListenedComponent},
+    { path: 'bestUsers', component: BestUsersComponent},
 
 
 
@@ -29,6 +32,7 @@ export const routes: Routes = [
     { path: 'gridrow', component: GridrowComponent },
     { path: 'encabezado', component: EncabezadoComponent},
     { path: 'btnViewMore', component: BtnViewMoreComponent},
+    { path: 'follows', component: FollowsComponent},
     { path: '**', pathMatch: 'full', redirectTo: 'welcomelogin'}
 ];
 
