@@ -14,6 +14,9 @@ import { FollowsComponent } from './components/follows/follows.component';
 import { BestUsersComponent } from './pages/best-users/best-users.component';
 import { RankedEspecificaComponent } from './components/ranked-especifica/ranked-especifica.component';
 import { RankedHistoryComponent } from './pages/ranked-history/ranked-history.component';
+import { ReviewEspecificaComponent } from './components/review-especifica/review-especifica.component';
+import { ReviewHistoryComponent } from './pages/review-history/review-history.component';
+import { AddToListComponent } from './components/modals/add-to-list/add-to-list.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -24,6 +27,7 @@ export const routes: Routes = [
     { path: 'songsListened', component: SongsListenedComponent},
     { path: 'bestUsers', component: BestUsersComponent},
     { path: 'rankedHistory', component: RankedHistoryComponent},
+    { path: 'reviewHistory', component: ReviewHistoryComponent},
 
 
 
@@ -37,6 +41,8 @@ export const routes: Routes = [
     { path: 'btnViewMore', component: BtnViewMoreComponent},
     { path: 'follows', component: FollowsComponent},
     { path: 'rankedEspecifica', component: RankedEspecificaComponent},
+    { path: 'reviewEspecifica', component: ReviewEspecificaComponent},
+    { path: 'modalAddToList', component: AddToListComponent},
     { path: '**', pathMatch: 'full', redirectTo: 'welcomelogin'}
 ];
 
