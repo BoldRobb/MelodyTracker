@@ -1,0 +1,63 @@
+.contenedor_principal{
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+    gap: 2rem;
+    width: 45rem;
+    height: 15rem;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+}
+
+
+.foto_ranked{
+    width: 10.1rem;
+    border-radius: 1.3rem;
+}
+
+.datos_ranked{
+    display: flex;
+    flex-direction: column;
+    row-gap: 0rem;
+    line-height: 1.1;
+}
+
+.contenedor_nombre_released{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nombre_song{
+    font-size: 4rem;
+    margin: 0;
+}
+
+.released_song{
+    font-size: 2.5rem;
+    margin: 0;
+    margin-top: 1rem;
+    opacity: 65%;
+}
+
+.nombre_artist{
+    margin: 0;
+    font-size: 2rem;
+    color: #C6FF41;
+}
+
+.titulo_rate{
+    margin: 0;
+    font-size: 1.5rem;
+    margin: 0.3rem 0 0.2rem 0;
+}
+
+.contenedor_rate{
+    display: flex;
+    gap: 0.1rem;
+}
+
+.imagen_estrella{
+    width: 1.5rem;
+    height: 1.5rem;
+}

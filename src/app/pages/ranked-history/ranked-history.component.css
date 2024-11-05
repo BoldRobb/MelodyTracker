@@ -1,0 +1,9 @@
+.contenedor_principal{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    justify-items: center;
+    width: 150rem;
+    margin: 0 auto;
+    row-gap: 3rem;
+}

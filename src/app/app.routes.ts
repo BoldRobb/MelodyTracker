@@ -12,6 +12,8 @@ import { BtnViewMoreComponent } from './components/btn-view-more/btn-view-more.c
 import { SongsListenedComponent } from './pages/songs-listened/songs-listened.component';
 import { FollowsComponent } from './components/follows/follows.component';
 import { BestUsersComponent } from './pages/best-users/best-users.component';
+import { RankedEspecificaComponent } from './components/ranked-especifica/ranked-especifica.component';
+import { RankedHistoryComponent } from './pages/ranked-history/ranked-history.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -21,6 +23,7 @@ export const routes: Routes = [
     { path: 'watchlist', component: WatchlistComponent},
     { path: 'songsListened', component: SongsListenedComponent},
     { path: 'bestUsers', component: BestUsersComponent},
+    { path: 'rankedHistory', component: RankedHistoryComponent},
 
 
 
@@ -33,6 +36,7 @@ export const routes: Routes = [
     { path: 'encabezado', component: EncabezadoComponent},
     { path: 'btnViewMore', component: BtnViewMoreComponent},
     { path: 'follows', component: FollowsComponent},
+    { path: 'rankedEspecifica', component: RankedEspecificaComponent},
     { path: '**', pathMatch: 'full', redirectTo: 'welcomelogin'}
 ];
 
