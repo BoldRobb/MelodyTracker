@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Jockey+One&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+.contenedor_principal{
+    display: flex;
+    flex-direction: column;
+    width: 100rem;
+    height: 67rem;
+    padding: 1rem;
+    background-color: #021333;
+    font-family: 'josefin sans', sans-serif;
+}
+
+.contenedor_boton_cerrar{
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    height: 4rem;
+}
+
+
+.boton_cerrar{
+    font-size: 4.5rem;
+    font-family: 'Jockey One', sans-serif;
+    background: none;
+    border: none;
+    outline: none;
+    margin: 0;
+    color: white;
+    cursor: pointer;
+    padding: 0 2rem;
+}
+
+.boton_create{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.2rem;
+    font-family: 'Jockey One', sans-serif;
+    background-color: #057A09;
+    border: none;
+    outline: none;
+    margin: 0;
+    color: white;
+    cursor: pointer;
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-right: 5rem;
+    width: 18rem;
+    height: 7.5rem;
+}
+
+.contenedor_cuerpo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.titulo{
+    font-size: 4rem;
+    color: #96FD47;
+}
+
+.cuerpo{
+    display: flex;
+    column-gap: 20rem;
+    
+}
+
+.texto{
+    
+    font-size: 3rem;
+}
+
+.input_design{
+    font-family: 'josefin sans', sans-serif;
+    width: 45rem;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.15);
+    height: 5rem;
+    border-radius: 1rem;
+    border: none;
+    font-size: 2.5rem;
+    color: white;
+    outline: none;
+    padding: 0 1rem;
+}
+
+.input_descripcion{
+    height: 17rem;
+    padding: 1rem;
+    resize: none;
+}
+
+
+/* Estilo general de la scrollbar */
+.input_descripcion::-webkit-scrollbar {
+    width: 12px; /* Ancho de la scrollbar */
+}
+
+/* Color de la pista de la scrollbar (la parte de fondo) */
+.input_descripcion::-webkit-scrollbar-track {
+    background: #333; /* Cambia este color al que prefieras */
+    border-radius: 10px;
+}
+
+/* Color y estilo del thumb (la parte que se desplaza) */
+.input_descripcion::-webkit-scrollbar-thumb {
+    background-color: #1c55f1; /* Color del thumb */
+    border-radius: 10px; /* Bordes redondeados */
+    border: 2px solid #333; /* Bordes del thumb */
+}
+
+/* Estilo cuando el thumb está siendo presionado */
+.input_descripcion::-webkit-scrollbar-thumb:active {
+    background-color: #0a33a7; /* Cambia este color al que prefieras */
+}
+
+
+
+.subir_imagen{
+    width: 24rem;
+    height: 24rem;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 2rem;
+    cursor: pointer;
+}
+
+.subir_imagen:hover{
+    background-color: rgba(255, 255, 255, 0.30);
+}
+
+.lado_izquierdo{
+    font-family: 'josefin sans', sans-serif;
+}

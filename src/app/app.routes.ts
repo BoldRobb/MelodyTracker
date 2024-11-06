@@ -17,6 +17,8 @@ import { RankedHistoryComponent } from './pages/ranked-history/ranked-history.co
 import { ReviewEspecificaComponent } from './components/review-especifica/review-especifica.component';
 import { ReviewHistoryComponent } from './pages/review-history/review-history.component';
 import { AddToListComponent } from './components/modals/add-to-list/add-to-list.component';
+import { CreateListComponent } from './components/modals/create-list/create-list.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -43,6 +45,8 @@ export const routes: Routes = [
     { path: 'rankedEspecifica', component: RankedEspecificaComponent},
     { path: 'reviewEspecifica', component: ReviewEspecificaComponent},
     { path: 'modalAddToList', component: AddToListComponent},
+    { path: 'modalCreateList', component: CreateListComponent},
+    { path: 'spinner', component: SpinnerComponent},
     { path: '**', pathMatch: 'full', redirectTo: 'welcomelogin'}
 ];
 
