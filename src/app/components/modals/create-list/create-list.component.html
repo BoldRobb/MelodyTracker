@@ -16,7 +16,10 @@
             <div class="lado_derecho">
                 <p class="texto">Photo</p>
                 <form action="">
-                    <input type="file" class="subir_imagen" id="imageupload" name="imageList" accept="image/">
+                    <label for="imageupload" class="subir_imagen">
+                        <span class="icon-plus">+</span>
+                        <input type="file" id="imageupload" name="imageList" accept="image/" />
+                    </label>
                 </form>
             </div>
         </div>
@@ -25,6 +28,4 @@
     <div class="contenedor_boton_cerrar">
         <button class="boton_create">Create</button>
     </div>
-    
-
 </div>

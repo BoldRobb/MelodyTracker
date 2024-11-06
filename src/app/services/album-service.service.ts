@@ -33,7 +33,7 @@ export class AlbumService {
     return this.http.get<BestAlbumsResponse>(`${this.apiUrl}/albums/home_best_albums`).pipe(
       // Cuando la solicitud se complete, ya sea con éxito o con error, ocultamos el spinner
       finalize(() => {
-        //this.spinnerService.hide();
+        this.spinnerService.hide();
       })
     );
   }

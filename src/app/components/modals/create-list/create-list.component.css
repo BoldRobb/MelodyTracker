@@ -118,16 +118,34 @@
 
 
 
-.subir_imagen{
+.subir_imagen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 24rem;
     height: 24rem;
     background-color: rgba(255, 255, 255, 0.15);
     border-radius: 2rem;
     cursor: pointer;
+    position: relative;
 }
 
-.subir_imagen:hover{
+.subir_imagen:hover {
     background-color: rgba(255, 255, 255, 0.30);
+}
+
+.subir_imagen input[type="file"] {
+    display: none; /* Oculta el input de tipo file */
+}
+
+.icon-plus {
+    font-size: 4rem;
+    color: white;
+    font-family: 'Jockey One', sans-serif;
+}
+
+.subir_imagen input[type="file"]:hover + .icon-plus {
+    color: rgba(255, 255, 255, 0.8); /* Cambia el color cuando se pasa por encima */
 }
 
 .lado_izquierdo{
