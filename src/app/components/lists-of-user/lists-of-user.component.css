@@ -1,0 +1,97 @@
+.contenedor_principal{
+    font-family: 'jomhuria';
+    display: flex;
+    width: 130rem;
+    margin: 0 auto;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+.imagen_album{
+    width: 23rem;
+    height: 23rem;
+    border-radius: 2rem;
+}
+
+.contenedor_datos{
+    display: flex;
+    flex-direction: column;
+}
+
+.contenedor_user_name{
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 1rem 0;
+}
+
+.foto_user{
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+}
+
+.nombre_user{
+    font-family: 'jockey one';
+    font-size: 2.8rem;
+    margin: 0;
+    opacity: 70%;
+}
+
+.name_list{
+    font-size: 6rem;
+    margin: 0;
+}
+
+.description_list{
+    font-family: 'josefin sans';
+    font-size: 2.2rem;
+    opacity: 70%;
+    margin: 0;
+    margin: 0rem 0 0.5rem 0;
+}
+
+.contenedor_stats{
+    font-family: 'jockey one';
+    display: flex;
+    gap: 3rem;
+}
+
+.texto_stat{
+    font-size: 2.2rem;
+    opacity: 85%;
+    margin: 0;
+}
+
+.contenedor_cuatro{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.imagen_stat{
+    width: 3rem;
+    height: 3rem;
+}
+
+.contenedor_rate{
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    
+}
+
+.imagen_estrella{
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+}
+
+.texto_total_ratings{
+    font-size: 2.2rem;
+    opacity: 85%;
+    margin: 0;
+    margin-left: 0.3rem;
+}

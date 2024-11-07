@@ -25,6 +25,7 @@ import { BtnReviewComponent } from './components/btn-review/btn-review.component
 import { BtnAddToListComponent } from './components/btn-add-to-list/btn-add-to-list.component';
 import { FeaturedReviewsComponent } from './components/featured-reviews/featured-reviews.component';
 import { CommentComponent } from './components/comment/comment.component';
+import { ListsOfUserComponent } from './components/lists-of-user/lists-of-user.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -59,6 +60,7 @@ export const routes: Routes = [
     { path: 'yourRating', component: YourRatingComponent},
     { path: 'featuredReviews', component: FeaturedReviewsComponent},
     { path: 'comment', component: CommentComponent},
+    { path: 'listsOfUser', component: ListsOfUserComponent},
     { path: '**', pathMatch: 'full', redirectTo: 'welcomelogin'}
 ];
 
