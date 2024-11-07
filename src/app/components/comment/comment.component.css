@@ -1,0 +1,59 @@
+.contenedor_principal{
+    font-family: 'josefin sans', sans-serif;
+    font-weight: bold;
+    width: 140rem;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+    padding: 2rem 3rem 3rem 3rem;
+    margin: 0 auto;
+}
+
+.contenedor_elementos{
+    display: flex;
+    gap: 1rem;
+}
+
+.foto_user{
+    width: 9rem;
+    height: 9rem;
+    border-radius: 50%;
+}
+
+.contenedor_nombre_listened{
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.nombre_user{
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.listened{
+    font-size: 1.8rem;
+    opacity: 65%;
+    margin: 0;
+}
+
+.contenedor_rate{
+    display: flex;
+    gap: 0.2rem;
+    margin-top: 0.5rem;
+}
+
+.imagen_estrella{
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+}
+
+.comment{
+    margin: 0;
+    font-size: 1.8rem;
+    margin-top: 2rem;
+    opacity: 70%;
+    line-height: 1.4;
+}

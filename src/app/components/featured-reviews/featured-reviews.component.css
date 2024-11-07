@@ -1,0 +1,54 @@
+.contenedor_principal{
+    font-family: 'josefin sans', sans-serif;
+    font-weight: bold;
+    display: flex;
+    column-gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    width: 86rem;
+    height: 24rem;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+}
+
+.featured_review{
+    display: flex;
+    width: 26.4rem;
+    height: 20.07rem;
+    background-color: #040317;
+    border-radius: 2rem;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.foto_user{
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+}
+
+.contenedor_datos{
+    display: flex;
+    flex-direction: column;
+}
+
+.nombre_user{
+    font-size: 2.5rem;
+    margin: 0;
+    margin-bottom: 1rem;
+}
+
+
+.contenedor_estrellas{
+    display: flex;
+}
+
+.imagen_estrella{
+    width: 2rem;
+    height: 2rem;
+}
+
+.comment{
+    font-size: 1.5rem;
+    opacity: 75%;
+}

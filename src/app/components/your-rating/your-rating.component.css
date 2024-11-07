@@ -1,0 +1,30 @@
+
+.contenedor_principal{
+    font-family: 'jomhuria';
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 49rem;
+    height: 19rem;
+    background-color: #0D0B29;
+    border-radius: 1rem;
+    padding-bottom: 2rem;
+}
+
+.texto{
+    margin: 0;
+    font-size: 6rem;
+}
+
+.contenedor_rate{
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+}
+
+.imagen_estrella{
+    width: 7rem;
+    height: 7rem;
+    cursor: pointer;
+}

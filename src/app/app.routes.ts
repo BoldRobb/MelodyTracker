@@ -19,6 +19,12 @@ import { ReviewHistoryComponent } from './pages/review-history/review-history.co
 import { AddToListComponent } from './components/modals/add-to-list/add-to-list.component';
 import { CreateListComponent } from './components/modals/create-list/create-list.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { CreateReviewComponent } from './components/modals/create-review/create-review.component';
+import { YourRatingComponent } from './components/your-rating/your-rating.component';
+import { BtnReviewComponent } from './components/btn-review/btn-review.component';
+import { BtnAddToListComponent } from './components/btn-add-to-list/btn-add-to-list.component';
+import { FeaturedReviewsComponent } from './components/featured-reviews/featured-reviews.component';
+import { CommentComponent } from './components/comment/comment.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -41,12 +47,18 @@ export const routes: Routes = [
     { path: 'gridrow', component: GridrowComponent },
     { path: 'encabezado', component: EncabezadoComponent},
     { path: 'btnViewMore', component: BtnViewMoreComponent},
+    { path: 'btnReview', component: BtnReviewComponent},
+    { path: 'btnAddToList', component: BtnAddToListComponent},
     { path: 'follows', component: FollowsComponent},
     { path: 'rankedEspecifica', component: RankedEspecificaComponent},
     { path: 'reviewEspecifica', component: ReviewEspecificaComponent},
     { path: 'modalAddToList', component: AddToListComponent},
     { path: 'modalCreateList', component: CreateListComponent},
+    { path: 'modalCreateReview', component: CreateReviewComponent},
     { path: 'spinner', component: SpinnerComponent},
+    { path: 'yourRating', component: YourRatingComponent},
+    { path: 'featuredReviews', component: FeaturedReviewsComponent},
+    { path: 'comment', component: CommentComponent},
     { path: '**', pathMatch: 'full', redirectTo: 'welcomelogin'}
 ];
 
