@@ -1,42 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SpinnerService } from './spinner.service';
+import { SpinnerService } from '../../others/spinner.service';
 import { finalize } from 'rxjs/operators';
+import { BestAlbumsResponse, AlbumDetailsResponse } from '../../../interfaces/album';
 
-export interface Album {
-  id_album: number;
-  title: string;
-  artist: string;
-  score: number;
-  photo: string;
-}
 
-export interface BestAlbumsResponse {
-  best_albums: Album[];
-}
-
-export interface AlbumDetailsResponse {
-  ratingCount: number;
-  likes: number;
-  listsCreated: number;
-  comments: number;
-  listens: number;
-  name: string;
-  id_artist: number;
-  artist_name: string;
-  photo: string;
-  released: string;
-  language: string;
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlbumService {
+  // -----------------------------------------------------------
+  //CONEXIÓN
   private apiUrl = 'http://127.0.0.1:8000';
 
   constructor(private http: HttpClient, private spinnerService: SpinnerService) {}
+
+
+
 
   // -----------------------------------------------------------
   // Servicio para obtener los mejores álbumes
@@ -53,6 +35,10 @@ export class AlbumService {
       })
     );
   }
+
+
+
+
 
   // -----------------------------------------------------------
   // Servicio para obtener la información completa de un álbum

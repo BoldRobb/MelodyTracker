@@ -33,6 +33,8 @@ import { DatosSongAlbumComponent } from './components/datos-song-album/datos-son
 import { BestUserComponent } from './components/best-user/best-user.component';
 import { Error404Component } from './pages/error404/error404.component';
 import { AlbumComponent } from './pages/album/album.component';
+import { SongsOnAlbumComponent } from './components/songs-on-album/songs-on-album.component';
+import { SongComponent } from './pages/song/song.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -46,7 +48,7 @@ export const routes: Routes = [
     { path: 'reviewHistory', component: ReviewHistoryComponent},
     { path: '404', component: Error404Component},
     { path: 'album/:id', component: AlbumComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
-
+    { path: 'song', component: SongComponent},
 
 
 
@@ -75,6 +77,7 @@ export const routes: Routes = [
     { path: 'songsInList', component: SongsInListComponent},
     { path: 'datosSongAlbum', component: DatosSongAlbumComponent},
     { path: 'bestUser', component: BestUserComponent},
+    { path: 'songsOnAlbum', component: SongsOnAlbumComponent},
     { path: '**', pathMatch: 'full', redirectTo: 'homepage' }
 ];
 

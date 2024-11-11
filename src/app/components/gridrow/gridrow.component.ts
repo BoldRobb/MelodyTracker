@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AlbumService, BestAlbumsResponse, Album } from '../../services/album-service.service';
+import { BestAlbumsResponse, Album } from '../../interfaces/album';
+import { AlbumService } from '../../services/album/backend/album-service.service';
 import { RouterOutlet, RouterModule } from '@angular/router';
 
 import { CommonModule } from '@angular/common';

@@ -1,5 +1,5 @@
 import { HttpRequest, HttpHandlerFn, HttpEvent, HttpInterceptorFn } from '@angular/common/http';
-import { SpinnerService } from '../services/spinner.service';
+import { SpinnerService } from '../services/others/spinner.service';
 import { Observable, finalize, catchError, throwError } from 'rxjs';
 
 // Esta es la nueva función de interceptor

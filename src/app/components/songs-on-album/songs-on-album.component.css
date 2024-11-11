@@ -1,0 +1,14 @@
+.contenedor_principal{
+    margin: 2rem 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 2rem;
+    row-gap: 1.5rem;
+    width: 86rem;
+}
+
+.imagen_song{
+    width: 20rem;
+    height: 20rem;
+    border-radius: 1.2rem;
+}

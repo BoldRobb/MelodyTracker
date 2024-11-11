@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
 import { NavbarLoginComponent } from "./components/navbars/navbar-login/navbar-login.component";
 import { NavbarUnloginComponent } from "./components/navbars/navbar-unlogin/navbar-unlogin.component";
-import { UsersService } from './services/users.service';
+import { UsersService } from './services/users/backend/users.service';
 import { uploadFile } from './firebase/storage';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
