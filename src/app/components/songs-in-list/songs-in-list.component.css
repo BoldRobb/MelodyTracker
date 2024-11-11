@@ -1,0 +1,103 @@
+.contenedor_principal{
+    font-family: 'jomhuria', sans-serif;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 10rem;
+    row-gap: 3rem;
+    width: 130rem;
+    margin: 3rem auto;
+}
+
+.contenedor_lista{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60rem;
+    background-color: #0D0B29;
+    padding: 1.2rem;
+    border-radius: 2rem;
+}
+
+.datos_user{
+    display: flex;
+    column-gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.foto_user{
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+}
+
+.texto{
+    font-size: 4rem;
+    opacity: 70%;
+    margin: 0;
+}
+
+.title_list{
+    font-size: 4.5rem;
+    margin: 0;
+    margin-top: 1rem;
+}
+
+.contenedor_fotos_canciones{
+    display: flex;
+    margin-left: 5rem;
+}
+
+.imagen_song{
+    width: 13rem;
+    height: 13rem;
+    margin-left: -5rem;
+    border-radius: 0.7rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.contenedor_stats{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.stat{
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.imagen_stat{
+    width: 3rem;
+    height: 3rem;
+}
+
+.contenedor_rate{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.imagen_estrella {
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+}
+
+
+.texto_stat{
+    font-size: 3rem;
+    opacity: 70%;
+    margin: 0;
+}
+
+.texto_star{
+    margin-left: 0.5rem;
+    margin-top: 1rem;
+}

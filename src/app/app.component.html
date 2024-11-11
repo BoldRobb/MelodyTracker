@@ -1,12 +1,20 @@
 
-@if (isLoggedIn()) {
+@if (usersService.isLoggedIn$) {
   <app-navbar-login></app-navbar-login>
+  
 } @else {
   <app-navbar-unlogin></app-navbar-unlogin>
 }
 
 
-<router-outlet/>
+
+
+<button (click)="logout()">Cerrar sesión</button>
+
+
+
+
+<router-outlet></router-outlet>
 
 
   <!-- Mostrar canciones populares -->

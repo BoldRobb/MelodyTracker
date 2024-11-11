@@ -15,6 +15,7 @@
     width: 18rem;
     height: 18rem;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 /*4X2*/
@@ -32,6 +33,7 @@
     height: 27.5rem;
     margin-bottom: 2.6rem;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 
@@ -51,6 +53,7 @@
     height: 27.5rem;
     margin-bottom: 2.6rem;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .contenedor-5x2 {
@@ -77,5 +80,6 @@
     height: 18rem;
     margin-bottom: 2.6rem;
     border-radius: 10px;
+    cursor: pointer;
 }
 /* Puedes añadir más clases según las combinaciones que necesites */

@@ -6,7 +6,7 @@ import { SpinnerComponent } from "../../components/spinner/spinner.component";  
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [GridrowComponent, WelcomeComponent, SpinnerComponent],  // Agrega SpinnerComponent aquí
+  imports: [GridrowComponent, WelcomeComponent, SpinnerComponent],
   templateUrl: './homepage.component.html',
   styleUrls: ['./homepage.component.css']
 })

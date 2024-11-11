@@ -26,6 +26,13 @@ import { BtnAddToListComponent } from './components/btn-add-to-list/btn-add-to-l
 import { FeaturedReviewsComponent } from './components/featured-reviews/featured-reviews.component';
 import { CommentComponent } from './components/comment/comment.component';
 import { ListsOfUserComponent } from './components/lists-of-user/lists-of-user.component';
+import { StatTotalComponent } from './components/stat-total/stat-total.component';
+import { ListenLikeWatchComponent } from './components/listen-like-watch/listen-like-watch.component';
+import { SongsInListComponent } from './components/songs-in-list/songs-in-list.component';
+import { DatosSongAlbumComponent } from './components/datos-song-album/datos-song-album.component';
+import { BestUserComponent } from './components/best-user/best-user.component';
+import { Error404Component } from './pages/error404/error404.component';
+import { AlbumComponent } from './pages/album/album.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -37,6 +44,8 @@ export const routes: Routes = [
     { path: 'bestUsers', component: BestUsersComponent},
     { path: 'rankedHistory', component: RankedHistoryComponent},
     { path: 'reviewHistory', component: ReviewHistoryComponent},
+    { path: '404', component: Error404Component},
+    { path: 'album/:id', component: AlbumComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
 
 
 
@@ -61,7 +70,12 @@ export const routes: Routes = [
     { path: 'featuredReviews', component: FeaturedReviewsComponent},
     { path: 'comment', component: CommentComponent},
     { path: 'listsOfUser', component: ListsOfUserComponent},
-    { path: '**', pathMatch: 'full', redirectTo: 'welcomelogin'}
+    { path: 'statTotal', component: StatTotalComponent},
+    { path: 'listenLikeWatch', component: ListenLikeWatchComponent},
+    { path: 'songsInList', component: SongsInListComponent},
+    { path: 'datosSongAlbum', component: DatosSongAlbumComponent},
+    { path: 'bestUser', component: BestUserComponent},
+    { path: '**', pathMatch: 'full', redirectTo: 'homepage' }
 ];
 
 

@@ -1,14 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlbumService, BestAlbumsResponse, Album } from '../../services/album-service.service';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterModule } from '@angular/router';
 
 import { CommonModule } from '@angular/common';
+
 
 
 @Component({
   selector: 'app-gridrow',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, RouterModule],
   templateUrl: './gridrow.component.html',
   styleUrl: './gridrow.component.css'
 })

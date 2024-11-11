@@ -1,0 +1,105 @@
+.contenedor_principal{
+    font-family: 'jomhuria', cursive;
+    display: flex;
+    align-items: center;
+    width: 86rem;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+    gap: 2.5rem;
+    padding: 1.3rem;
+    line-height: 0.7;
+}
+
+
+.foto_song{
+    width: 24rem;
+    height: 24rem;
+    border-radius: 1rem;
+}
+
+.contenedor_datos{
+    display: flex;
+    flex-direction: column;
+}
+
+.contenedor_title_released{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.title_song{
+    font-size: 7rem;
+    margin: 0;
+}
+
+.released{
+    margin: 0;
+    font-size: 4.5rem;
+    opacity: 65%;
+}
+
+.name_artist{
+    margin: 0;
+    font-size: 3.5rem;
+    color: #C6FF41;
+}
+
+.contenedor_stats{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+    margin: 1rem 0;
+}
+
+.stat{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.imagen_stat{
+    width: 3.3rem;
+    height: 3.3rem;
+}
+
+.cantidad_stat{
+    font-size: 4.2rem;
+    color: white;
+    opacity: 75%;
+    margin: 0;
+    margin-top: 1rem;
+}
+
+.contenedor_rate{
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.imagen_estrella {
+    width: 2.3rem;
+    height: 2.3rem;
+    cursor: pointer;
+}
+
+
+.texto_stat{
+    font-size: 3rem;
+    opacity: 70%;
+    margin: 0;
+}
+
+.texto_star{
+    margin-left: 0.5rem;
+    margin-top: 1rem;
+}
+
+.texto{
+    font-size: 3.5rem;
+    opacity: 75%;
+    margin: 0;
+    margin: 0.5rem 0;
+}

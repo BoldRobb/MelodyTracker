@@ -9,6 +9,7 @@ from app.database.database import get_db
 from app.models.users import User, Profile
 from app.models.albums import Album, RankedAlbums, ListenedAlbums, FavoriteAlbumsOfUser
 from app.models.artists import Artist
+from sqlalchemy.orm import aliased
 
 
 from app.schemas.users import UserCreate
@@ -18,6 +19,27 @@ from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_c
 import traceback
 
 router = APIRouter()
+
+
+#OBTENER INFO COMPLETA DE UN ALBUM
+@router.get("/info_album/{id_album}")
+def get_album_details(id_album: int, db: Session = Depends(get_db)):
+    # Buscar el álbum por su ID y obtener el nombre del artista mediante un join
+    album = db.query(Album, Artist.name.label('artist_name')).join(Artist, Artist.id_artist == Album.id_artist).filter(Album.id_album == id_album).first()
+
+    # Si no se encuentra el álbum, lanzar un error
+    if not album:
+        raise HTTPException(status_code=404, detail="Album not found")
+
+    # Devolver la información del álbum y el nombre del artista
+    return {
+        "name": album.Album.name,
+        "id_artist": album.Album.id_artist,
+        "artist_name": album.artist_name,  # Nombre del artista
+        "photo": album.Album.photo,  # Suponiendo que 'photo' ya es un string o base64
+        "released": album.Album.released.strftime("%Y-%m-%d") if album.Album.released else None,
+        "language": album.Album.language
+    }
 
 
 # Rankear Album

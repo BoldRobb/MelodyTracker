@@ -1,0 +1,24 @@
+<div class="contenedor_principal">
+    <div class="contenedor_foto">
+
+        @if (type_stat=='heart') {
+            <img class="imagen_stat" src="images/heart.png" alt="">
+        } @else if(type_stat=='listened') {
+            <img class="imagen_stat" src="images/song_listened.png" alt="">
+        } @else if(type_stat=='list') {
+            <img class="imagen_stat" src="images/lists_created.png" alt="">
+        }
+
+    </div>
+
+    <div class="contenedor_texto">
+        @if (type_stat=='heart') {
+            <p class="texto_stat">Liked 1,421 times</p>
+        } @else if(type_stat=='listened') {
+            <p class="texto_stat">Listened 5,901 times</p>
+        } @else if(type_stat=='list') {
+            <p class="texto_stat">241 Lists with this song</p>
+            
+        }
+    </div>
+</div>

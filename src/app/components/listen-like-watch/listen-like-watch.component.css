@@ -1,0 +1,36 @@
+.contenedor_principal{
+    font-family: 'jomhuria', cursive;
+    display: flex;
+    width: 49rem;
+    height: 20rem;
+    justify-content: center;
+    align-items: center;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+    column-gap: 4.5rem;
+
+}
+
+.contenedor_stat {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease; /* Hace la transición más suave */
+}
+
+.contenedor_stat:hover {
+    filter: grayscale(0%); /* Vuelve a los colores originales al pasar el ratón */
+}
+
+.imagen_stat{
+    width: 7.8rem;
+    height: 7.8rem;
+    margin-bottom: 1rem;
+}
+
+.texto_stat{
+    font-size: 4.5rem;
+}

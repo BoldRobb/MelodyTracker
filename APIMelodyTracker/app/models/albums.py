@@ -17,6 +17,8 @@ class Album(Base):
     artist = relationship("Artist", back_populates="albums")
     songs = relationship("SongsOnAlbum", back_populates="album")
 
+
+
     
 class FavoriteAlbumsOfUser(Base):
     __tablename__ = "favorite_albums_of_user"
