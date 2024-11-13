@@ -41,3 +41,14 @@ class SongResponse(BaseModel):
 class FavoriteSongCreate(BaseModel):
     id_user: int
     id_song: int
+
+
+class LikeSongRequest(BaseModel):
+    id_user: int
+    id_song: int
+
+
+class ReviewSongSchema(BaseModel):
+    id_user: int
+    id_song: int
+    comment: str

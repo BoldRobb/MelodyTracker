@@ -14,7 +14,7 @@ import { SpinnerService } from '../../services/others/spinner.service';
 export class DatosSongAlbumComponent implements OnInit {
   albumId: number | null = null;
 
-  // Variables para almacenar los detalles del álbum
+  // Variables para almacenar los detalles del álbum o la canción
   albumCover: string = '';
   title: string = '';
   releaseYear: number = 0;
@@ -26,6 +26,7 @@ export class DatosSongAlbumComponent implements OnInit {
   listsCreated: number = 0;
   likes: number = 0;
   ratingCount: number = 0;
+  reviewCount: number = 0;
 
   isAlbumRoute: boolean = true;
 
@@ -73,11 +74,16 @@ export class DatosSongAlbumComponent implements OnInit {
         }
       );
     } else {
-      // Si estamos en la ruta de canción, obtenemos detalles de la canción
+      // Si estamos en la ruta de canción, obtenemos detalles de la canción y los datos de likes y reviews
       this.songService.getSongDetails(id).subscribe(
         (response) => {
-          console.log('Detalles de la canción:', response); // Verifica los datos en la consola
           this.assignSongData(response);
+          
+          // Llamar a los métodos para obtener el conteo de likes, reviews y escuchas
+          this.getSongLikeCount(id);
+          this.getSongReviewCount(id);
+          this.getSongListenedCount(id);
+          
           this.spinnerService.hide();
         },
         (error) => {
@@ -89,8 +95,44 @@ export class DatosSongAlbumComponent implements OnInit {
     }
   }
 
-  // Asigna los datos de álbum
+  // Método para obtener el conteo de likes
+  getSongLikeCount(id: number): void {
+    this.songService.getSongLikeCount(id).subscribe(
+      (response) => {
+        this.likes = response.likes_count;
+      },
+      (error) => {
+        console.error('Error al obtener el conteo de likes:', error);
+      }
+    );
+  }
+
+  // Método para obtener el conteo de reviews
+  getSongReviewCount(id: number): void {
+    this.songService.getSongReviewCount(id).subscribe(
+      (response) => {
+        this.reviewCount = response.reviews_count;
+      },
+      (error) => {
+        console.error('Error al obtener el conteo de reviews:', error);
+      }
+    );
+  }
+
+  // Método para obtener el conteo de escuchas de la canción
+  getSongListenedCount(id: number): void {
+    this.songService.getSongListenedCount(id).subscribe(
+      (response) => {
+        this.listens = response.user_count;
+      },
+      (error) => {
+        console.error('Error al obtener el conteo de escuchas:', error);
+      }
+    );
+  }
+
   assignAlbumData(response: any): void {
+    console.log('Asignando datos del álbum:', response);  // Verifica los datos recibidos
     this.albumCover = response.photo;
     this.title = response.name;
     this.releaseYear = new Date(response.released).getFullYear();
@@ -103,18 +145,19 @@ export class DatosSongAlbumComponent implements OnInit {
     this.likes = response.likes;
     this.ratingCount = response.ratingCount;
   }
-
+  
   assignSongData(response: any): void {
+    console.log('Asignando datos de la canción:', response);  // Verifica los datos recibidos
     this.albumCover = response.photo;
     this.title = response.name;
     this.artist = response.artist_name;
     this.language = response.language;
-    this.releaseDate = response.released; 
-    this.releaseYear = new Date(response.released).getFullYear(); // Asegúrate de que este valor es correcto
-    this.listens = response.listens;
+    this.releaseDate = response.released;
+    this.releaseYear = new Date(response.released).getFullYear();
+    this.listens = response.listenedCount;
     this.comments = response.comments;
     this.likes = response.likes;
     this.ratingCount = response.ratingCount;
+    this.reviewCount = response.reviews_count;
   }
-  
 }

@@ -48,8 +48,6 @@ export class UsersService {
     if (typeof window !== 'undefined' && window.localStorage) {
       const token = localStorage.getItem('access_token');
     
-      console.log('Token encontrado en localStorage:', token);
-    
       if (!token) {
         this.isLoggedInSubject.next(false);
         console.log('Token no encontrado, isLoggedIn:', false);
@@ -58,7 +56,6 @@ export class UsersService {
     
       const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
       
-      console.log('Iniciando petición HTTP para verificar el token...');
     
       this.http.get('http://127.0.0.1:8000/users/me', { headers }).subscribe({
         next: () => {

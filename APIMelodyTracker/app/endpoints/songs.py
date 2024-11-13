@@ -5,10 +5,10 @@ from datetime import date, datetime
 
 
 from app.models.users import User
-from app.models.songs import Song, WatchlistSongs, ListenedSongs, FavoriteSongsOfUser
+from app.models.songs import ReviewedSongs, Song, WatchlistSongs, ListenedSongs, FavoriteSongsOfUser, LikedSongs
 from app.models.artists import Artist
 
-from app.schemas.Schemasongs import CreateSong, UpdateSong, SongListened, WatchlistSongRequest, SongResponse, FavoriteSongCreate
+from app.schemas.Schemasongs import CreateSong, ReviewSongSchema, UpdateSong, SongListened, WatchlistSongRequest, LikeSongRequest, SongResponse, FavoriteSongCreate
 
 
 from app.jwt.auth import get_current_user
@@ -151,6 +151,22 @@ def song_listened(song_data: SongListened, db: Session = Depends(get_db), curren
     db.refresh(new_listened_song)
 
     return {"msg": "Song listened recorded successfully", "listened_song": new_listened_song}
+
+
+
+# Endpoint para obtener el conteo de usuarios que han escuchado una canción
+@router.get("/song_listened_count/{song_id}")
+def get_song_listened_count(song_id: int, db: Session = Depends(get_db)):
+    # Consultar el número de usuarios que han escuchado la canción
+    user_count = db.query(ListenedSongs.id_user).filter(ListenedSongs.id_song == song_id).distinct().count()
+
+    if user_count is None:
+        raise HTTPException(status_code=404, detail="Song not found or no listens recorded")
+
+    return {"song_id": song_id, "user_count": user_count}
+
+
+
 
 # Total Canciones Escuchadas
 @router.get("/total_songs_listened/{id_user}")
@@ -408,3 +424,82 @@ def favorite_songs_user(
             })
 
     return {"favorite_songs": songs_info}
+
+
+
+
+# Dar like a una canción
+@router.post("/like_song")
+def like_song(request: LikeSongRequest, db: Session = Depends(get_db)):
+    # Verifica si la canción y el usuario existen
+    song = db.query(Song).filter(Song.id_song == request.id_song).first()
+    user = db.query(User).filter(User.id_user == request.id_user).first()
+    
+    if not song or not user:
+        raise HTTPException(status_code=404, detail="Song or user not found")
+
+    # Agrega el like, estableciendo la fecha automáticamente
+    liked_song = LikedSongs(id_user=request.id_user, id_song=request.id_song, date=datetime.now().date())
+    db.add(liked_song)
+    db.commit()
+
+    return {"message": "Song liked successfully"}
+
+
+
+#TOTAL LIKE SONG
+@router.get("/{id_song}/like_count")
+def get_like_count(id_song: int, db: Session = Depends(get_db)):
+    # Contar el número de likes para la canción específica
+    likes_count = db.query(LikedSongs).filter(LikedSongs.id_song == id_song).count()
+
+    return {"id_song": id_song, "likes_count": likes_count}
+
+
+# REVIEW SONG
+@router.post("/review_song")
+def review_song(review_data: ReviewSongSchema, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    user, role = current_user
+    if role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    # Verificar si la canción ya ha sido escuchada por el usuario
+    existing_listened_entry = db.query(ListenedSongs).filter(
+        ListenedSongs.id_user == review_data.id_user,
+        ListenedSongs.id_song == review_data.id_song
+    ).first()
+
+    # Si la canción no ha sido escuchada, registrarla como escuchada
+    if not existing_listened_entry:
+        new_listened_song = ListenedSongs(
+            id_user=review_data.id_user,
+            id_song=review_data.id_song,
+            date=date.today()
+        )
+        db.add(new_listened_song)
+        db.commit()
+        db.refresh(new_listened_song)
+
+    # Crear una nueva reseña en reviewed_songs
+    new_review = ReviewedSongs(
+        id_user=review_data.id_user,
+        id_song=review_data.id_song,
+        comment=review_data.comment,
+        date=date.today()
+    )
+    db.add(new_review)
+    db.commit()
+    db.refresh(new_review)
+
+    return {"msg": "Review created successfully", "review": new_review}
+
+
+#TOTAL REVIEWS DE UNA CANCIÓN
+@router.get("/{id_song}/review_count")
+def get_review_count(id_song: int, db: Session = Depends(get_db)):
+    # Consultar la cantidad de reseñas para la canción específica
+    reviews_count = db.query(ReviewedSongs).filter(ReviewedSongs.id_song == id_song).count()
+
+    return {"id_song": id_song, "reviews_count": reviews_count}
+
+

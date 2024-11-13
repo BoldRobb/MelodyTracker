@@ -1,41 +1,42 @@
 <div class="contenedor_principal">
     <div class="contenedor_foto">
-        <img class="foto_song" [src]="albumCover" alt="Album Cover">
+      <img class="foto_song" [src]="albumCover || 'ruta/a/imagen_por_defecto.jpg'" alt="Album Cover">
     </div>
     <div class="contenedor_datos">
-        <div class="contenedor_title_released">
-            <p class="title_song">{{ title }}</p>
-            <p class="released">{{ releaseYear }}</p>
+      <div class="contenedor_title_released">
+        <p class="title_song">{{ title || 'Título desconocido' }}</p>
+        <p class="released">{{ releaseYear || 'Año desconocido' }}</p>
+      </div>
+      <p class="name_artist">{{ artist || 'Artista desconocido' }}</p>
+      <div class="contenedor_stats">
+        <div class="stat">
+          <img class="imagen_stat" src="images/song_listened.png" alt="">
+          <p class="cantidad_stat">{{ listens || 0 }}</p>
         </div>
-        <p class="name_artist">{{ artist }}</p>
-        <div class="contenedor_stats">
-            <div class="stat">
-                <img class="imagen_stat" src="images/song_listened.png" alt="">
-                <p class="cantidad_stat">{{ listens }}</p>
-            </div>
-            <div class="stat">
-                <img class="imagen_stat" src="images/comment.png" alt="">
-                <p class="cantidad_stat">{{ comments }}</p>
-            </div>
-            <div class="stat">
-                <img class="imagen_stat" src="images/lists_created.png" alt="">
-                <p class="cantidad_stat">{{ listsCreated }}</p>
-            </div>
-            <div class="stat">
-                <img class="imagen_stat" src="images/heart.png" alt="">
-                <p class="cantidad_stat">{{ likes }}</p>
-            </div>
+        <div class="stat">
+          <img class="imagen_stat" src="images/comment.png" alt="">
+          <p class="cantidad_stat">{{ reviewCount || 0 }}</p>
         </div>
-        <div class="contenedor_rate">
-            <img class="imagen_estrella" src="images/star.png" alt="">
-            <img class="imagen_estrella" src="images/star.png" alt="">
-            <img class="imagen_estrella" src="images/star.png" alt="">
-            <img class="imagen_estrella" src="images/star.png" alt="">
-            <img class="imagen_estrella" src="images/star.png" alt="">
-            <p class="texto_stat texto_star">From 872 Ratings</p>
+        <div class="stat">
+          <img class="imagen_stat" src="images/lists_created.png" alt="">
+          <p class="cantidad_stat">{{ listsCreated || 0 }}</p>
         </div>
-        
-        <p class="total_released texto">Released {{ releaseDate }}</p>
-        <p class="languaje texto">Language: {{ language }}</p>
+        <div class="stat">
+          <img class="imagen_stat" src="images/heart.png" alt="">
+          <p class="cantidad_stat">{{ likes || 0 }}</p>
+        </div>
+      </div>
+      <div class="contenedor_rate">
+        <img class="imagen_estrella" src="images/star.png" alt="">
+        <img class="imagen_estrella" src="images/star.png" alt="">
+        <img class="imagen_estrella" src="images/star.png" alt="">
+        <img class="imagen_estrella" src="images/star.png" alt="">
+        <img class="imagen_estrella" src="images/star.png" alt="">
+        <p class="texto_stat texto_star">From {{ ratingCount || 0 }} Ratings</p>
+      </div>
+      
+      <p class="total_released texto">Released {{ releaseDate || 'Fecha desconocida' }}</p>
+      <p class="languaje texto">Language: {{ language || 'Idioma desconocido' }}</p>
     </div>
-</div>
+  </div>
+  
