@@ -48,6 +48,7 @@ export const routes: Routes = [
     { path: 'reviewHistory', component: ReviewHistoryComponent},
     { path: '404', component: Error404Component},
     { path: 'album/:id', component: AlbumComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
+    { path: 'song/:id', component: SongComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'song', component: SongComponent},
 
 

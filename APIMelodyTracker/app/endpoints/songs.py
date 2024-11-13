@@ -18,6 +18,34 @@ from sqlalchemy import func, desc
 router = APIRouter()
 
 
+# OBTENER INFO COMPLETA DE UNA CANCIÓN
+@router.get("/info_song/{id_song}")
+def get_song_details(id_song: int, db: Session = Depends(get_db)):
+    # Buscar la canción por su ID y obtener el nombre del artista mediante un join
+    song = (
+        db.query(Song, Artist.name.label('artist_name'))
+        .join(Artist, Artist.id_artist == Song.id_artist)
+        .filter(Song.id_song == id_song)
+        .first()
+    )
+
+    # Si no se encuentra la canción, lanzar un error
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+
+    # Devolver la información de la canción y el nombre del artista
+    return {
+        "name": song.Song.name,
+        "id_artist": song.Song.id_artist,
+        "artist_name": song.artist_name,  # Nombre del artista
+        "photo": song.Song.photo,  # Foto de la canción (puedes devolverla como base64 si es necesario)
+        "released": song.Song.released.strftime("%Y-%m-%d") if song.Song.released else None,
+        "language": song.Song.language,
+        "genre": song.Song.genre  # Género de la canción (si existe)
+    }
+
+
+
 #   OBTENER CANCIONES
 @router.get("/get_songs/")
 def read_songs(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):

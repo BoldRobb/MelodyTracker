@@ -11,8 +11,8 @@ import { BtnAddToListComponent } from "../../components/btn-add-to-list/btn-add-
 
 @Component({
   selector: 'app-song',
-  standalone: true,
   imports: [DatosSongAlbumComponent, SongsOnAlbumComponent, FeaturedReviewsComponent, ListenLikeWatchComponent, YourRatingComponent, BtnReviewComponent, CommentComponent, BtnViewMoreComponent, BtnAddToListComponent],
+  standalone: true,
   templateUrl: './song.component.html',
   styleUrl: './song.component.css'
 })

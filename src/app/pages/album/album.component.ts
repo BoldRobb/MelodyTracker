@@ -16,14 +16,7 @@ import { BtnViewMoreComponent } from "../../components/btn-view-more/btn-view-mo
   templateUrl: './album.component.html',
   styleUrls: ['./album.component.css'],
   standalone: true,  // Hacemos que el componente sea standalone
-  imports: [DatosSongAlbumComponent, ListenLikeWatchComponent, YourRatingComponent, BtnReviewComponent, SongsOnAlbumComponent, FeaturedReviewsComponent, CommentComponent, BtnViewMoreComponent] // Importamos el componente standalone
- // Importamos el componente standalone
- // Importamos el componente standalone
- // Importamos el componente standalone
- // Importamos el componente standalone
- // Importamos el componente standalone
- // Importamos el componente standalone
-  // Importamos el componente standalone
+  imports: [DatosSongAlbumComponent, ListenLikeWatchComponent, YourRatingComponent, BtnReviewComponent, SongsOnAlbumComponent, FeaturedReviewsComponent, CommentComponent, BtnViewMoreComponent] 
 })
 export class AlbumComponent{
   

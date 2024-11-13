@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SpinnerService } from '../../others/spinner.service';
 import { finalize } from 'rxjs/operators';
-import { BestAlbumsResponse, AlbumDetailsResponse } from '../../../interfaces/album';
+import { BestAlbumsResponse, AlbumDetailsResponse  } from '../../../interfaces/album';
+
 
 
 
@@ -54,4 +55,8 @@ export class AlbumService {
       })
     );
   }
+
+
+
+  
 }
