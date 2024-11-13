@@ -35,6 +35,9 @@ import { Error404Component } from './pages/error404/error404.component';
 import { AlbumComponent } from './pages/album/album.component';
 import { SongsOnAlbumComponent } from './components/songs-on-album/songs-on-album.component';
 import { SongComponent } from './pages/song/song.component';
+import { FollowingComponent } from './pages/following/following.component';
+import { FollowersComponent } from './pages/followers/followers.component';
+import { MyListsComponent } from './pages/my-lists/my-lists.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -49,8 +52,9 @@ export const routes: Routes = [
     { path: '404', component: Error404Component},
     { path: 'album/:id', component: AlbumComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'song/:id', component: SongComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
-    { path: 'song', component: SongComponent},
-
+    { path: 'following', component: FollowingComponent},
+    { path: 'followers', component: FollowersComponent},
+    { path: 'myLists', component: MyListsComponent},
 
 
     /* COMPONENTES */

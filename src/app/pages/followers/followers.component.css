@@ -1,0 +1,11 @@
+.contenedor_principal{
+    margin: 0 auto;
+}
+
+.contenedor_follows{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    min-width: 40rem;
+    max-width: 150rem;
+    margin: 0 auto;
+}

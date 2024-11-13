@@ -20,6 +20,14 @@
     row-gap: 3rem;
 }
 
+.contenedor_follows{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    min-width: 40rem;
+    max-width: 150rem;
+    margin: 0 auto;
+}
+
 .user{
     display: flex;
     flex-direction: column;
