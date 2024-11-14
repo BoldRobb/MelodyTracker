@@ -10,3 +10,10 @@ export interface RegisterData {
     confirmPassword: string;
     role: string; // Ajusta según el rol que manejes, o elimínalo si no aplica.
 }
+
+export interface UserResponse {
+    id_user: number;
+    username: string;
+    email: string;
+    role: string;
+  }

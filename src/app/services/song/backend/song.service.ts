@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SpinnerService } from '../../others/spinner.service';
 import { finalize } from 'rxjs/operators';
@@ -38,12 +38,112 @@ export class SongService {
     );
   }
 
-
-   // Método para obtener el conteo de usuarios que han escuchado una canción
-   getSongListenedCount(id_song: number): Observable<{ song_id: number, user_count: number }> {
+  // Método para obtener el conteo de usuarios que han escuchado una canción
+  getSongListenedCount(id_song: number): Observable<{ song_id: number, user_count: number }> {
     this.spinnerService.show();
     return this.http.get<{ song_id: number, user_count: number }>(`${this.apiUrl}/songs/song_listened_count/${id_song}`).pipe(
       finalize(() => this.spinnerService.hide())
+    );
+  }
+
+  // Método para dar like a una canción
+  likeSong(id_song: number, id_user: number): Observable<{ message: string }> {
+    this.spinnerService.show();
+    
+    // Crear el objeto que se enviará al backend
+    const likeData = {
+      id_song: id_song,
+      id_user: id_user
+    };
+
+    // Realizar la solicitud POST al backend
+    return this.http.post<{ message: string }>(`${this.apiUrl}/songs/like_song`, likeData).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+    );
+  }
+
+  // Método para quitar el like de una canción
+  unlikeSong(id_song: number, id_user: number): Observable<{ message: string }> {
+    this.spinnerService.show();  // Muestra el spinner
+
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/songs/unlike_song`, {
+      body: { id_song, id_user }
+    }).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+    );
+  }
+
+  // Nuevo método para verificar si un usuario ha dado like a una canción
+  checkIfUserLikedSong(id_song: number, id_user: number): Observable<{ has_liked: boolean }> {
+    this.spinnerService.show();
+
+    // Crear los parámetros de la solicitud
+    const params = new HttpParams()
+      .set('id_song', id_song.toString())
+      .set('id_user', id_user.toString());
+
+    // Realizar la solicitud GET al backend para verificar el like
+    return this.http.get<{ has_liked: boolean }>(`${this.apiUrl}/songs/has_liked_song`, { params }).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+    );
+  }
+
+
+  // Método para marcar una canción como escuchada
+  listenSong(id_song: number, id_user: number): Observable<{ message: string }> {
+    this.spinnerService.show();
+    
+    // Crear el objeto que se enviará al backend
+    const listenData = {
+      id_song: id_song,
+      id_user: id_user
+    };
+
+    // Realizar la solicitud POST al backend
+    return this.http.post<{ message: string }>(`${this.apiUrl}/songs/listen_song`, listenData).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+    );
+  }
+
+
+  // Método para quitar la marca de canción escuchada
+  unlistenSong(id_song: number, id_user: number): Observable<{ message: string }> {
+    this.spinnerService.show();  // Muestra el spinner
+
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/songs/unlisten_song`, {
+      body: { id_song, id_user }
+    }).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+    );
+  }
+
+  // Método para verificar si un usuario ya ha escuchado una canción
+  checkIfUserListenedSong(id_song: number, id_user: number): Observable<{ has_listened: boolean }> {
+    this.spinnerService.show();
+
+    // Crear los parámetros de la solicitud
+    const params = new HttpParams()
+      .set('id_song', id_song.toString())
+      .set('id_user', id_user.toString());
+
+    // Realizar la solicitud GET al backend para verificar si la canción fue escuchada
+    return this.http.get<{ has_listened: boolean }>(`${this.apiUrl}/songs/has_listened_song`, { params }).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+    );
+  }
+
+
+  // Servicio SongService
+  getComments(id_song: number, page: number = 1): Observable<{ id_song: number, comments: any[] }> {
+    this.spinnerService.show();  // Muestra el spinner
+
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', '4');  // Limitar los comentarios a 4
+
+    // Realizar la solicitud GET al backend
+    return this.http.get<{ id_song: number, comments: any[] }>(`${this.apiUrl}/songs/${id_song}/comments_song`, { params }).pipe(
+      finalize(() => this.spinnerService.hide())  // Ocultar el spinner cuando termine
     );
   }
 

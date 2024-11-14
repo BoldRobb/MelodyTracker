@@ -22,6 +22,7 @@ import { SpinnerComponent } from "./components/spinner/spinner.component";
 
 export class AppComponent implements OnInit {
   title = 'MelodyTracker';
+  user: any = null; // Variable para almacenar los datos del usuario
   
   
 
@@ -31,8 +32,22 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.usersService.checkToken(); 
+    this.getUserData();
   }
 
+
+  // Función para obtener datos del usuario
+  getUserData(): void {
+    this.usersService.getCurrentUser().subscribe(
+      (response) => {
+        this.user = response; // Asigna la respuesta a la variable user
+        // console.log("Datos del usuario:", this.user);
+      },
+      (error) => {
+        console.error("Error al obtener datos del usuario:", error);
+      }
+    );
+  }
   
   
   login(username: string, password: string): void {

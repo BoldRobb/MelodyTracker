@@ -1,14 +1,23 @@
 <div class="contenedor_principal">
-    <div class="contenedor_stat">
-        <img class="imagen_stat" src="images/song_listened.png" alt="">
-        <div class="texto_stat">Listened</div>
+    <div class="contenedor_stat" 
+         [style.filter]="isLiked ? 'grayscale(0%)' : 'grayscale(100%)'" 
+         (click)="giveLike()">
+      <!-- La imagen no cambiará, solo el filtro de escala de grises -->
+      <img class="imagen_stat" src="images/heart.png" alt="Like">
+      <div class="texto_stat">Like</div>
     </div>
-    <div class="contenedor_stat">
-        <img class="imagen_stat" src="images/heart.png" alt="">
-        <div class="texto_stat">Like</div>
+  
+    <div class="contenedor_stat" 
+         [style.filter]="isListened ? 'grayscale(0%)' : 'grayscale(100%)'" 
+         (click)="giveListen()">
+      <!-- Imagen de 'Listened' -->
+      <img class="imagen_stat" src="images/song_listened.png" alt="Listened">
+      <div class="texto_stat">Listened</div>
     </div>
+  
     <div class="contenedor_stat">
-        <img class="imagen_stat" src="images/reloj.png" alt="">
-        <div class="texto_stat">Watch List</div>
+      <img class="imagen_stat" src="images/reloj.png" alt="Watch List">
+      <div class="texto_stat">Watch List</div>
     </div>
-</div>
+  </div>
+  

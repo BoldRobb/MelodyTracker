@@ -445,7 +445,53 @@ def like_song(request: LikeSongRequest, db: Session = Depends(get_db)):
 
     return {"message": "Song liked successfully"}
 
+#unlike SONG
+@router.delete("/unlike_song")
+def unlike_song(request: LikeSongRequest, db: Session = Depends(get_db)):
+    # Verifica si la canción y el usuario existen
+    song = db.query(Song).filter(Song.id_song == request.id_song).first()
+    user = db.query(User).filter(User.id_user == request.id_user).first()
+    
+    if not song or not user:
+        raise HTTPException(status_code=404, detail="Song or user not found")
+    
+    # Verifica si el usuario ya ha dado like a la canción
+    liked_song = db.query(LikedSongs).filter(
+        LikedSongs.id_user == request.id_user,
+        LikedSongs.id_song == request.id_song
+    ).first()
+    
+    if not liked_song:
+        raise HTTPException(status_code=404, detail="Like not found")
+    
+    # Elimina el like
+    db.delete(liked_song)
+    db.commit()
 
+    return {"message": "Like removed successfully"}
+
+
+# Verificar si un usuario ya le ha dado like a una canción
+@router.get("/has_liked_song")
+def has_liked_song(id_song: int, id_user: int, db: Session = Depends(get_db)):
+    # Verifica si la canción y el usuario existen
+    song = db.query(Song).filter(Song.id_song == id_song).first()
+    user = db.query(User).filter(User.id_user == id_user).first()
+    
+    if not song or not user:
+        raise HTTPException(status_code=404, detail="Song or user not found")
+    
+    # Verifica si el usuario ya ha dado like a la canción
+    liked_song = db.query(LikedSongs).filter(
+        LikedSongs.id_user == id_user,
+        LikedSongs.id_song == id_song
+    ).first()
+    
+    # Si existe la relación, significa que el usuario ya dio like
+    if liked_song:
+        return {"has_liked": True}
+    else:
+        return {"has_liked": False}
 
 #TOTAL LIKE SONG
 @router.get("/{id_song}/like_count")
@@ -454,6 +500,84 @@ def get_like_count(id_song: int, db: Session = Depends(get_db)):
     likes_count = db.query(LikedSongs).filter(LikedSongs.id_song == id_song).count()
 
     return {"id_song": id_song, "likes_count": likes_count}
+
+
+#CANCION ESCUCHADA
+@router.post("/listen_song")
+def listen_song(request: LikeSongRequest, db: Session = Depends(get_db)):
+    # Verifica si la canción y el usuario existen
+    song = db.query(Song).filter(Song.id_song == request.id_song).first()
+    user = db.query(User).filter(User.id_user == request.id_user).first()
+    
+    if not song or not user:
+        raise HTTPException(status_code=404, detail="Song or user not found")
+
+    # Verifica si el usuario ya ha marcado la canción como escuchada
+    listened_song = db.query(ListenedSongs).filter(
+        ListenedSongs.id_user == request.id_user,
+        ListenedSongs.id_song == request.id_song
+    ).first()
+    
+    if listened_song:
+        raise HTTPException(status_code=400, detail="Song already marked as listened by this user")
+    
+    # Registra la canción como escuchada, estableciendo la fecha automáticamente
+    listened_song = ListenedSongs(id_user=request.id_user, id_song=request.id_song, date=datetime.now().date())
+    db.add(listened_song)
+    db.commit()
+
+    return {"message": "Song marked as listened successfully"}
+
+
+#ELIMINAR CANCIÓN ESCUCHADA
+@router.delete("/unlisten_song")
+def unlisten_song(request: LikeSongRequest, db: Session = Depends(get_db)):
+    # Verifica si la canción y el usuario existen
+    song = db.query(Song).filter(Song.id_song == request.id_song).first()
+    user = db.query(User).filter(User.id_user == request.id_user).first()
+    
+    if not song or not user:
+        raise HTTPException(status_code=404, detail="Song or user not found")
+    
+    # Verifica si el usuario ha marcado la canción como escuchada
+    listened_song = db.query(ListenedSongs).filter(
+        ListenedSongs.id_user == request.id_user,
+        ListenedSongs.id_song == request.id_song
+    ).first()
+    
+    if not listened_song:
+        raise HTTPException(status_code=404, detail="Listen not found")
+    
+    # Elimina la canción de la lista de escuchadas
+    db.delete(listened_song)
+    db.commit()
+
+    return {"message": "Song unlistened successfully"}
+
+
+
+# Verificar si un usuario ya ha escuchado una canción
+@router.get("/has_listened_song")
+def has_listened_song(id_song: int, id_user: int, db: Session = Depends(get_db)):
+    # Verifica si la canción y el usuario existen
+    song = db.query(Song).filter(Song.id_song == id_song).first()
+    user = db.query(User).filter(User.id_user == id_user).first()
+    
+    if not song or not user:
+        raise HTTPException(status_code=404, detail="Song or user not found")
+    
+    # Verifica si el usuario ya ha escuchado la canción
+    listened_song = db.query(ListenedSongs).filter(
+        ListenedSongs.id_user == id_user,
+        ListenedSongs.id_song == id_song
+    ).first()
+    
+    # Si existe la relación, significa que el usuario ya ha escuchado la canción
+    if listened_song:
+        return {"has_listened": True}
+    else:
+        return {"has_listened": False}
+    
 
 
 # REVIEW SONG
@@ -503,3 +627,20 @@ def get_review_count(id_song: int, db: Session = Depends(get_db)):
     return {"id_song": id_song, "reviews_count": reviews_count}
 
 
+# Obtener comentarios paginados de una canción
+@router.get("/{id_song}/comments_song")
+def get_comments(id_song: int, page: int = 1, limit: int = 4, db: Session = Depends(get_db)):
+    # Validar que el `limit` esté dentro de un rango adecuado
+    if limit <= 0 or page <= 0:
+        raise HTTPException(status_code=400, detail="Page and limit must be greater than 0")
+
+    # Calcular el offset para la paginación
+    offset = (page - 1) * limit
+
+    # Consultar los comentarios de la canción con paginación
+    comments = db.query(ReviewedSongs).filter(ReviewedSongs.id_song == id_song).limit(limit).offset(offset).all()
+
+    if not comments:
+        raise HTTPException(status_code=404, detail="No comments found")
+
+    return {"id_song": id_song, "comments": comments}
