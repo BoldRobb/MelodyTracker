@@ -132,20 +132,4 @@ export class SongService {
     );
   }
 
-
-  // Servicio SongService
-  getComments(id_song: number, page: number = 1): Observable<{ id_song: number, comments: any[] }> {
-    this.spinnerService.show();  // Muestra el spinner
-
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', '4');  // Limitar los comentarios a 4
-
-    // Realizar la solicitud GET al backend
-    return this.http.get<{ id_song: number, comments: any[] }>(`${this.apiUrl}/songs/${id_song}/comments_song`, { params }).pipe(
-      finalize(() => this.spinnerService.hide())  // Ocultar el spinner cuando termine
-    );
-  }
-
-
 }

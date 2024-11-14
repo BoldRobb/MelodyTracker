@@ -7,7 +7,8 @@
   [ngStyle]="{
     'grid-template-columns': 'repeat(' + columns + ', 1fr)',
     'grid-template-rows': 'repeat(' + rows + ', 1fr)',
-    
+    'position': 'relative',
+    'left': '0px'
   }">
 
 
@@ -25,7 +26,7 @@
     </a>
   }
 }
-@else if (this.type == 'song') {
+@else if (this.type == 'null') {
   <p>Hola</p>
 }
 

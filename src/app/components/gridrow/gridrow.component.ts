@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-gridrow',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './gridrow.component.html',
   styleUrl: './gridrow.component.css'
 })
@@ -28,12 +28,16 @@ export class GridrowComponent implements OnInit {
   ngOnInit(): void {
     this.loadBestAlbums();
   }
-
+  
   loadBestAlbums() {
     this.albumService.getBestAlbums().subscribe(
       (response: BestAlbumsResponse) => {
         this.bestAlbums = response.best_albums;
         console.log(this.bestAlbums);
+      },
+      (error) => {
+        console.error('Error loading best albums:', error);
+        // Puedes manejar el error de otras maneras, como mostrar un mensaje al usuario
       }
     );
   }

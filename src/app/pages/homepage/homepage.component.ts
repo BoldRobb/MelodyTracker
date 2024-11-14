@@ -12,4 +12,4 @@ import { SpinnerComponent } from "../../components/spinner/spinner.component";  
 })
 export class HomepageComponent {
   // Lógica del componente
-}
+} 

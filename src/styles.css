@@ -17,3 +17,6 @@ body{
     color: #FFFFFF;
 }
 
+element.style{
+  left: 0px !important;
+}
