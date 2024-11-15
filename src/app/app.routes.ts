@@ -44,7 +44,7 @@ export const routes: Routes = [
     { path: 'homepage', component: HomepageComponent},
     { path: 'login', component: LoginComponent},
     { path: 'profile', component: ProfileComponent},
-    { path: 'watchlist', component: WatchlistComponent},
+    { path: 'watchlist/:id_user', component: WatchlistComponent },
     { path: 'songsListened', component: SongsListenedComponent},
     { path: 'bestUsers', component: BestUsersComponent},
     { path: 'rankedHistory', component: RankedHistoryComponent},

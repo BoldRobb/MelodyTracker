@@ -6,9 +6,7 @@
   }" 
   [ngStyle]="{
     'grid-template-columns': 'repeat(' + columns + ', 1fr)',
-    'grid-template-rows': 'repeat(' + rows + ', 1fr)',
-    'position': 'relative',
-    'left': '0px'
+    'grid-template-rows': 'repeat(' + rows + ', 1fr)'
   }">
 
 
@@ -25,6 +23,7 @@
         [src]="album.photo" alt="{{ album.title }}">
     </a>
   }
+  
 }
 @else if (this.type == 'null') {
   <p>Hola</p>
@@ -101,8 +100,9 @@
 
 
   <!-- ----------------- WATCHLIST ------------------ -->
-  @if (this.type == 'watchlist') {
-    @for (album of bestAlbums; track $index) {
+  @if (this.type === 'watchlistSongs') {
+    @for (song of watchlistSongs; track $index) {
+      <a [routerLink]="['/song', song.id_song]"></a>
       <img
       [ngClass]="{
           'imagenPrueba-8x1': columns === 8 && rows === 1,
@@ -110,12 +110,13 @@
           'imagenPrueba-5x2': columns === 5 && rows === 2,
           'imagen_watchlist': columns === 8 && rows === 4,
         }" 
-      [src]="album.photo" alt="{{ album.title }}">
+      [src]="song.photo" alt="{{ song.id_song}}">
+      
+      
     }
   } @else if (this.type == 'song_watch_list') {
     <p>Hola</p>
   }
-  
-
+ 
 
 </div>

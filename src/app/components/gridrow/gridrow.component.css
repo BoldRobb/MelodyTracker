@@ -9,6 +9,7 @@
     max-width: 150rem;
     margin: 0 auto;
     row-gap: 1.1rem;
+    padding: 1.5rem 0;
 }
 
 .imagenPrueba-8x1{
@@ -67,12 +68,13 @@
 
 
 .contenedor_watchlist{
-    display: grid;
+    grid-template-columns: repeat(8, 1fr);
     justify-items: center;
     align-items: center;
-    max-width: 1600px;
-    margin: 3.2rem 0;
-    gap: 0rem 2rem;
+    justify-content: center;
+    row-gap: 1rem;
+    margin: 2rem 0;
+    margin-left: 2.2rem;
 }
 
 .imagen_watchlist{
@@ -80,6 +82,7 @@
     height: 18rem;
     margin-bottom: 2.6rem;
     border-radius: 10px;
+    margin: 1rem;
     cursor: pointer;
 }
 /* Puedes añadir más clases según las combinaciones que necesites */

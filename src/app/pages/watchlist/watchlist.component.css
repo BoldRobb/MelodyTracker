@@ -1,8 +1,9 @@
 .contenedor_watchlist{
-    display: grid;
+    display: flex;
     justify-items: center;
     align-items: center;
-    max-width: 1650px;
+    justify-content: center;
+    width: 1650px;
     margin: 0 auto;
     row-gap: 1.5rem;
     background-color: #0D0B29;

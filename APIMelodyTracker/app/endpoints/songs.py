@@ -651,3 +651,42 @@ def get_comments(id_song: int, page: int = 1, limit: int = 4, db: Session = Depe
         raise HTTPException(status_code=404, detail="No comments found")
 
     return {"id_song": id_song, "comments": comments}
+
+
+
+
+
+# Endpoint para obtener las canciones en la watchlist de un usuario
+@router.get("/watchlist_songs_user/{id_user}")
+def watchlist_songs_user(
+    id_user: int,
+    db: Session = Depends(get_db),
+):
+    # Consultar la watchlist del usuario
+    watchlist_songs = (
+        db.query(WatchlistSongs)
+        .filter(WatchlistSongs.id_user == id_user)
+        .all()
+    )
+
+    if not watchlist_songs:
+        return {"message": "No songs found in the user's watchlist."}
+
+    # Obtener la información de las canciones correspondientes
+    songs_info = []
+    for entry in watchlist_songs:
+        song = db.query(Song).filter(Song.id_song == entry.id_song).first()
+        if song:
+            # Asegurarse de que la foto sea tratada correctamente
+            photo = song.photo.decode('utf-8') if isinstance(song.photo, (bytes, bytearray)) else song.photo
+            songs_info.append({
+                "id_song": song.id_song,
+                "name": song.name,
+                "photo": photo,  # Decodificar si es binario, sino usar directamente
+                "id_artist": song.id_artist,
+                "released": song.released.strftime("%Y-%m-%d") if song.released else None,
+                "language": song.language,
+                "genre": song.genre,
+            })
+
+    return {"watchlist_songs": songs_info}

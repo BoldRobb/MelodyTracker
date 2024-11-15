@@ -132,4 +132,12 @@ export class SongService {
     );
   }
 
+  // Método para obtener las canciones de la lista de reproducción de un usuario
+  getWatchlistSongsByUser(id_user: number): Observable<{ watchlist_songs: any[] }> {
+    this.spinnerService.show();
+    return this.http.get<{ watchlist_songs: any[] }>(`${this.apiUrl}/songs/watchlist_songs_user/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide())
+    );
+  }
+
 }
