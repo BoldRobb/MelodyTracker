@@ -5,15 +5,16 @@ from sqlalchemy import desc
 from datetime import date
 from app.database.database import get_db
 
+from datetime import datetime
 
 from app.models.users import User, Profile
-from app.models.albums import Album, RankedAlbums, ListenedAlbums, FavoriteAlbumsOfUser
+from app.models.albums import Album, RankedAlbums, ListenedAlbums, FavoriteAlbumsOfUser, LikedAlbums
 from app.models.artists import Artist
 from sqlalchemy.orm import aliased
 
 
 from app.schemas.users import UserCreate
-from app.schemas.albums import RankedAlbum, BestAlbumsResponse, AlbumResponse, AlbumListened, FavoriteAlbumCreate
+from app.schemas.albums import RankedAlbum, BestAlbumsResponse, AlbumResponse, AlbumListened, FavoriteAlbumCreate, LikeAlbumRequest
 
 from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_current_user  # Asegúrate de importar hash_password
 import traceback
@@ -40,6 +41,82 @@ def get_album_details(id_album: int, db: Session = Depends(get_db)):
         "released": album.Album.released.strftime("%Y-%m-%d") if album.Album.released else None,
         "language": album.Album.language
     }
+
+
+
+# Dar like a un álbum
+@router.post("/like_album")
+def like_album(request: LikeAlbumRequest, db: Session = Depends(get_db)):
+    # Verifica si el álbum y el usuario existen
+    album = db.query(Album).filter(Album.id_album == request.id_album).first()
+    user = db.query(User).filter(User.id_user == request.id_user).first()
+    
+    if not album or not user:
+        raise HTTPException(status_code=404, detail="Album or user not found")
+    
+    # Verifica si el usuario ya ha dado like al álbum
+    existing_like = db.query(LikedAlbums).filter(
+        LikedAlbums.id_user == request.id_user,
+        LikedAlbums.id_album == request.id_album
+    ).first()
+    
+    if existing_like:
+        raise HTTPException(status_code=400, detail="User has already liked this album")
+
+    # Agrega el like, estableciendo la fecha automáticamente
+    liked_album = LikedAlbums(id_user=request.id_user, id_album=request.id_album, date=datetime.now().date())
+    db.add(liked_album)
+    db.commit()
+
+    return {"message": "Album liked successfully"}
+
+# Quitar like de un álbum
+@router.delete("/unlike_album")
+def unlike_album(request: LikeAlbumRequest, db: Session = Depends(get_db)):
+    # Verifica si el álbum y el usuario existen
+    album = db.query(Album).filter(Album.id_album == request.id_album).first()
+    user = db.query(User).filter(User.id_user == request.id_user).first()
+    
+    if not album or not user:
+        raise HTTPException(status_code=404, detail="Album or user not found")
+    
+    # Verifica si el usuario ya ha dado like al álbum
+    liked_album = db.query(LikedAlbums).filter(
+        LikedAlbums.id_user == request.id_user,
+        LikedAlbums.id_album == request.id_album
+    ).first()
+    
+    if not liked_album:
+        raise HTTPException(status_code=404, detail="Like not found")
+    
+    # Elimina el like
+    db.delete(liked_album)
+    db.commit()
+
+    return {"message": "Like removed successfully"}
+
+# Verificar si un usuario ya le ha dado like a un álbum
+@router.get("/has_liked_album")
+def has_liked_album(id_album: int, id_user: int, db: Session = Depends(get_db)):
+    # Verifica si el álbum y el usuario existen
+    album = db.query(Album).filter(Album.id_album == id_album).first()
+    user = db.query(User).filter(User.id_user == id_user).first()
+    
+    if not album or not user:
+        raise HTTPException(status_code=404, detail="Album or user not found")
+    
+    # Verifica si el usuario ya ha dado like al álbum
+    liked_album = db.query(LikedAlbums).filter(
+        LikedAlbums.id_user == id_user,
+        LikedAlbums.id_album == id_album
+    ).first()
+    
+    # Si existe la relación, significa que el usuario ya dio like
+    if liked_album:
+        return {"has_liked": True}
+    else:
+        return {"has_liked": False}
+
 
 
 # Rankear Album
@@ -114,11 +191,9 @@ def home_best_albums(db: Session = Depends(get_db)):
 
 
 # Álbum Escuchado
-@router.post("/album_listened")
+@router.post("/listened_album")
 def album_listened(album_data: AlbumListened, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     user, role = current_user
-    if role != "admin":
-        raise HTTPException(status_code=403, detail="Not authorized")
 
     # Verificar si el álbum ya ha sido escuchado por el usuario
     existing_entry = db.query(ListenedAlbums).filter(
@@ -142,6 +217,55 @@ def album_listened(album_data: AlbumListened, db: Session = Depends(get_db), cur
     db.refresh(new_listened_album)
 
     return {"msg": "Album listened recorded successfully", "listened_album": new_listened_album}
+
+
+# Eliminar álbum escuchado
+@router.delete("/unlisten_album")
+def unlisten_album(request: LikeAlbumRequest, db: Session = Depends(get_db)):
+    # Verifica si el álbum y el usuario existen
+    album = db.query(Album).filter(Album.id_album == request.id_album).first()
+    user = db.query(User).filter(User.id_user == request.id_user).first()
+    
+    if not album or not user:
+        raise HTTPException(status_code=404, detail="Album or user not found")
+    
+    # Verifica si el usuario ha marcado el álbum como escuchado
+    listened_album = db.query(ListenedAlbums).filter(
+        ListenedAlbums.id_user == request.id_user,
+        ListenedAlbums.id_album == request.id_album
+    ).first()
+    
+    if not listened_album:
+        raise HTTPException(status_code=404, detail="Album listen record not found")
+    
+    # Elimina el álbum de la lista de escuchados
+    db.delete(listened_album)
+    db.commit()
+
+    return {"message": "Album unlistened successfully"}
+
+
+# Verificar si un usuario ya ha escuchado un álbum
+@router.get("/has_listened_album")
+def has_listened_album(id_album: int, id_user: int, db: Session = Depends(get_db)):
+    # Verifica si el álbum y el usuario existen
+    album = db.query(Album).filter(Album.id_album == id_album).first()
+    user = db.query(User).filter(User.id_user == id_user).first()
+    
+    if not album or not user:
+        raise HTTPException(status_code=404, detail="Album or user not found")
+    
+    # Verifica si el usuario ya ha escuchado el álbum
+    listened_album = db.query(ListenedAlbums).filter(
+        ListenedAlbums.id_user == id_user,
+        ListenedAlbums.id_album == id_album
+    ).first()
+    
+    # Si existe la relación, significa que el usuario ya ha escuchado el álbum
+    if listened_album:
+        return {"has_listened": True}
+    else:
+        return {"has_listened": False}
 
 
 # Total Álbumes Escuchados

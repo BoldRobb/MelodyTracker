@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SpinnerService } from '../../others/spinner.service';
 import { finalize } from 'rxjs/operators';
@@ -56,7 +56,93 @@ export class AlbumService {
     );
   }
 
+  // Método para dar like a un álbum
+  likeAlbum(id_album: number, id_user: number): Observable<{ message: string }> {
+    this.spinnerService.show();
+    
+    // Crear el objeto que se enviará al backend
+    const likeData = {
+      id_album: id_album,
+      id_user: id_user
+    };
 
+    // Realizar la solicitud POST al backend
+    return this.http.post<{ message: string }>(`${this.apiUrl}/albums/like_album`, likeData).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+    );
+  }
+
+
+  // Método para quitar el like de un álbum
+  unlikeAlbum(id_album: number, id_user: number): Observable<{ message: string }> {
+    this.spinnerService.show();  // Muestra el spinner
+
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/albums/unlike_album`, {
+      body: { id_album, id_user }
+    }).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+    );
+  }
+
+
+  // Método para verificar si un usuario ha dado like a un álbum
+  checkIfUserLikedAlbum(id_album: number, id_user: number): Observable<{ has_liked: boolean }> {
+    this.spinnerService.show();
+
+    // Crear los parámetros de la solicitud
+    const params = new HttpParams()
+      .set('id_album', id_album.toString())
+      .set('id_user', id_user.toString());
+
+    // Realizar la solicitud GET al backend para verificar el like
+    return this.http.get<{ has_liked: boolean }>(`${this.apiUrl}/albums/has_liked_album`, { params }).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+    );
+  }
+
+
+  //ALBUM ESCUCHADO
+  listenAlbum(id_album: number, id_user: number): Observable<{ message: string }> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('access_token')}`);
+    
+    const listenData = {
+      id_album: id_album,
+      id_user: id_user
+    };
+  
+    return this.http.post<{ message: string }>(`${this.apiUrl}/albums/listened_album`, listenData, { headers }).pipe(
+      finalize(() => this.spinnerService.hide())
+    );
+  }
 
   
+  //QUITAR ALBUM ESCUCHADO
+  unlistenAlbum(id_album: number, id_user: number): Observable<{ message: string }> {
+    this.spinnerService.show();  // Muestra el spinner
+  
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/albums/unlisten_album`, {
+      body: { id_album, id_user }
+    }).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+    );
+  }
+
+
+
+  // Método para verificar si un usuario ya ha escuchado un álbum
+  checkIfUserListenedAlbum(id_album: number, id_user: number): Observable<{ has_listened: boolean }> {
+    this.spinnerService.show();
+  
+    // Crear los parámetros de la solicitud
+    const params = new HttpParams()
+      .set('id_album', id_album.toString())
+      .set('id_user', id_user.toString());
+  
+    // Realizar la solicitud GET al backend para verificar si el álbum fue escuchado
+    return this.http.get<{ has_listened: boolean }>(`${this.apiUrl}/albums/has_listened_album`, { params }).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+    );
+  }
+  
+
 }

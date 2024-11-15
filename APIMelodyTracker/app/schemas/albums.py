@@ -31,3 +31,7 @@ class FavoriteAlbumCreate(BaseModel):
     id_album: int
 
 
+# Solicitud para dar/quitar like
+class LikeAlbumRequest(BaseModel):
+    id_user: int
+    id_album: int

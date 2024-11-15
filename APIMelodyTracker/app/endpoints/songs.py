@@ -154,16 +154,7 @@ def song_listened(song_data: SongListened, db: Session = Depends(get_db), curren
 
 
 
-# Endpoint para obtener el conteo de usuarios que han escuchado una canción
-@router.get("/song_listened_count/{song_id}")
-def get_song_listened_count(song_id: int, db: Session = Depends(get_db)):
-    # Consultar el número de usuarios que han escuchado la canción
-    user_count = db.query(ListenedSongs.id_user).filter(ListenedSongs.id_song == song_id).distinct().count()
 
-    if user_count is None:
-        raise HTTPException(status_code=404, detail="Song not found or no listens recorded")
-
-    return {"song_id": song_id, "user_count": user_count}
 
 
 
@@ -493,6 +484,20 @@ def has_liked_song(id_song: int, id_user: int, db: Session = Depends(get_db)):
     else:
         return {"has_liked": False}
 
+
+
+
+# TOTAL LISTENED ON SONG
+@router.get("/song_listened_count/{song_id}")
+def get_song_listened_count(song_id: int, db: Session = Depends(get_db)):
+    # Consultar el número de usuarios que han escuchado la canción
+    user_count = db.query(ListenedSongs.id_user).filter(ListenedSongs.id_song == song_id).distinct().count()
+
+    if user_count is None:
+        raise HTTPException(status_code=404, detail="Song not found or no listens recorded")
+
+    return {"song_id": song_id, "user_count": user_count}
+
 #TOTAL LIKE SONG
 @router.get("/{id_song}/like_count")
 def get_like_count(id_song: int, db: Session = Depends(get_db)):
@@ -501,6 +506,14 @@ def get_like_count(id_song: int, db: Session = Depends(get_db)):
 
     return {"id_song": id_song, "likes_count": likes_count}
 
+
+#TOTAL REVIEWS DE UNA CANCIÓN
+@router.get("/{id_song}/review_count")
+def get_review_count(id_song: int, db: Session = Depends(get_db)):
+    # Consultar la cantidad de reseñas para la canción específica
+    reviews_count = db.query(ReviewedSongs).filter(ReviewedSongs.id_song == id_song).count()
+
+    return {"id_song": id_song, "reviews_count": reviews_count}
 
 #CANCION ESCUCHADA
 @router.post("/listen_song")
@@ -618,13 +631,7 @@ def review_song(review_data: ReviewSongSchema, db: Session = Depends(get_db), cu
     return {"msg": "Review created successfully", "review": new_review}
 
 
-#TOTAL REVIEWS DE UNA CANCIÓN
-@router.get("/{id_song}/review_count")
-def get_review_count(id_song: int, db: Session = Depends(get_db)):
-    # Consultar la cantidad de reseñas para la canción específica
-    reviews_count = db.query(ReviewedSongs).filter(ReviewedSongs.id_song == id_song).count()
 
-    return {"id_song": id_song, "reviews_count": reviews_count}
 
 
 # Obtener comentarios paginados de una canción
