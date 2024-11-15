@@ -56,6 +56,34 @@ export class AlbumService {
     );
   }
 
+
+  // Método para obtener el conteo de likes de un álbum
+  getAlbumLikeCount(id_album: number): Observable<{ id_album: number, likes_count: number }> {
+    this.spinnerService.show();
+    return this.http.get<{ id_album: number, likes_count: number }>(`${this.apiUrl}/albums/${id_album}/like_count`).pipe(
+      finalize(() => this.spinnerService.hide())
+    );
+  }
+
+  // Método para obtener el conteo de reviews de un álbum
+  getAlbumReviewCount(id_album: number): Observable<{ id_album: number, reviews_count: number }> {
+    this.spinnerService.show();
+    return this.http.get<{ id_album: number, reviews_count: number }>(`${this.apiUrl}/albums/${id_album}/review_count`).pipe(
+      finalize(() => this.spinnerService.hide())
+    );
+  }
+
+  // Método para obtener el conteo de usuarios que han escuchado un álbum
+  getAlbumListenedCount(id_album: number): Observable<{ album_id: number, user_count: number }> {
+    this.spinnerService.show();
+    return this.http.get<{ album_id: number, user_count: number }>(`${this.apiUrl}/albums/album_listened_count/${id_album}`).pipe(
+      finalize(() => this.spinnerService.hide())
+    );
+  }
+
+
+
+
   // Método para dar like a un álbum
   likeAlbum(id_album: number, id_user: number): Observable<{ message: string }> {
     this.spinnerService.show();

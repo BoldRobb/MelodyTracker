@@ -8,7 +8,7 @@ from app.database.database import get_db
 from datetime import datetime
 
 from app.models.users import User, Profile
-from app.models.albums import Album, RankedAlbums, ListenedAlbums, FavoriteAlbumsOfUser, LikedAlbums
+from app.models.albums import Album, RankedAlbums, ListenedAlbums, FavoriteAlbumsOfUser, LikedAlbums, ReviewedAlbums
 from app.models.artists import Artist
 from sqlalchemy.orm import aliased
 
@@ -94,6 +94,38 @@ def unlike_album(request: LikeAlbumRequest, db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "Like removed successfully"}
+
+
+# TOTAL LISTENED ON ALBUM
+@router.get("/album_listened_count/{album_id}")
+def get_album_listened_count(album_id: int, db: Session = Depends(get_db)):
+    # Consultar el número de usuarios únicos que han escuchado el álbum
+    user_count = db.query(ListenedAlbums.id_user).filter(ListenedAlbums.id_album == album_id).distinct().count()
+
+    if user_count == 0:
+        raise HTTPException(status_code=404, detail="Album not found or no listens recorded")
+
+    return {"album_id": album_id, "user_count": user_count}
+
+
+# TOTAL LIKE ALBUM
+@router.get("/{id_album}/like_count")
+def get_like_count(id_album: int, db: Session = Depends(get_db)):
+    # Contar el número de likes para el álbum específico
+    likes_count = db.query(LikedAlbums).filter(LikedAlbums.id_album == id_album).count()
+
+    return {"id_album": id_album, "likes_count": likes_count}
+
+
+# TOTAL REVIEWS DE UN ÁLBUM
+@router.get("/{id_album}/review_count")
+def get_review_count(id_album: int, db: Session = Depends(get_db)):
+    # Consultar la cantidad de reseñas para el álbum específico
+    reviews_count = db.query(ReviewedAlbums).filter(ReviewedAlbums.id_album == id_album).count()
+
+    return {"id_album": id_album, "reviews_count": reviews_count}
+
+
 
 # Verificar si un usuario ya le ha dado like a un álbum
 @router.get("/has_liked_album")
