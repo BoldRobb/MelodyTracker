@@ -102,20 +102,19 @@
   <!-- ----------------- WATCHLIST ------------------ -->
   @if (this.type === 'watchlistSongs') {
     @for (song of watchlistSongs; track $index) {
-      <a [routerLink]="['/song', song.id_song]"></a>
-      <img
-      [ngClass]="{
-          'imagenPrueba-8x1': columns === 8 && rows === 1,
-          'imagenPrueba-4x2': columns === 4 && rows === 2,
-          'imagenPrueba-5x2': columns === 5 && rows === 2,
-          'imagen_watchlist': columns === 8 && rows === 4,
-        }" 
-      [src]="song.photo" alt="{{ song.id_song}}">
-      
-      
+      <a [routerLink]="['/song', song.id_song]">
+        <img 
+          [src]="song.photo" 
+          [alt]="song.title"
+          [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-5x2': columns === 5 && rows === 2,
+            'imagen_watchlist': columns === 8 && rows === 4
+          }"
+        />
+      </a>
     }
-  } @else if (this.type == 'song_watch_list') {
-    <p>Hola</p>
   }
  
 
