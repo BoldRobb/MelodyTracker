@@ -1,3 +1,11 @@
-<div class="contenedor_principal btnAddToList">
+<!-- btn-add-to-list.component.html -->
+<div class="contenedor_principal btnAddToList" (click)="openAddToListModal()">
     <p class="texto">Add to list</p>
-</div>
+  </div>
+  
+  <!-- Aquí invocas el componente AddToList cuando isModalOpen es true -->
+   @if (isModalOpen) {
+    <app-add-to-list (clickEvent)="closeModal()"></app-add-to-list>
+   }
+  
+  
