@@ -34,7 +34,7 @@ const storage = getStorage(app);
 export const uploadFile = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     // Crear una referencia a la ubicación en Storage
-    const storageRef = ref(storage, `songs/${file.name}`);
+    const storageRef = ref(storage, `uploads/${file.name}`);
     
     // Subir el archivo
     const uploadTask = uploadBytesResumable(storageRef, file);

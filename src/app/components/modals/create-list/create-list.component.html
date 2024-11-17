@@ -1,34 +1,35 @@
 <div class="modal-overlay">
-    <div class="contenedor_principal">
-      <div class="contenedor_boton_cerrar">
-        <button class="boton_cerrar" (click)="closeModal()">x</button>
-      </div>
-  
-      <div class="contenedor_cuerpo">
-        <h1 class="titulo">Create Your List</h1>
-  
-        <div class="cuerpo">
-          <div class="lado_izquierdo">
-            <p class="texto">Name</p>
-            <input class="input_design input_name" type="text">
-            <p class="texto">Description</p>
-            <textarea class="input_design input_descripcion"></textarea>
-          </div>
-          <div class="lado_derecho">
-            <p class="texto">Photo</p>
-            <form action="">
-              <label for="imageupload" class="subir_imagen">
-                <span class="icon-plus">+</span>
-                <input type="file" id="imageupload" name="imageList" accept="image/" />
-              </label>
-            </form>
-          </div>
+  <div class="contenedor_principal">
+    <div class="contenedor_boton_cerrar">
+      <button class="boton_cerrar" (click)="closeModal()">x</button>
+    </div>
+
+    <div class="contenedor_cuerpo">
+      <h1 class="titulo">Create Your List</h1>
+
+      <div class="cuerpo">
+        <div class="lado_izquierdo">
+          <p class="texto">Name</p>
+          <input class="input_design input_name" type="text" [(ngModel)]="listData.name">
+          <p class="texto">Description</p>
+          <textarea class="input_design input_descripcion" [(ngModel)]="listData.comment"></textarea>
+        </div>
+        <div class="lado_derecho">
+          <p class="texto">Photo</p>
+          <label for="imageupload" class="subir_imagen">
+            <span class="icon-plus">+</span>
+            <input type="file" id="imageupload" name="imageList" accept="image/*" (change)="onFileSelected($event)">
+          </label>
         </div>
       </div>
-  
-      <div class="contenedor_boton_cerrar">
-        <button class="boton_create">Create</button>
-      </div>
+    </div>
+
+    <div class="contenedor_boton_cerrar">
+      <button 
+        class="boton_create" 
+        [disabled]="!isFormValid()" 
+        (click)="createList()">Create
+      </button>
     </div>
   </div>
-  
+</div>

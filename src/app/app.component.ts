@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        console.log('URL actual:', event.urlAfterRedirects);
+        // console.log('URL actual:', event.urlAfterRedirects);
       });
   }
 
@@ -45,7 +45,18 @@ export class AppComponent implements OnInit {
     this.usersService.getCurrentUser().subscribe(
       (response) => {
         this.user = response; // Asigna la respuesta a la variable user
-        // console.log("Datos del usuario:", this.user);
+  
+        // Verifica la estructura de la respuesta
+        if (this.user) {
+  
+          // Asegúrate de que el campo id_user existe en la respuesta
+          const userId = this.user?.id_user;
+          if (userId !== undefined) {
+            // console.log('id_user encontrado:', userId);
+          } else {
+            console.log('id_user no encontrado en la respuesta');
+          }
+        }
       },
       (error) => {
         console.error("Error al obtener datos del usuario:", error);
@@ -56,7 +67,7 @@ export class AppComponent implements OnInit {
   login(username: string, password: string): void {
     this.usersService.login(username, password).subscribe({
       next: (accessToken) => {
-        console.log('Login exitoso, token:', accessToken);
+        // console.log('Login exitoso, token:', accessToken);
       },
       error: () => {
         console.log('Error al iniciar sesión');
