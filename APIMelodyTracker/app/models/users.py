@@ -10,6 +10,7 @@ class User(Base):
     email = Column(String(255), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
     role = Column(String(255), nullable=False)
+    
 
     profile = relationship("Profile", back_populates="user")  # Relación uno a uno
     # Especificamos las claves foráneas en la relación con los seguidores
@@ -22,7 +23,7 @@ class Profile(Base):
 
     id_user = Column(BigInteger, ForeignKey('users.id_user'), primary_key=True, nullable=False)  # Definimos id_user como clave primaria
     bio = Column(Text)
-    photo = Column(LargeBinary)
+    photo = Column(String(255), nullable=True)
 
     user = relationship("User", back_populates="profile")  # Relación inversa
 

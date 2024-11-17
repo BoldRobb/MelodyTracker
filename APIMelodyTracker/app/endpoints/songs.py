@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from datetime import date, datetime
 
 
-from app.models.users import User
+from app.models.users import User, Profile
 from app.models.songs import ReviewedSongs, Song, WatchlistSongs, ListenedSongs, FavoriteSongsOfUser, LikedSongs
 from app.models.artists import Artist
 
@@ -120,6 +120,34 @@ def delete_song(song_id: int, db: Session = Depends(get_db), current_user: dict 
     db.commit()
     return {"detail": "Song deleted"}
 
+
+
+# OBTENER DETALLES ENCABEZADO WATCHLIST
+@router.get("/user/{id_user}/details_encabezado")
+async def get_user_details(id_user: int, db: Session = Depends(get_db)):
+    # Consulta para obtener el username y la photo
+    user_data = (
+        db.query(User.username, Profile.photo)
+        .join(Profile, Profile.id_user == User.id_user)
+        .filter(User.id_user == id_user)
+        .first()
+    )
+
+    if not user_data:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Consulta para contar las canciones en watchlist_songs
+    watchlist_count = (
+        db.query(func.count(WatchlistSongs.id_song))
+        .filter(WatchlistSongs.id_user == id_user)
+        .scalar()
+    )
+
+    return {
+        "username": user_data.username,
+        "photo": user_data.photo,
+        "watchlist_count": watchlist_count,
+    }
 
 
 # Cancion Escuchada

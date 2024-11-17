@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
+import { SpinnerService } from '../../others/spinner.service';
 import { LoginResponse, RegisterData, UserResponse } from '../../../interfaces/users';
 
 @Injectable({
@@ -10,7 +11,7 @@ import { LoginResponse, RegisterData, UserResponse } from '../../../interfaces/u
 export class UsersService {
   private apiUrl = 'http://127.0.0.1:8000';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private spinnerService: SpinnerService) {}
 
   // Método de login
   login(username: string, password: string): Observable<string> {
@@ -116,5 +117,13 @@ export class UsersService {
   // Verificar si el usuario está logueado
   isUserLoggedIn(): boolean {
     return this.isLoggedInSubject.value;
+  }
+
+  // Método para obtener los detalles del encabezado de la watchlist
+  detailsEncabezadoWatchlistSong(id_user: number): Observable<{ username: string, photo: string, watchlist_count: number }> {
+    this.spinnerService.show();
+    return this.http.get<{ username: string, photo: string, watchlist_count: number }>(`${this.apiUrl}/songs/user/${id_user}/details_encabezado`).pipe(
+      finalize(() => this.spinnerService.hide())
+    );
   }
 }

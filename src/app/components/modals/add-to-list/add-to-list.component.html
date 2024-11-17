@@ -1,35 +1,39 @@
-<div class="contenedor_principal">
-    <div class="contenedor_boton_cerrar">
-        <button class="boton_cerrar">x</button>
-    </div>
-    
-    <div class="contenedor_cuerpo">
-        <h1 class="titulo">Choose your list</h1>
-
-        <div class="contenedor_input">
-            <i class="fa-solid fa-magnifying-glass logo_lupa" (click)="inputSearch.focus()"></i>
-            <input type="text" class="input_search" #inputSearch spellcheck="false" placeholder="Search List">
-        </div>
-
-        <button class="create_List option_list">+ Create List</button>
-        <div class="contenedor_options">
-            <p class="option_list">Las mejores bachatas</p>
-            <p class="option_list">Best Banda Music</p>
-            <p class="option_list">Las mejores bachatas</p>
-            <p class="option_list">Best Banda Music</p>
-            <p class="option_list">Las mejores bachatas</p>
-            <p class="option_list">Las mejores bachatas</p>
-            <p class="option_list">Las mejores bachatas</p>
-            <p class="option_list">Best Banda Music</p>
-            <p class="option_list">Las mejores bachatas</p>
-            <p class="option_list">Best Banda Music</p>
-            <p class="option_list">Las mejores bachatas</p>
-            <p class="option_list">Las mejores bachatas</p>
+<div class="modal-overlay">
+    <div class="contenedor_principal">
+        <div class="contenedor_boton_cerrar">
+            <button class="boton_cerrar">x</button>
         </div>
         
+        <div class="contenedor_cuerpo">
+            <h1 class="titulo">Choose your list</h1>
+    
+            <div class="contenedor_input">
+                <i class="fa-solid fa-magnifying-glass logo_lupa" (click)="inputSearch.focus()"></i>
+                <input type="text" class="input_search" #inputSearch spellcheck="false" placeholder="Search List">
+            </div>
+    
+            <button class="create_List option_list" (click)="openModal($event)">+ Create List</button>
+            <div class="contenedor_options">
+                <p class="option_list">Las mejores bachatas</p>
+                <p class="option_list">Best Banda Music</p>
+                <p class="option_list">Las mejores bachatas</p>
+                <p class="option_list">Best Banda Music</p>
+                <p class="option_list">Las mejores bachatas</p>
+                <p class="option_list">Las mejores bachatas</p>
+                <p class="option_list">Las mejores bachatas</p>
+                <p class="option_list">Best Banda Music</p>
+                <p class="option_list">Las mejores bachatas</p>
+                <p class="option_list">Best Banda Music</p>
+                <p class="option_list">Las mejores bachatas</p>
+                <p class="option_list">Las mejores bachatas</p>
+            </div>
+            
+        </div>
     </div>
-
-    
-    
-
 </div>
+
+
+<!-- Mostrar el Modal solo cuando isOpen sea true -->
+@if (isOpen) {
+    <app-create-list (close)="closeModal()"></app-create-list>
+   }

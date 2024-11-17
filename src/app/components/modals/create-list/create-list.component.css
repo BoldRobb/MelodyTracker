@@ -1,14 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Jockey+One&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-.contenedor_principal{
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000; /* Asegúrate de que el modal esté al frente */
+  }
+
+/* Estilo del modal */
+.contenedor_principal {
     display: flex;
     flex-direction: column;
-    width: 100rem;
-    height: 67rem;
-    padding: 1rem;
+    width: 100rem; /* Reduce el tamaño para un modal */
+    height: auto;
+    padding: 3rem;
     background-color: #021333;
-    font-family: 'josefin sans', sans-serif;
+    font-family: 'Josefin Sans', sans-serif;
+    border-radius: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10000; /* Más alto que el overlay */
 }
+
+
+/* Ocultar scroll en la página al abrir el modal */
+body.modal-open {
+    overflow: hidden;
+}
+
 
 .contenedor_boton_cerrar{
     display: flex;
