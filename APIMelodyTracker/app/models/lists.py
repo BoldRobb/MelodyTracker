@@ -10,6 +10,7 @@ class List(Base):
     id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
     name = Column(String(255), nullable=False)
     comment = Column(Text, nullable=False)
+    photo = Column(String(255), nullable=False)
 
 
 class LikedLists(Base):
