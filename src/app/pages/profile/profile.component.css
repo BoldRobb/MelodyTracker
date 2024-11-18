@@ -145,6 +145,7 @@ p{
 .contenedor_imagen_texto_review_ranked{
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
 }
 

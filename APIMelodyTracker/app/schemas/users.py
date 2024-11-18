@@ -25,3 +25,18 @@ class UserProfileUpdate(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UserProfileResponse(BaseModel):
+    username: str
+    photo: str | None  # Puede ser None si no hay foto
+    songs_listened: int
+    total_following: int
+    total_followers: int
+
+
+# Definir el esquema de respuesta
+class UserStatsResponse(BaseModel):
+    bio: str
+    total_ranked_songs_albums: int
+    total_reviews_songs_albums: int

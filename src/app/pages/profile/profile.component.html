@@ -1,52 +1,57 @@
+
+
+<!-- Mostrar los datos del perfil -->
 <div class="contenedor_principal">
-<!-- contenedor_datos_user -->
-    <div class="contenedor_datos_user">
-        <div class="contenedor_edit_profile">
-            <p>Edit Profile</p>
-            <img class="foto_engranaje" src="images/engranaje.png" alt="">
-        </div>
-        <div class="contenedor_foto">
-            <img class="foto_user" src="images/foto_user_teemo.png" alt="">
-            <p class="nombre_user">Jexbii</p>
-        </div>
-        <div class="contenedor_stats_user">
-            <div>
-                <p class="valor_stats">674</p>
-                <p class="titulo_stats">Songs</p>
-            </div>
-            <div>
-                <p class="valor_stats">325 k</p>
-                <p class="titulo_stats">Following</p>
-            </div>
-            <div>
-                <p class="valor_stats">30,6k</p>
-                <p class="titulo_stats">Followers</p>
-            </div>
-        </div>
+  <div class="contenedor_datos_user">
+    <div class="contenedor_edit_profile">
+      <p>Edit Profile</p>
+      <img class="foto_engranaje" src="images/engranaje.png" alt="">
     </div>
+    <div class="contenedor_foto">
+      <img class="foto_user" [src]="userProfile.photo || 'images/foto_user_default.png'" alt="">
+      <p class="nombre_user">{{ userProfile.username || 'Usuario no encontrado' }}</p>
+    </div>
+    <div class="contenedor_stats_user">
+      <div>
+        <p class="valor_stats">{{ userProfile.songs_listened }}</p>
+        <p class="titulo_stats">Songs</p>
+      </div>
+      <div>
+        <p class="valor_stats">{{ userProfile.total_following }}</p>
+        <p class="titulo_stats">Following</p>
+      </div>
+      <div>
+        <p class="valor_stats">{{ userProfile.total_followers }}</p>
+        <p class="titulo_stats">Followers</p>
+      </div>
+    </div>
+  </div>
+
+
 <!-- contedor_bio_stats -->
     <div class="contenedor_bio_stats">
         <div class="contenedor_biografia">
             <p class="titulo_bio">Bio</p>
-            <p class="texto_bio">La brisa suave recorría el campo, acariciando las flores mientras el cielo se teñía de tonos naranjas y rosados al atardecer. Los pájaros cantaban en los árboles, y el sonido del río cercano llenaba el ambiente de tranquilidad absoluta.
-        </div>
-        <div class="contenedor_stats_bio">
+            <p class="texto_bio">{{ bio || 'Sin biografía disponible.' }}</p>
+          </div>
+        
+          <!-- Estadísticas del usuario -->
+          <div class="contenedor_stats_bio">
             <div class="contenedor_ranked_reviews">
-                <p class="titulo_ranked_review">Total Ranked</p>
-                <div class="contenedor_imagen_texto_review_ranked">
-                    <img class="imagen_ranked_review" src="images/ranked.png" alt="">
-                    <p class="texto_ranked_review">287</p>
-                </div>
-                
+              <p class="titulo_ranked_review">Total Ranked</p>
+              <div class="contenedor_imagen_texto_review_ranked">
+                <img class="imagen_ranked_review" src="images/ranked.png" alt="Ranked Icon">
+                <p class="texto_ranked_review">{{ totalRanked }}</p>
+              </div>
             </div>
             <div class="contenedor_ranked_reviews">
-                <p class="titulo_ranked_review">Total Review</p>
-                <div class="contenedor_imagen_texto_review_ranked">
-                    <img class="imagen_ranked_review" src="images/comment.png" alt="">
-                    <p class="texto_ranked_review">287</p>
-                </div>
+              <p class="titulo_ranked_review">Total Review</p>
+              <div class="contenedor_imagen_texto_review_ranked">
+                <img class="imagen_ranked_review" src="images/comment.png" alt="Review Icon">
+                <p class="texto_ranked_review">{{ totalReview }}</p>
+              </div>
             </div>
-        </div>
+          </div>
     </div>
 <!-- contenedor_history -->
     <div class="contenedor_history">

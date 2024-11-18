@@ -126,4 +126,22 @@ export class UsersService {
       finalize(() => this.spinnerService.hide())
     );
   }
+
+
+   // Método para obtener los detalles del perfil del usuario y su actividad musical
+   profileDatosUser(id_user: number): Observable<{ username: string, photo: string | null, songs_listened: number, total_following: number, total_followers: number }> {
+    this.spinnerService.show(); // Muestra el spinner mientras se carga la información
+    return this.http.get<{ username: string, photo: string | null, songs_listened: number, total_following: number, total_followers: number }>(`${this.apiUrl}/users/profile_datos_user/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide()) // Oculta el spinner cuando la solicitud haya terminado
+    );
+  }
+
+
+  getProfileBioStats(id_user: number): Observable<{ bio: string | null, total_ranked_songs_albums: number, total_reviews_songs_albums: number }> {
+    return this.http.get<{ bio: string | null, total_ranked_songs_albums: number, total_reviews_songs_albums: number }>(
+      `${this.apiUrl}/users/profile_bio_stats/${id_user}`
+    );
+  }
+
+
 }

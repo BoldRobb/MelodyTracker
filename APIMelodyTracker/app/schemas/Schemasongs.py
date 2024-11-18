@@ -52,3 +52,10 @@ class ReviewSongSchema(BaseModel):
     id_user: int
     id_song: int
     comment: str
+
+
+# Definición del esquema de entrada
+class RankSongRequest(BaseModel):
+    id_song: int
+    score: float
+

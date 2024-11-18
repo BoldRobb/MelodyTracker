@@ -1,12 +1,18 @@
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
 from app.database.database import get_db
 
 
 from app.models.users import User, Profile, Followers
 
-from app.schemas.users import UserCreate, ProfileResponse, FollowUserRequest, UserProfileUpdate
+from app.models.songs import ListenedSongs, RankedSongs, ReviewedSongs
+
+from app.models.albums import RankedAlbums, ReviewedAlbums
+
+from app.schemas.users import UserCreate, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse 
 
 from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_current_user  # Asegúrate de importar hash_password
 
@@ -71,18 +77,13 @@ def info_profile(id_user: int, db: Session = Depends(get_db)):
         photo=profile.photo
     )
 
+
 # Endpoint para seguir a un usuario
 @router.post("/follow_user/")
 def follow_user(
     request: FollowUserRequest,  # Usamos el modelo para recibir los datos en el cuerpo de la solicitud
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
-
-    user, role = current_user
-    if role != "admin":
-        raise HTTPException(status_code=403, detail="Not authorized")
-
     # Validación: Un usuario no puede seguirse a sí mismo
     if request.id_user == request.id_follower:
         raise HTTPException(status_code=400, detail="A user cannot follow themselves.")
@@ -105,6 +106,7 @@ def follow_user(
     db.refresh(new_follow)
 
     return {"message": f"User {request.id_follower} is now following User {request.id_user}."}
+
 
 
 # Endpoint para obtener el total de following y followers
@@ -170,3 +172,75 @@ def update_profile(id_user: int, profile_update: UserProfileUpdate, db: Session 
     db.refresh(profile)
 
     return {"msg": "Profile updated successfully", "user_id": user.id_user}
+
+
+
+@router.get("/profile_datos_user/{id_user}", response_model=UserProfileResponse)
+def profile_datos_user(id_user: int, db: Session = Depends(get_db)):
+    # Obtener el usuario
+    user = db.query(User).filter(User.id_user == id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Obtener el perfil del usuario
+    profile = db.query(Profile).filter(Profile.id_user == id_user).first()
+
+    # Contar canciones escuchadas
+    songs_listened = db.query(func.count(ListenedSongs.id_song)).filter(ListenedSongs.id_user == id_user).scalar()
+
+    # Obtener el total de usuarios que sigo (following)
+    total_following = (
+        db.query(Followers)
+        .filter(Followers.id_follower == id_user)  # Usuarios que sigo
+        .count()  # Contar cuántos sigo
+    )
+    
+    # Obtener el total de usuarios que me siguen (followers)
+    total_followers = (
+        db.query(Followers)
+        .filter(Followers.id_user == id_user)  # Usuarios que me siguen
+        .count()  # Contar cuántos me siguen
+    )
+
+    return UserProfileResponse(
+        username=user.username,
+        photo=profile.photo if profile else None,
+        songs_listened=songs_listened,
+        total_following=total_following,
+        total_followers=total_followers
+    )
+
+
+
+@router.get("/profile_bio_stats/{id_user}", response_model=UserStatsResponse)
+def get_user_stats(id_user: int, db: Session = Depends(get_db)):
+    # Verificar si el usuario existe
+    user = db.query(User).filter(User.id_user == id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Obtener la bio del perfil
+    profile = db.query(Profile).filter(Profile.id_user == id_user).first()
+    bio = profile.bio if profile else None
+
+    # Contar el total de ranked songs
+    total_ranked_songs = db.query(func.count(RankedSongs.id_song)).filter(RankedSongs.id_user == id_user).scalar()
+
+    # Contar el total de ranked albums
+    total_ranked_albums = db.query(func.count(RankedAlbums.id_album)).filter(RankedAlbums.id_user == id_user).scalar()
+
+    # Contar el total de reviewed songs
+    total_reviewed_songs = db.query(func.count(ReviewedSongs.id_reviewed_songs)).filter(ReviewedSongs.id_user == id_user).scalar()
+
+    # Contar el total de reviewed albums
+    total_reviewed_albums = db.query(func.count(ReviewedAlbums.id_reviewed_albums)).filter(ReviewedAlbums.id_user == id_user).scalar()
+
+    # Calcular totales separados
+    total_ranked_songs_albums = total_ranked_songs + total_ranked_albums
+    total_reviews_songs_albums = total_reviewed_songs + total_reviewed_albums
+
+    return UserStatsResponse(
+        bio=bio,
+        total_ranked_songs_albums=total_ranked_songs_albums,
+        total_reviews_songs_albums=total_reviews_songs_albums
+    )

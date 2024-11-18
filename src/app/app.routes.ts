@@ -43,7 +43,7 @@ export const routes: Routes = [
     /* PAGINAS */
     { path: 'homepage', component: HomepageComponent},
     { path: 'login', component: LoginComponent},
-    { path: 'profile', component: ProfileComponent},
+    { path: 'profile/:id', component: ProfileComponent, pathMatch: 'full', data: { idPattern: '\\d+' } },
     { path: 'watchlist/:id_user', component: WatchlistComponent },
     { path: 'songsListened', component: SongsListenedComponent},
     { path: 'bestUsers', component: BestUsersComponent},

@@ -5,10 +5,10 @@ from datetime import date, datetime
 
 
 from app.models.users import User, Profile
-from app.models.songs import ReviewedSongs, Song, WatchlistSongs, ListenedSongs, FavoriteSongsOfUser, LikedSongs
+from app.models.songs import RankedSongs, ReviewedSongs, Song, WatchlistSongs, ListenedSongs, FavoriteSongsOfUser, LikedSongs
 from app.models.artists import Artist
 
-from app.schemas.Schemasongs import CreateSong, ReviewSongSchema, UpdateSong, SongListened, WatchlistSongRequest, LikeSongRequest, SongResponse, FavoriteSongCreate
+from app.schemas.Schemasongs import CreateSong, RankSongRequest, ReviewSongSchema, UpdateSong, SongListened, WatchlistSongRequest, LikeSongRequest, SongResponse, FavoriteSongCreate
 
 
 from app.jwt.auth import get_current_user
@@ -718,3 +718,46 @@ def watchlist_songs_user(
             })
 
     return {"watchlist_songs": songs_info}
+
+
+@router.post("/rank_song/{id_user}")
+def rank_song(id_user: int, rank_request: RankSongRequest, db: Session = Depends(get_db)):
+    # Verificar si el usuario existe
+    user = db.query(User).filter(User.id_user == id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Verificar si la canción existe
+    song = db.query(Song).filter(Song.id_song == rank_request.id_song).first()
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+
+    # Verificar si el puntaje está dentro del rango permitido
+    if rank_request.score < 0 or rank_request.score > 5:
+        raise HTTPException(status_code=400, detail="Score must be between 0 and 5")
+
+    # Verificar si ya existe una calificación para esta canción por el usuario
+    existing_rank = (
+        db.query(RankedSongs)
+        .filter(RankedSongs.id_user == id_user, RankedSongs.id_song == rank_request.id_song)
+        .first()
+    )
+    if existing_rank:
+        # Si ya existe, actualizamos el puntaje y la fecha
+        existing_rank.score = rank_request.score
+        existing_rank.date = date.today()
+    else:
+        # Crear una nueva entrada en la tabla de ranked_songs
+        new_rank = RankedSongs(
+            id_user=id_user,
+            id_song=rank_request.id_song,
+            score=rank_request.score,
+            date=date.today()
+        )
+        db.add(new_rank)
+
+    # Guardar los cambios
+    db.commit()
+
+    return {"msg": "Song ranked successfully", "id_user": id_user, "id_song": rank_request.id_song}
+
