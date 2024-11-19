@@ -8,7 +8,7 @@ from app.database.database import get_db
 from datetime import datetime
 
 from app.models.users import User, Profile
-from app.models.albums import Album, RankedAlbums, ListenedAlbums, FavoriteAlbumsOfUser, LikedAlbums, ReviewedAlbums
+from app.models.albums import Album, RankedAlbums, ListenedAlbums, FavoriteAlbumsOfUser, LikedAlbums, ReviewedAlbums, WatchlistAlbums
 from app.models.artists import Artist
 from sqlalchemy.orm import aliased
 
@@ -222,7 +222,7 @@ def home_best_albums(db: Session = Depends(get_db)):
     
 
 
-# 
+# Añadir álbum a la watchlist
 @router.post("/add_album_watchlist")
 def add_album_watchlist(request: WatchlistAlbumRequest, db: Session = Depends(get_db)):
     # Verificar si el usuario existe
@@ -255,6 +255,65 @@ def add_album_watchlist(request: WatchlistAlbumRequest, db: Session = Depends(ge
         "user_id": request.id_user, 
         "album_id": request.id_album
     }
+
+
+
+
+
+# Verificar si un álbum está en la watchlist del usuario
+@router.get("/is_album_in_watchlist")
+def is_album_in_watchlist(id_album: int, id_user: int, db: Session = Depends(get_db)):
+    # Verificar si el usuario existe
+    user = db.query(User).filter(User.id_user == id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Verificar si el álbum existe
+    album = db.query(Album).filter(Album.id_album == id_album).first()
+    if not album:
+        raise HTTPException(status_code=404, detail="Album not found")
+
+    # Verificar si el álbum está en la watchlist del usuario
+    watchlist_entry = db.query(WatchlistAlbums).filter(
+        WatchlistAlbums.id_user == id_user,
+        WatchlistAlbums.id_album == id_album
+    ).first()
+
+    # Retornar el estado
+    if watchlist_entry:
+        return {"is_in_watchlist": True}
+    else:
+        return {"is_in_watchlist": False}
+
+
+
+# Remove ALBUM from watchlist
+@router.delete("/remove_album_watchlist")
+def remove_album_watchlist(request: WatchlistAlbumRequest, db: Session = Depends(get_db)):
+    # Verificar si el álbum y el usuario existen
+    album = db.query(Album).filter(Album.id_album == request.id_album).first()
+    user = db.query(User).filter(User.id_user == request.id_user).first()
+    
+    if not album or not user:
+        raise HTTPException(status_code=404, detail="Album or user not found")
+    
+    # Verificar si el álbum está en la watchlist del usuario
+    watchlist_entry = db.query(WatchlistAlbums).filter(
+        WatchlistAlbums.id_user == request.id_user,
+        WatchlistAlbums.id_album == request.id_album
+    ).first()
+    
+    if not watchlist_entry:
+        raise HTTPException(status_code=404, detail="Album not found in watchlist")
+    
+    # Eliminar la entrada de la watchlist
+    db.delete(watchlist_entry)
+    db.commit()
+
+    return {"message": "Album removed from watchlist successfully"}
+
+
+
 
 # Álbum Escuchado
 @router.post("/listened_album")

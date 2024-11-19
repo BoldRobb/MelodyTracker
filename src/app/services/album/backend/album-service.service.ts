@@ -173,4 +173,59 @@ export class AlbumService {
   }
   
 
+  addAlbumToWatchlist(id_album: number, id_user: number): Observable<{ msg: string, user_id: number, album_id: number }> {
+    // Muestra el spinner mientras se realiza la operación
+    this.spinnerService.show(); 
+    
+    // Crear el objeto con los datos necesarios
+    const watchlistData = {
+      id_album: id_album,
+      id_user: id_user
+    };
+  
+    // Realizar la solicitud POST al backend
+    return this.http.post<{ msg: string, user_id: number, album_id: number }>(
+      `${this.apiUrl}/albums/add_album_watchlist`,
+      watchlistData
+    ).pipe(
+      // Ocultar el spinner cuando finalice la operación
+      finalize(() => this.spinnerService.hide())
+    );
+  }
+
+
+  // Método para verificar si un álbum está en la watchlist del usuario
+  checkIfAlbumInWatchlist(id_album: number, id_user: number): Observable<{ is_in_watchlist: boolean }> {
+    this.spinnerService.show();
+
+    // Crear los parámetros de la solicitud
+    const params = new HttpParams()
+      .set('id_album', id_album.toString())
+      .set('id_user', id_user.toString());
+
+    // Realizar la solicitud GET al backend para verificar si el álbum está en la watchlist
+    return this.http.get<{ is_in_watchlist: boolean }>(`${this.apiUrl}/albums/is_album_in_watchlist`, { params }).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+    );
+  }
+
+
+  removeAlbumFromWatchlist(id_album: number, id_user: number): Observable<{ msg: string, user_id: number, album_id: number }> {
+    this.spinnerService.show();  // Muestra el spinner mientras se realiza la operación
+    
+    // Crear el objeto con los datos necesarios
+    const watchlistData = {
+      id_album: id_album,
+      id_user: id_user
+    };
+  
+    // Realizar la solicitud DELETE al backend para quitar el álbum de la watchlist
+    return this.http.delete<{ msg: string, user_id: number, album_id: number }>(
+      `${this.apiUrl}/albums/remove_album_watchlist`,
+      { body: watchlistData }
+    ).pipe(
+      finalize(() => this.spinnerService.hide())  // Ocultar el spinner cuando termine
+    );
+  }
+  
 }

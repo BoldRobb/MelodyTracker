@@ -295,6 +295,60 @@ def add_song_watchlist(request: WatchlistSongRequest, db: Session = Depends(get_
     return {"msg": "Song added to watchlist successfully", "user_id": request.id_user, "song_id": request.id_song}
 
 
+# Verificar si una canción está en la watchlist del usuario
+@router.get("/is_song_in_watchlist")
+def is_song_in_watchlist(id_song: int, id_user: int, db: Session = Depends(get_db)):
+    # Verificar si el usuario existe
+    user = db.query(User).filter(User.id_user == id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Verificar si la canción existe
+    song = db.query(Song).filter(Song.id_song == id_song).first()
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+
+    # Verificar si la canción está en la watchlist del usuario
+    watchlist_entry = db.query(WatchlistSongs).filter(
+        WatchlistSongs.id_user == id_user,
+        WatchlistSongs.id_song == id_song
+    ).first()
+
+    # Retornar el estado
+    if watchlist_entry:
+        return {"is_in_watchlist": True}
+    else:
+        return {"is_in_watchlist": False}
+
+
+
+# Remove SONG from watchlist
+@router.delete("/remove_song_watchlist")
+def remove_song_watchlist(request: WatchlistSongRequest, db: Session = Depends(get_db)):
+    # Verificar si la canción y el usuario existen
+    song = db.query(Song).filter(Song.id_song == request.id_song).first()
+    user = db.query(User).filter(User.id_user == request.id_user).first()
+    
+    if not song or not user:
+        raise HTTPException(status_code=404, detail="Song or user not found")
+    
+    # Verificar si la canción está en la watchlist del usuario
+    watchlist_entry = db.query(WatchlistSongs).filter(
+        WatchlistSongs.id_user == request.id_user,
+        WatchlistSongs.id_song == request.id_song
+    ).first()
+    
+    if not watchlist_entry:
+        raise HTTPException(status_code=404, detail="Song not found in watchlist")
+    
+    # Eliminar la entrada de la watchlist
+    db.delete(watchlist_entry)
+    db.commit()
+
+    return {"message": "Song removed from watchlist successfully"}
+
+
+
 # Endpoint para obtener las canciones de la watchlist de un usuario
 @router.get("/watchlist_user_songs/{id_user}", response_model=list[SongResponse])
 def watchlist_user_songs(id_user: int, db: Session = Depends(get_db)):
