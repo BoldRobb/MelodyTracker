@@ -35,3 +35,7 @@ class FavoriteAlbumCreate(BaseModel):
 class LikeAlbumRequest(BaseModel):
     id_user: int
     id_album: int
+
+class WatchlistAlbumRequest(BaseModel):
+    id_user: int
+    id_album: int

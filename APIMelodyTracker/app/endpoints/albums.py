@@ -14,7 +14,7 @@ from sqlalchemy.orm import aliased
 
 
 from app.schemas.users import UserCreate
-from app.schemas.albums import RankedAlbum, BestAlbumsResponse, AlbumResponse, AlbumListened, FavoriteAlbumCreate, LikeAlbumRequest
+from app.schemas.albums import RankedAlbum, WatchlistAlbumRequest, BestAlbumsResponse, AlbumResponse, AlbumListened, FavoriteAlbumCreate, LikeAlbumRequest
 
 from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_current_user  # Asegúrate de importar hash_password
 import traceback
@@ -221,6 +221,40 @@ def home_best_albums(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Error al obtener los mejores álbumes: {str(e)}")
     
 
+
+# 
+@router.post("/add_album_watchlist")
+def add_album_watchlist(request: WatchlistAlbumRequest, db: Session = Depends(get_db)):
+    # Verificar si el usuario existe
+    user = db.query(User).filter(User.id_user == request.id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Verificar si el álbum existe
+    album = db.query(Album).filter(Album.id_album == request.id_album).first()
+    if not album:
+        raise HTTPException(status_code=404, detail="Album not found")
+
+    # Verificar si el álbum ya está en la watchlist del usuario
+    existing_entry = db.query(WatchlistAlbums).filter(
+        WatchlistAlbums.id_user == request.id_user, 
+        WatchlistAlbums.id_album == request.id_album
+    ).first()
+    if existing_entry:
+        raise HTTPException(status_code=400, detail="Album is already in the watchlist")
+
+    # Agregar el álbum a la watchlist
+    new_watchlist_entry = WatchlistAlbums(
+        id_user=request.id_user, id_album=request.id_album, date=datetime.now()
+    )
+    db.add(new_watchlist_entry)
+    db.commit()
+
+    return {
+        "msg": "Album added to watchlist successfully", 
+        "user_id": request.id_user, 
+        "album_id": request.id_album
+    }
 
 # Álbum Escuchado
 @router.post("/listened_album")
