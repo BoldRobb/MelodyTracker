@@ -33,23 +33,29 @@ export class ListenLikeWatchComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Identificar si la URL contiene 'song' o 'album'
-    this.checkIfInWatchlist();
-    this.activatedRoute.url.subscribe(urlSegments => {
-      this.isSong = urlSegments.some(segment => segment.path === 'song');
-
-      const idParam = +this.activatedRoute.snapshot.paramMap.get('id')!;
-      if (this.isSong) {
-        this.songId = idParam;
-      } else {
-        this.albumId = idParam;
-      }
-    });
-
-    // Obtener el ID del usuario logueado
     this.usersService.getUserId().subscribe({
       next: (id) => {
         this.userId = id;
+        // Asegúrate de que songId o albumId están definidos antes de continuar
+        if (this.songId !== undefined || this.albumId !== undefined) {
+          this.checkIfInWatchlist();
+        } else {
+          console.error('No se ha definido ni songId ni albumId');
+        }
+  
+        this.activatedRoute.url?.subscribe(urlSegments => {
+          this.isSong = urlSegments.some(segment => segment.path === 'song');
+          const idParam = +this.activatedRoute.snapshot.paramMap.get('id')!;
+          if (this.isSong) {
+            this.songId = idParam;
+          } else {
+            this.albumId = idParam;
+          }
+  
+          // Verificar si está en la watchlist solo después de definir los IDs
+          this.checkIfInWatchlist();
+        });
+        
         this.checkIfLiked();
         this.checkIfListened();
       },
@@ -58,6 +64,7 @@ export class ListenLikeWatchComponent implements OnInit {
       }
     });
   }
+  
 
   // Método para verificar si el elemento está en la Watchlist
   checkIfInWatchlist(): void {
@@ -80,28 +87,42 @@ export class ListenLikeWatchComponent implements OnInit {
 
 
   toggleWatchlist(): void {
-    if (this.userId) {
-      console.log('songId:', this.songId, 'userId:', this.userId);
+    if (!this.userId || (!this.songId && !this.albumId)) {
+      console.error('Faltan los IDs necesarios');
+      return;
+    }
+    
+    console.log('songId:', this.songId, 'userId:', this.userId);
   
-      // Comprobar si la canción ya está en la lista antes de hacer la solicitud
-      if (this.isInWatchlist) {
-        alert('Esta canción ya está en tu lista de seguimiento.');
-        return; // Evitar enviar la solicitud si ya está en la lista
-      }
+    if (this.isInWatchlist) {
+      const removeFromWatchlist$ = this.isSong
+        ? this.songService.removeSongFromWatchlist(this.songId!, this.userId)
+        : this.albumService.removeAlbumFromWatchlist(this.albumId!, this.userId);
   
-      const watchlist$: Observable<{ msg?: string; message?: string }> = this.isSong
+      removeFromWatchlist$.subscribe({
+        next: (response: any) => {
+          this.isInWatchlist = false;
+          console.log('Respuesta remove:', response);
+          console.log(response.message || response.msg);
+        },
+        error: (error) => {
+          console.error('Error al quitar de la Watchlist:', error);
+          alert('Ocurrió un error, por favor intente nuevamente.');
+        }
+      });
+    } else {
+      const addToWatchlist$: Observable<any> = this.isSong
         ? this.songService.addSongToWatchlist(this.songId!, this.userId)
         : this.albumService.addAlbumToWatchlist(this.albumId!, this.userId);
   
-      watchlist$.subscribe({
-        next: (response) => {
-          this.isInWatchlist = true; // Actualizar el estado solo si la canción se agrega correctamente
+      addToWatchlist$.subscribe({
+        next: (response: any) => {
+          this.isInWatchlist = true;
+          console.log('Respuesta add:', response);
           console.log(response.msg || response.message);
         },
         error: (error) => {
           console.error('Error al alternar Watchlist:', error);
-          console.error('Detalles del error:', error?.message || error);
-  
           if (error?.error?.detail === 'Song is already in the watchlist') {
             alert('Esta canción ya está en tu lista de seguimiento.');
           } else {
@@ -111,6 +132,8 @@ export class ListenLikeWatchComponent implements OnInit {
       });
     }
   }
+  
+  
   
   
   
