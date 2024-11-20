@@ -1,25 +1,36 @@
 <header class="navbar">
-    <a class="contenedor_logo" routerLink="/homepage">
-      <p class="nombre">MelodyTracker</p>
-      <img src="images/audifonos.png" alt="logo" class="logo">
-    </a>
-  
-    <div class="contenedor_input">
-      <i class="fa-solid fa-magnifying-glass logo_lupa" (click)="inputSearch.focus()"></i>
-      <input type="text" class="input_search" #inputSearch spellcheck="false">
+  <a class="contenedor_logo" routerLink="/homepage">
+    <p class="nombre">MelodyTracker</p>
+    <img src="images/audifonos.png" alt="logo" class="logo">
+  </a>
+
+  <div class="contenedor_input">
+    <i class="fa-solid fa-magnifying-glass logo_lupa" (click)="inputSearch.focus()"></i>
+    <input type="text" class="input_search" #inputSearch spellcheck="false">
+  </div>
+
+  <div class="contenedor_enlaces">
+    <a href="#" class="nombre">Songs</a>
+    <a href="#" class="nombre">Play Lists</a>
+    <a href="#" class="nombre">Albums</a>
+    <a href="#" class="nombre" (click)="openModal($event)">Create List</a>
+
+    <div class="contenedor_perfil" (click)="toggleDropdown()">
+      <img [src]="photo" alt="Profile Picture" class="img_profile">
+      <p class="nombre">{{ username }}</p>
+      
+      <!-- Dropdown menu -->
+       @if (showDropdown) {
+        <div class="dropdown">
+          <a [routerLink]="['/profile', userId]" class="dropdown-item">Profile</a>
+          
+          <a href="#" class="dropdown-item" (click)="logout()">Logout</a>
+        </div>
+       }
+      
     </div>
-  
-    <div class="contenedor_enlaces">
-      <a href="#" class="nombre">Songs</a>
-      <a href="#" class="nombre">Play Lists</a>
-      <a href="#" class="nombre">Albums</a>
-      <a href="#" class="nombre" (click)="openModal($event)">Create List</a>
-      <a href="#" class="contenedor_perfil">
-        <img [src]="photo" alt="Profile Picture" class="img_profile">
-      <p class="nombre">{{ username }}</p>  <!-- Mostrar el username dinámicamente -->
-      </a>
-    </div>
-  </header>
+  </div>
+</header>
   
   <!-- Mostrar el Modal solo cuando isOpen sea true -->
    @if (isOpen) {

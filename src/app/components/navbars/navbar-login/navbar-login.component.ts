@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CreateListComponent } from "../../modals/create-list/create-list.component";
 import { UsersService } from '../../../services/users/backend/users.service';
@@ -12,23 +12,23 @@ import { UsersService } from '../../../services/users/backend/users.service';
 })
 export class NavbarLoginComponent implements OnInit {
   isOpen = false; // Controla la visibilidad del modal
+  showDropdown = false; // Controla la visibilidad del menú desplegable
   username: string = ''; // Variable para almacenar el username
   photo: string = ''; // Variable para almacenar la photo
+  userId: number | null = null; // Variable para almacenar el id_user
 
   constructor(private userService: UsersService) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('access_token');  // Obtener el token desde localStorage
+    const token = localStorage.getItem('access_token');  
     if (token) {
-      const userId = this.decodeToken(token);  // Extraer el id_user del token
-
-      if (userId) {
-        this.userService.getUsernameAndPhoto(Number(userId)).subscribe(
+      const id = this.decodeToken(token);  
+      if (id) {
+        this.userId = Number(id); // Almacena el id_user en la variable
+        this.userService.getUsernameAndPhoto(this.userId).subscribe(
           (data) => {
-            this.username = data.username;  // Asigna el username
-            this.photo = data.photo || 'images/teemo.jpg';  // Asigna la foto o usa una predeterminada
-            // console.log('Username:', this.username); // Verificar el username
-            // console.log('Photo:', this.photo);       // Verificar la foto
+            this.username = data.username; 
+            this.photo = data.photo || 'images/teemo.jpg';  
           },
           (error) => {
             console.error('Error fetching user data:', error);
@@ -41,22 +41,31 @@ export class NavbarLoginComponent implements OnInit {
       console.log('No token found');
     }
   }
-  
-  // Función para decodificar el JWT y extraer el id_user
-  // Función para decodificar el JWT y extraer el id_user
+
   decodeToken(token: string): string | null {
     try {
-      const payload = token.split('.')[1];  // Obtener la parte del payload del token
-      const decodedPayload = atob(payload);  // Decodificar de base64 a string
-
-      const parsedPayload = JSON.parse(decodedPayload);  // Parsear el JSON del payload
-      return parsedPayload.id_user;  // Ajustar para obtener el campo 'id_user'
+      const payload = token.split('.')[1];
+      const decodedPayload = atob(payload);
+      const parsedPayload = JSON.parse(decodedPayload);
+      return parsedPayload.id_user; 
     } catch (error) {
       console.error('Error decoding token:', error);
       return null;
     }
   }
 
+
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown; // Cambia el estado del menú desplegable
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeDropdownOnOutsideClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.contenedor_perfil')) {
+      this.showDropdown = false; // Cierra el menú si se hace clic fuera del contenedor
+    }
+  }
 
   openModal(event: Event): void {
     event.preventDefault(); // Prevenir el comportamiento por defecto
@@ -65,5 +74,11 @@ export class NavbarLoginComponent implements OnInit {
 
   closeModal(): void {
     this.isOpen = false; // Cerrar el modal
+  }
+
+
+  logout(): void {
+    localStorage.removeItem('access_token'); // Elimina el token del localStorage
+    window.location.href = '/login'; // Redirige a la página de inicio de sesión o al home
   }
 }
