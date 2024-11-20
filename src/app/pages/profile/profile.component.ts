@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService } from '../../services/users/backend/users.service'; // Servicio para obtener los datos del usuario
-import { ActivatedRoute, Router } from '@angular/router'; // Para obtener el ID de la URL y redirigir
+import { UsersService } from '../../services/users/backend/users.service'; // Ya lo tienes
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule], // Importa CommonModule aquí
+  imports: [CommonModule], 
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
@@ -30,12 +30,13 @@ export class ProfileComponent implements OnInit {
   totalReview: number = 0;
 
   isLoading: boolean = true;
+  isFollowed = false;
   errorMessage: string | null = null;
 
   constructor(
     private userService: UsersService, 
     private route: ActivatedRoute, 
-    private router: Router // Inyectar el Router para redirigir a 404
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -51,25 +52,65 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  toggleFollow() {
+    if (this.isFollowed) {
+      this.unfollowUser();
+    } else {
+      this.followUser();
+    }
+  }
+
+  followUser(): void {
+    const idUser = +this.route.snapshot.params['id']; // Obtener el id del usuario al que se va a seguir
+    const idFollower = 1; // Aquí asumes que el ID del seguidor es 1, reemplázalo por el ID real
+
+    this.userService.followUser({ id_user: idUser, id_follower: idFollower }).subscribe({
+      next: () => {
+        this.isFollowed = true;
+        this.userProfile.total_followers += 1; // Incrementa el número de seguidores
+      },
+      error: (err) => {
+        console.error('Error following user:', err);
+        this.errorMessage = 'No se pudo seguir al usuario';
+      }
+    });
+  }
+
+  unfollowUser(): void {
+    const idUser = +this.route.snapshot.params['id']; // Obtener el id del usuario al que se va a dejar de seguir
+    const idFollower = 1; // Aquí asumes que el ID del seguidor es 1, reemplázalo por el ID real
+
+    this.userService.unfollowUser({ id_user: idUser, id_follower: idFollower }).subscribe({
+      next: () => {
+        this.isFollowed = false;
+        this.userProfile.total_followers -= 1; // Decrementa el número de seguidores
+      },
+      error: (err) => {
+        console.error('Error unfollowing user:', err);
+        this.errorMessage = 'No se pudo dejar de seguir al usuario';
+      }
+    });
+  }
+
   loadUserProfile(idUser: number): void {
-    this.isLoading = true; // Inicia la carga
+    this.isLoading = true;
     this.userService.profileDatosUser(idUser).subscribe(
       profile => {
-        if (!profile || !profile.username) { // Si el perfil no tiene datos válidos
-          this.router.navigate(['/404']); // Redirigir a la página 404
+        if (!profile || !profile.username) {
+          this.router.navigate(['/404']);
           return;
         }
-        this.userProfile = profile; // Asigna los datos del perfil al objeto 'userProfile'
-        this.isLoading = false; // Termina la carga
+        this.userProfile = profile;
+        this.isLoading = false;
       },
       error => {
         console.error('Error fetching user profile:', error);
-        if (error.status === 404) { // Si el backend devuelve un error 404
-          this.router.navigate(['/404']); // Redirigir a la página 404
+        if (error.status === 404) {
+          this.router.navigate(['/404']);
         } else {
           this.errorMessage = 'No se pudo obtener el perfil del usuario';
         }
-        this.isLoading = false; // Termina la carga en caso de error
+        this.isLoading = false;
       }
     );
   }

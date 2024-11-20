@@ -165,4 +165,26 @@ export class UsersService {
   }
 
 
+   // Servicio para seguir a un usuario
+   followUser(data: { id_user: number; id_follower: number }): Observable<any> {
+    const token = this.getToken();
+    const headers = token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
+      : undefined;
+
+    return this.http.post(`${this.apiUrl}/users/follow_user/`, data, { headers });
+  }
+
+  // Servicio para dejar de seguir a un usuario
+  unfollowUser(data: { id_user: number; id_follower: number }): Observable<any> {
+    const token = this.getToken();
+    const headers = token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
+      : undefined;
+
+    return this.http.delete(`${this.apiUrl}/users/unfollow_user/`, {
+      headers,
+      body: data, // En DELETE, el cuerpo debe pasarse de esta forma
+    });
+  }
 }

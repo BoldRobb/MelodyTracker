@@ -8,9 +8,15 @@
       <img class="foto_engranaje" src="images/engranaje.png" alt="">
     </div>
     <div class="contenedor_foto">
-      <img class="foto_user" [src]="userProfile.photo || 'images/foto_user_default.png'" alt="">
-      <p class="nombre_user">{{ userProfile.username || 'Usuario no encontrado' }}</p>
-    </div>
+        <img class="foto_user" [src]="userProfile.photo || 'images/foto_user_default.png'" alt="">
+        <button 
+          class="btn_follow" 
+          [ngClass]="{ 'btn_follow_clicked': isFollowed }" 
+          (click)="toggleFollow()">
+          {{ isFollowed ? '✓' : '+' }}
+        </button>
+        <p class="nombre_user">{{ userProfile.username || 'Usuario no encontrado' }}</p>
+      </div>
     <div class="contenedor_stats_user">
       <div>
         <p class="valor_stats">{{ userProfile.songs_listened }}</p>

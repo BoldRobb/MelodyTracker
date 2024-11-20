@@ -131,6 +131,31 @@ def follow_user(
     return {"message": f"User {request.id_follower} is now following User {request.id_user}."}
 
 
+@router.delete("/unfollow_user/")
+def unfollow_user(
+    request: FollowUserRequest,  # Usamos el mismo modelo para recibir los datos
+    db: Session = Depends(get_db)
+):
+    # Validación: Un usuario no puede dejar de seguirse a sí mismo
+    if request.id_user == request.id_follower:
+        raise HTTPException(status_code=400, detail="A user cannot unfollow themselves.")
+
+    # Buscar si existe la relación de seguimiento
+    existing_follow = db.query(Followers).filter(
+        Followers.id_user == request.id_user,
+        Followers.id_follower == request.id_follower
+    ).first()
+
+    if not existing_follow:
+        raise HTTPException(status_code=404, detail="Follow relationship does not exist.")
+
+    # Eliminar la relación de seguimiento
+    db.delete(existing_follow)
+    db.commit()
+
+    return {"message": f"User {request.id_follower} has unfollowed User {request.id_user}."}
+
+
 
 # Endpoint para obtener el total de following y followers
 @router.get("/total_stats_follows/{id_user}")

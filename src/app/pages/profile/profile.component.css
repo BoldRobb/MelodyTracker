@@ -20,7 +20,8 @@ p{
 }
 
 .contenedor_datos_user{
-    display: grid;
+    display: flex;
+    flex-direction: column;
     grid-template-rows: 10% 55% 20%;
     text-align: center;
     justify-content: center;
@@ -36,7 +37,7 @@ p{
     justify-content: center;
     gap: 0.3rem;
     cursor: pointer;
-    margin: 1rem 0 0 0;
+    margin: 0 0 3rem 0;
     height: 40px;
 }
 
@@ -46,11 +47,46 @@ p{
 }
 
 .contenedor_foto{
-    display: grid;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     text-align: center;
     align-items: center;
 }
+
+.contenedor_foto {
+    position: relative; /* Necesario para posicionar el botón respecto al contenedor */
+    text-align: center; /* Centra el texto y otros elementos dentro */
+    align-items: center;
+    justify-content: center;
+  }
+  
+  
+  .btn_follow {
+    font-family: 'jockey one', sans-serif;
+    position: absolute;
+    bottom: +25%; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4rem;
+    height: 4rem;
+    background-color: #003369;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .btn_follow:hover {
+    background-color: #012145;
+  }
+  
+  .btn_follow_clicked {
+    background-color: #003369; /* Nuevo color cuando el botón está clicado */
+  }
+  
 
 .foto_user{
     width: 25rem;
@@ -61,7 +97,7 @@ p{
 
 .nombre_user{
     font-size: 4rem;
-    margin: 2rem;
+    margin: 3rem 2rem 2rem 2rem;
     background-color: #0A0824;
     border-radius: 2rem;
 }
@@ -76,7 +112,7 @@ p{
     width: 38rem;
     height: 8rem;
     padding: 1rem 0;
-    margin-top: 2rem;
+    margin: 2rem auto;
     border-radius: 2rem;
     line-height: 1;
 }
