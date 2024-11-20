@@ -8,7 +8,7 @@ from typing import List
 from app.models.users import User, Profile, Followers
 from app.models.artists import Artist
 from app.models.songs import Song
-from app.models.lists import List, LikedLists, SongsOnList, RankedLists, ReviewedLists
+from app.models.lists import Lists, LikedLists, SongsOnList, RankedLists, ReviewedLists
 
 from app.schemas.users import UserCreate, ProfileResponse, FollowUserRequest
 from app.schemas.lists import ListCreate

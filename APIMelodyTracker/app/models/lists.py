@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 
-class List(Base):
+class Lists(Base):
     __tablename__ = "list"
 
     id_list = Column(BigInteger, primary_key=True, index=True, nullable=False)

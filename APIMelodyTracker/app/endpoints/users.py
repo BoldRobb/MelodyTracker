@@ -1,4 +1,6 @@
 
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -8,11 +10,13 @@ from app.database.database import get_db
 
 from app.models.users import User, Profile, Followers
 
-from app.models.songs import ListenedSongs, RankedSongs, ReviewedSongs
+from app.models.lists import Lists
+
+from app.models.songs import LikedSongs, ListenedSongs, RankedSongs, ReviewedSongs
 
 from app.models.albums import RankedAlbums, ReviewedAlbums, WatchlistAlbums
 
-from app.schemas.users import UserCreate, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse 
+from app.schemas.users import UserCreate, UserIdsRequest, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse 
 
 from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_current_user  # Asegúrate de importar hash_password
 
@@ -131,6 +135,67 @@ def follow_user(
     return {"message": f"User {request.id_follower} is now following User {request.id_user}."}
 
 
+
+# Endpoint para obtener los usuarios que sigue un usuario
+@router.get("/following/{id_user}", response_model=List[int])
+def get_following(id_user: int, db: Session = Depends(get_db)):
+    # Verificar si el usuario existe
+    user = db.query(User).filter(User.id_user == id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+    
+    # Obtener los IDs de los usuarios que el usuario con id_user está siguiendo
+    following_users = db.query(Followers).filter(Followers.id_follower == id_user).all()
+
+    if not following_users:
+        return []  # Si el usuario no sigue a nadie, devolver una lista vacía.
+    
+    # Extraer solo los id_user de los resultados
+    following_ids = [follow.id_user for follow in following_users]
+
+    return following_ids
+
+# Crear un modelo para aceptar un array de IDs en el cuerpo de la solicitud
+
+# endpoint para obtener los detalles de los usuarios followers
+@router.post("/details_followers", response_model=List[dict])
+def get_users_details(request: UserIdsRequest, db: Session = Depends(get_db)):
+    users_details = []
+
+    for user_id in request.user_ids:
+        # Obtener el usuario
+        user = db.query(User).filter(User.id_user == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found.")
+        
+        # Obtener el perfil del usuario
+        profile = db.query(Profile).filter(Profile.id_user == user_id).first()
+
+        # Obtener la cantidad de canciones escuchadas por el usuario
+        total_listened_songs = db.query(ListenedSongs).filter(ListenedSongs.id_user == user_id).count()
+
+        # Obtener la cantidad de reseñas hechas por el usuario
+        total_reviews = db.query(ReviewedSongs).filter(ReviewedSongs.id_user == user_id).count()
+
+        # Obtener la cantidad de listas creadas por el usuario
+        total_lists_created = db.query(Lists).filter(Lists.id_user == user_id).count()
+
+        # Obtener la cantidad de canciones que el usuario ha marcado como "Me gusta"
+        total_liked_songs = db.query(LikedSongs).filter(LikedSongs.id_user == user_id).count()
+
+        # Crear el diccionario con la información que se necesita
+        user_info = {
+            "username": user.username,
+            "photo": profile.photo if profile else None,  # Si no tiene perfil, se asigna None
+            "total_listened_songs": total_listened_songs,
+            "total_reviews": total_reviews,
+            "total_lists_created": total_lists_created,
+            "total_liked_songs": total_liked_songs
+        }
+
+        users_details.append(user_info)
+
+    return users_details
 @router.delete("/unfollow_user/")
 def unfollow_user(
     request: FollowUserRequest,  # Usamos el mismo modelo para recibir los datos

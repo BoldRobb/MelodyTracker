@@ -9,12 +9,15 @@
     </div>
     <div class="contenedor_foto">
         <img class="foto_user" [src]="userProfile.photo || 'images/foto_user_default.png'" alt="">
-        <button 
-          class="btn_follow" 
-          [ngClass]="{ 'btn_follow_clicked': isFollowed }" 
-          (click)="toggleFollow()">
-          {{ isFollowed ? '✓' : '+' }}
-        </button>
+        @if (this.idUser != this.idProfile) {
+            <button 
+                class="btn_follow" 
+                [ngClass]="{ 'btn_follow_clicked': isFollowed }" 
+                (click)="toggleFollow()">
+                {{ isFollowed ? '✓' : '+' }}
+            </button>
+        }
+        
         <p class="nombre_user">{{ userProfile.username || 'Usuario no encontrado' }}</p>
       </div>
     <div class="contenedor_stats_user">

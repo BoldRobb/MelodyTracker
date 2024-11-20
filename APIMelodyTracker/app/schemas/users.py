@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import date
-from typing import Optional
+from typing import List, Optional
 
 class UserCreate(BaseModel):
     username: str
@@ -40,3 +40,7 @@ class UserStatsResponse(BaseModel):
     bio: str
     total_ranked_songs_albums: int
     total_reviews_songs_albums: int
+
+
+class UserIdsRequest(BaseModel):
+    user_ids: List[int]

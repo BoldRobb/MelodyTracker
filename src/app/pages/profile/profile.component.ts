@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService } from '../../services/users/backend/users.service'; // Ya lo tienes
+import { UsersService } from '../../services/users/backend/users.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule], 
+  imports: [CommonModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  userProfile: { 
-    username: string, 
-    photo: string | null, 
-    songs_listened: number, 
-    total_following: number, 
-    total_followers: number 
+  userProfile: {
+    username: string;
+    photo: string | null;
+    songs_listened: number;
+    total_following: number;
+    total_followers: number;
   } = {
     username: '',
     photo: null,
@@ -33,24 +33,34 @@ export class ProfileComponent implements OnInit {
   isFollowed = false;
   errorMessage: string | null = null;
 
+  idUser: number | null = null;
+  idProfile: number | null = null;
+
   constructor(
-    private userService: UsersService, 
-    private route: ActivatedRoute, 
+    private userService: UsersService,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.idUser = this.getUserIdFromToken(); // Extraer el id del token
+
     // Obtener el parámetro 'id' de la URL y cargar el perfil
     this.route.params.subscribe(params => {
-      const idUser = +params['id']; // Convierte el parámetro 'id' a número
-      if (idUser && !isNaN(idUser)) {
-        this.loadUserProfile(idUser); // Llamar al servicio para cargar el perfil
-        this.loadUserStats(idUser); // Llamar al servicio para cargar las estadísticas
+      this.idProfile = +params['id'];
+      if (this.idProfile && !isNaN(this.idProfile)) {
+        this.loadUserProfile(this.idProfile); // Llamar al servicio para cargar el perfil
+        this.loadUserStats(this.idProfile); // Llamar al servicio para cargar las estadísticas
       } else {
         this.router.navigate(['/404']); // Redirigir a 404 si el ID no es válido
       }
     });
+
+    // console.log("AAAAAAA: ", this.idUser,"AAAA: ", this.idProfile);
   }
+
+
+  
 
   toggleFollow() {
     if (this.isFollowed) {
@@ -61,15 +71,15 @@ export class ProfileComponent implements OnInit {
   }
 
   followUser(): void {
-    const idUser = +this.route.snapshot.params['id']; // Obtener el id del usuario al que se va a seguir
-    const idFollower = 1; // Aquí asumes que el ID del seguidor es 1, reemplázalo por el ID real
+    const idProfile = +this.route.snapshot.params['id']; // Obtener el id del usuario a seguir
+    if (!this.idUser) return;
 
-    this.userService.followUser({ id_user: idUser, id_follower: idFollower }).subscribe({
+    this.userService.followUser({ id_user: idProfile, id_follower: this.idUser }).subscribe({
       next: () => {
         this.isFollowed = true;
         this.userProfile.total_followers += 1; // Incrementa el número de seguidores
       },
-      error: (err) => {
+      error: err => {
         console.error('Error following user:', err);
         this.errorMessage = 'No se pudo seguir al usuario';
       }
@@ -77,24 +87,24 @@ export class ProfileComponent implements OnInit {
   }
 
   unfollowUser(): void {
-    const idUser = +this.route.snapshot.params['id']; // Obtener el id del usuario al que se va a dejar de seguir
-    const idFollower = 1; // Aquí asumes que el ID del seguidor es 1, reemplázalo por el ID real
+    const idProfile = +this.route.snapshot.params['id']; // Obtener el id del usuario a dejar de seguir
+    if (!this.idUser) return;
 
-    this.userService.unfollowUser({ id_user: idUser, id_follower: idFollower }).subscribe({
+    this.userService.unfollowUser({ id_user: idProfile, id_follower: this.idUser }).subscribe({
       next: () => {
         this.isFollowed = false;
         this.userProfile.total_followers -= 1; // Decrementa el número de seguidores
       },
-      error: (err) => {
+      error: err => {
         console.error('Error unfollowing user:', err);
         this.errorMessage = 'No se pudo dejar de seguir al usuario';
       }
     });
   }
 
-  loadUserProfile(idUser: number): void {
+  loadUserProfile(idProfile: number): void {
     this.isLoading = true;
-    this.userService.profileDatosUser(idUser).subscribe(
+    this.userService.profileDatosUser(idProfile).subscribe(
       profile => {
         if (!profile || !profile.username) {
           this.router.navigate(['/404']);
@@ -115,18 +125,32 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  loadUserStats(idUser: number): void {
-    this.userService.getProfileBioStats(idUser).subscribe({
-      next: (stats) => {
+  loadUserStats(idProfile: number): void {
+    this.userService.getProfileBioStats(idProfile).subscribe({
+      next: stats => {
         this.bio = stats.bio;
         this.totalRanked = stats.total_ranked_songs_albums;
         this.totalReview = stats.total_reviews_songs_albums;
         console.log('User stats:', stats);
       },
-      error: (err) => {
+      error: err => {
         console.error('Error fetching user stats:', err);
         this.errorMessage = 'No se pudieron cargar las estadísticas del usuario';
       }
     });
+  }
+
+  private getUserIdFromToken(): number | null {
+    const token = localStorage.getItem('access_token');
+    if (!token) return null;
+
+    try {
+      const payloadBase64 = token.split('.')[1]; // Extraer la parte del payload del token
+      const payload = JSON.parse(atob(payloadBase64)); // Decodificar el payload
+      return payload.id_user || null; // Devuelve el `id_user` si existe
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
   }
 }

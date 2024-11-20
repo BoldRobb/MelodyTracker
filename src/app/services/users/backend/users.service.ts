@@ -187,4 +187,27 @@ export class UsersService {
       body: data, // En DELETE, el cuerpo debe pasarse de esta forma
     });
   }
+
+
+  getFollowingUsers(id_user: number): Observable<number[]> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se carga
+    return this.http.get<number[]>(`${this.apiUrl}/users/following/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
+    );
+  }
+
+
+
+  // Servicio para obtener los detalles de los usuarios seguidores
+  getUsersDetails(userIds: number[]): Observable<any> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se carga
+
+    return this.http
+      .post<any>(`${this.apiUrl}/users/details_followers`, { user_ids: userIds })
+      .pipe(
+        finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
+      );
+  }
+
+
 }

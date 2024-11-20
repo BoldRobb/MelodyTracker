@@ -4,7 +4,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Configuración de la base de datos
-DATABASE_URL = "mysql://uni6exdehgbeasyl:n0dtJAFLi5U6iEYnuwdJ@bdbaiom27d8ceog98mei-mysql.services.clever-cloud.com:3306/bdbaiom27d8ceog98mei"
+DATABASE_URL = "mysql://root:2316394@localhost:3306/melodytracker"
+# "mysql://uni6exdehgbeasyl:n0dtJAFLi5U6iEYnuwdJ@bdbaiom27d8ceog98mei-mysql.services.clever-cloud.com:3306/bdbaiom27d8ceog98mei"
 
 # Crear el motor de conexión a la base de datos
 engine = create_engine(DATABASE_URL)
