@@ -140,60 +140,58 @@ export class SongService {
     );
   }
 
-
-
-  addSongToWatchlist(id_song: number, id_user: number): Observable<{ msg: string, user_id: number, song_id: number }> {
-    const watchlistData = { id_song, id_user };
-    return this.http.post<{ msg: string, user_id: number, song_id: number }>(
-      `${this.apiUrl}/songs/add_song_watchlist`,
-      watchlistData
+  // Método para quitar una canción de la lista de reproducción de un usuario
+  addSongToWatchlist(id_song: number, id_user: number): Observable<{ msg: string; user_id: number; song_id: number }> {
+    this.spinnerService.show(); // Mostrar el spinner
+  
+    // Crear el objeto para la solicitud POST
+    const songData = {
+      id_song: id_song,
+      id_user: id_user
+    };
+  
+    return this.http.post<{ msg: string; user_id: number; song_id: number }>(`${this.apiUrl}/songs/add_song_watchlist`,
+      songData
     ).pipe(
-      finalize(() => this.spinnerService.hide()),
-      tap(response => console.log('Respuesta de addSongToWatchlist:', response))  // Verifica la respuesta
+      finalize(() => this.spinnerService.hide()) 
     );
   }
   
 
-  
-  checkIfSongInWatchlist(id_song: number, id_user: number): Observable<{ is_in_watchlist: boolean }> {
-    // Muestra el spinner mientras se realiza la operación
-    this.spinnerService.show();
+  isSongInWatchlist(id_song: number, id_user: number): Observable<{ is_in_watchlist: boolean }> {
+    this.spinnerService.show(); // Mostrar el spinner
   
     // Crear los parámetros de la solicitud
     const params = new HttpParams()
       .set('id_song', id_song.toString())
       .set('id_user', id_user.toString());
   
-    // Realizar la solicitud GET al backend para verificar si la canción está en la watchlist
     return this.http.get<{ is_in_watchlist: boolean }>(
       `${this.apiUrl}/songs/is_song_in_watchlist`,
       { params }
     ).pipe(
-      // Ocultar el spinner cuando finalice la operación
-      finalize(() => this.spinnerService.hide())
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
     );
   }
-  
-
 
   
-  // Método para quitar la canción de la watchlist
-  removeSongFromWatchlist(id_song: number, id_user: number): Observable<{ msg: string, user_id: number, song_id: number }> {
-    this.spinnerService.show();  // Muestra el spinner mientras se realiza la operación
-    
-    // Crear el objeto con los datos necesarios
-    const watchlistData = {
+  removeSongFromWatchlist(id_song: number, id_user: number): Observable<{ message: string }> {
+    this.spinnerService.show(); // Mostrar el spinner
+  
+    // Crear el cuerpo de la solicitud DELETE
+    const songData = {
       id_song: id_song,
       id_user: id_user
     };
   
-    // Realizar la solicitud DELETE al backend para quitar la canción de la watchlist
-    return this.http.delete<{ msg: string, user_id: number, song_id: number }>(
+    return this.http.delete<{ message: string }>(
       `${this.apiUrl}/songs/remove_song_watchlist`,
-      { body: watchlistData }
+      { body: songData }
     ).pipe(
-      finalize(() => this.spinnerService.hide())  // Ocultar el spinner cuando termine
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
     );
   }
+  
+
 
 }

@@ -15,9 +15,11 @@
       <div class="texto_stat">Listened</div>
     </div>
   
-    <div class="contenedor_stat">
+    <div class="contenedor_stat" 
+         [style.filter]="isInWatchlist ? 'grayscale(0%)' : 'grayscale(100%)'" 
+         (click)="toggleWatchlist()">
       <img class="imagen_stat" src="images/reloj.png" alt="Watch List">
       <div class="texto_stat">Watch List</div>
     </div>
-  </div>
+</div>
   

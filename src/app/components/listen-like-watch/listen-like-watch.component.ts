@@ -5,7 +5,7 @@ import { AlbumService } from '../../services/album/backend/album-service.service
 import { UsersService } from '../../services/users/backend/users.service'; // Servicio para manejar al usuario
 import { SpinnerService } from '../../services/others/spinner.service';
 import { SpinnerComponent } from "../spinner/spinner.component"; // Servicio para mostrar/ocultar el spinner
-import { finalize } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-listen-like-watch',
@@ -22,6 +22,7 @@ export class ListenLikeWatchComponent implements OnInit {
   isLiked: boolean = false;
   isListened: boolean = false;
   isSong: boolean = true; // Variable para identificar si es una canción o un álbum
+  isInWatchlist: boolean = false; // Nueva variable
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -33,6 +34,7 @@ export class ListenLikeWatchComponent implements OnInit {
 
   ngOnInit(): void {
     // Identificar si la URL contiene 'song' o 'album'
+    this.checkIfInWatchlist();
     this.activatedRoute.url.subscribe(urlSegments => {
       this.isSong = urlSegments.some(segment => segment.path === 'song');
 
@@ -56,6 +58,65 @@ export class ListenLikeWatchComponent implements OnInit {
       }
     });
   }
+
+  // Método para verificar si el elemento está en la Watchlist
+  checkIfInWatchlist(): void {
+    if (this.userId !== undefined) {
+      const checkWatchlist$ = this.isSong 
+        ? this.songService.isSongInWatchlist(this.songId!, this.userId)
+        : this.albumService.isAlbumInWatchlist(this.albumId!, this.userId);
+  
+      checkWatchlist$.subscribe({
+        next: (response) => {
+          this.isInWatchlist = response.is_in_watchlist;
+          console.log('Estado en Watchlist:', this.isInWatchlist);
+        },
+        error: (error) => {
+          console.error('Error al verificar si está en Watchlist:', error);
+        }
+      });
+    }
+  }
+
+
+  toggleWatchlist(): void {
+    if (this.userId) {
+      console.log('songId:', this.songId, 'userId:', this.userId);
+  
+      // Comprobar si la canción ya está en la lista antes de hacer la solicitud
+      if (this.isInWatchlist) {
+        alert('Esta canción ya está en tu lista de seguimiento.');
+        return; // Evitar enviar la solicitud si ya está en la lista
+      }
+  
+      const watchlist$: Observable<{ msg?: string; message?: string }> = this.isSong
+        ? this.songService.addSongToWatchlist(this.songId!, this.userId)
+        : this.albumService.addAlbumToWatchlist(this.albumId!, this.userId);
+  
+      watchlist$.subscribe({
+        next: (response) => {
+          this.isInWatchlist = true; // Actualizar el estado solo si la canción se agrega correctamente
+          console.log(response.msg || response.message);
+        },
+        error: (error) => {
+          console.error('Error al alternar Watchlist:', error);
+          console.error('Detalles del error:', error?.message || error);
+  
+          if (error?.error?.detail === 'Song is already in the watchlist') {
+            alert('Esta canción ya está en tu lista de seguimiento.');
+          } else {
+            alert('Ocurrió un error, por favor intente nuevamente.');
+          }
+        }
+      });
+    }
+  }
+  
+  
+  
+  
+  
+
 
   // Método para verificar si el usuario le dio like
   checkIfLiked(): void {
