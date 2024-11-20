@@ -15,8 +15,8 @@
       <a href="#" class="nombre">Albums</a>
       <a href="#" class="nombre" (click)="openModal($event)">Create List</a>
       <a href="#" class="contenedor_perfil">
-        <img src="images/teemo.jpg" alt="" class="img_profile">
-        <p class="nombre">Jexbii</p>
+        <img [src]="photo" alt="Profile Picture" class="img_profile">
+      <p class="nombre">{{ username }}</p>  <!-- Mostrar el username dinámicamente -->
       </a>
     </div>
   </header>

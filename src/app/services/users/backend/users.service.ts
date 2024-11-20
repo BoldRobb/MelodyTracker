@@ -13,6 +13,16 @@ export class UsersService {
 
   constructor(private http: HttpClient, private spinnerService: SpinnerService) {}
 
+
+  // Método para obtener el username y la photo del usuario
+  getUsernameAndPhoto(id_user: number): Observable<{ username: string, photo: string }> {
+    this.spinnerService.show();  // Mostrar spinner mientras se carga la respuesta
+    return this.http.get<{ username: string, photo: string }>(`${this.apiUrl}/users/${id_user}/profile_photo_username`).pipe(
+      finalize(() => this.spinnerService.hide())  // Esconde el spinner una vez obtenida la respuesta
+    );
+  }
+
+
   // Método de login
   login(username: string, password: string): Observable<string> {
     const headers = new HttpHeaders({

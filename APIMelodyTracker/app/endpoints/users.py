@@ -39,6 +39,29 @@ def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 
+
+# Endpoint para obtener el username y la photo de un usuario
+@router.get("/{id_user}/profile_photo_username")
+async def get_user_photo_and_username(id_user: int, db: Session = Depends(get_db)):
+    # Consulta para obtener el username y la photo
+    user_data = (
+        db.query(User.username, Profile.photo)
+        .join(Profile, Profile.id_user == User.id_user)
+        .filter(User.id_user == id_user)
+        .first()
+    )
+
+    # Si no se encuentra el usuario, devuelve un error 404
+    if not user_data:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Retorna el username y la photo
+    return {
+        "username": user_data.username,
+        "photo": user_data.photo,
+    }
+
+
 @router.post("/users/createUser")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     # Verificar si el usuario ya existe

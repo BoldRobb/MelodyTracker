@@ -33,7 +33,6 @@ export class GridrowComponent implements OnInit {
     // Obtén el userId de la ruta actual
     this.route.params.subscribe(params => {
       this.userId = params['id_user'];  // Guarda el id_user de la URL
-      console.log('userId desde la ruta:', this.userId);
 
       // Cargar contenido según el tipo y el userId
       this.loadContentBasedOnType();
@@ -67,7 +66,7 @@ export class GridrowComponent implements OnInit {
     this.albumService.getBestAlbums().subscribe(
       (response: BestAlbumsResponse) => {
         this.bestAlbums = response.best_albums;
-        console.log('Mejores álbumes:', this.bestAlbums);
+        // console.log('Mejores álbumes:', this.bestAlbums);
       },
       (error) => {
         console.error('Error loading best albums:', error);
@@ -81,7 +80,7 @@ export class GridrowComponent implements OnInit {
     this.albumService.getWatchlistAlbumsByUser(Number(this.userId)).subscribe(
       (response: WatchListAlbumsResponse) => {
         this.watchlistAlbums = response.watchlist_albums;
-        console.log('Álbumes en la watchlist:', this.watchlistAlbums);
+        // console.log('Álbumes en la watchlist:', this.watchlistAlbums);
       },
       (error) => {
         console.error('Error loading watchlist albums:', error);
@@ -95,7 +94,7 @@ export class GridrowComponent implements OnInit {
     this.songService.getWatchlistSongsByUser(Number(this.userId)).subscribe(
       (response: WatchListUserResponse) => {
         this.watchlistSongs = response.watchlist_songs;
-        console.log('Canciones de la watchlist:', this.watchlistSongs);
+        // console.log('Canciones de la watchlist:', this.watchlistSongs);
       },
       (error) => {
         console.error('Error loading watchlist songs:', error);
