@@ -1,65 +1,70 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { BestAlbumsResponse, Album } from '../../interfaces/album';
+import { ActivatedRoute } from '@angular/router'; // Para obtener parámetros de la ruta
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router'; // Para la navegación de rutas
 import { AlbumService } from '../../services/album/backend/album-service.service';
 import { SongService } from '../../services/song/backend/song.service';
-import { ActivatedRoute } from '@angular/router'; // Importar ActivatedRoute
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'; // Importar RouterModule
 import { WatchListUserResponse, WatchlistSong } from '../../interfaces/song';
+import { WatchListAlbumsResponse, Album } from '../../interfaces/album';  // Aquí importamos los tipos para álbumes
 
 @Component({
   selector: 'app-gridrow',
-  standalone: true,  // Indica que el componente es independiente
-  imports: [CommonModule, RouterModule],  // Los módulos que se usarán en este componente
-  templateUrl: './gridrow.component.html',  // Ruta al archivo de plantilla HTML
-  styleUrls: ['./gridrow.component.css']  // Ruta al archivo de estilos CSS
+  standalone: true,
+  imports: [CommonModule, RouterModule],
+  templateUrl: './gridrow.component.html',
+  styleUrls: ['./gridrow.component.css']
 })
 export class GridrowComponent implements OnInit {
-  @Input() type: string = '';  // Tipo de elemento, se pasa como entrada al componente
-  @Input() columns: number = 8; // Número de columnas por defecto
-  @Input() rows: number = 1;   // Número de filas por defecto
+  @Input() type: string = '';  // Tipo de contenido, se pasa como entrada al componente
+  @Input() columns: number = 8;
+  @Input() rows: number = 1;
 
-  bestAlbums: Album[] = []; // Array para almacenar los álbumes mejores
-  watchlistSongs: WatchlistSong[] = []; // Array para almacenar las canciones de la watchlist
-  userId: number | null = null; // Variable para almacenar el ID del usuario
+  bestAlbums: Album[] = []; // Array para los mejores álbumes
+  watchlistSongs: WatchlistSong[] = []; // Array para las canciones de la watchlist
+  watchlistAlbums: Album[] = [];  // Nuevo array para los álbumes en la watchlist
+  userId: number | null = null;
 
   constructor(
-    private songService: SongService, // Servicio para manejar canciones
-    private albumService: AlbumService, // Servicio para manejar álbumes
-    private route: ActivatedRoute // Para obtener parámetros de la ruta
+    private songService: SongService,
+    private albumService: AlbumService,
+    private route: ActivatedRoute  // Para obtener los parámetros de la ruta
   ) {}
 
   ngOnInit(): void {
+    // Obtenemos el id_user de la ruta
     this.route.paramMap.subscribe((params) => {
       this.userId = Number(params.get('id_user'));
       console.log('User ID (reactivo):', this.userId);
+
+      // Ahora cargamos los álbumes y canciones de la watchlist con el id_user
+      if (this.userId) {
+        this.loadWatchlistAlbums();  // Cargar los álbumes de la watchlist
+        this.loadWatchlistSongs();   // Cargar las canciones de la watchlist
+      }
     });
-  
-    this.loadBestAlbums();
-    this.loadWatchlistSongs();
   }
 
-  // Método para cargar los mejores álbumes
-  loadBestAlbums(): void {
-    this.albumService.getBestAlbums().subscribe(
-      (response: BestAlbumsResponse) => {
-        this.bestAlbums = response.best_albums;
-        console.log(this.bestAlbums);  // Verifica si los álbumes están correctamente cargados
+  loadWatchlistAlbums(): void {
+    if (!this.userId) return;
+
+    this.albumService.getWatchlistAlbumsByUser(this.userId).subscribe(
+      (response: WatchListAlbumsResponse) => {
+        this.watchlistAlbums = response.watchlist_albums;
+        console.log('Álbumes en la watchlist:', this.watchlistAlbums);
       },
       (error) => {
-        console.error('Error loading best albums:', error);
+        console.error('Error loading watchlist albums:', error);
       }
     );
   }
-  
-  // Método para cargar las canciones de la watchlist
+
   loadWatchlistSongs(): void {
     if (!this.userId) return;
-  
+
     this.songService.getWatchlistSongsByUser(this.userId).subscribe(
       (response: WatchListUserResponse) => {
         this.watchlistSongs = response.watchlist_songs;
-        console.log('Canciones de la watchlist:', this.watchlistSongs);  // Verifica las canciones
+        console.log('Canciones de la watchlist:', this.watchlistSongs);
       },
       (error) => {
         console.error('Error loading watchlist songs:', error);

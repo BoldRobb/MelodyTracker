@@ -30,75 +30,6 @@
 }
 
 
-
-  <!-- ----------------- NEW SONGS ------------------ -->
-  <!-- @if (this.type == 'newSongs') {
-    @for (album of bestAlbums; track $index) {
-      <img
-      [ngClass]="{
-          'imagenPrueba-8x1': columns === 8 && rows === 1,
-          'imagenPrueba-4x2': columns === 4 && rows === 2,
-          'imagenPrueba-5x2': columns === 5 && rows === 2,
-          'imagen_watchlist': columns === 8 && rows === 4,
-        }" 
-      [src]="album.photo" alt="{{ album.title }}">
-    }
-  } @else if (this.type == 'song') {
-    <p>Hola</p>
-  } -->
-
-
- <!-- ----------------- NEW ALBUMS ------------------ -->
-  <!-- @if (this.type == 'newAlbums') {
-    @for (album of bestAlbums; track $index) {
-      <img
-      [ngClass]="{
-          'imagenPrueba-8x1': columns === 8 && rows === 1,
-          'imagenPrueba-4x2': columns === 4 && rows === 2,
-          'imagenPrueba-5x2': columns === 5 && rows === 2,
-          'imagen_watchlist': columns === 8 && rows === 4,
-        }" 
-      [src]="album.photo" alt="{{ album.title }}">
-    }
-  } @else if (this.type == 'song') {
-    <p>Hola</p>
-  } -->
-
-
-  <!-- ----------------- RECOMENDACIONES ------------------ -->
-  <!-- @if (this.type == 'newAlbums') {
-    @for (album of bestAlbums; track $index) {
-      <img
-      [ngClass]="{
-          'imagenPrueba-8x1': columns === 8 && rows === 1,
-          'imagenPrueba-4x2': columns === 4 && rows === 2,
-          'imagenPrueba-5x2': columns === 5 && rows === 2,
-          'imagen_watchlist': columns === 8 && rows === 4,
-        }" 
-      [src]="album.photo" alt="{{ album.title }}">
-    }
-  } @else if (this.type == 'song') {
-    <p>Hola</p>
-  } -->
-
-
-  <!-- ----------------- Top 10 Rankeds ------------------ -->
-  <!-- @if (this.type == 'newAlbums') {
-    @for (album of bestAlbums; track $index) {
-      <img
-      [ngClass]="{
-          'imagenPrueba-8x1': columns === 8 && rows === 1,
-          'imagenPrueba-4x2': columns === 4 && rows === 2,
-          'imagenPrueba-5x2': columns === 5 && rows === 2,
-          'imagen_watchlist': columns === 8 && rows === 4,
-        }" 
-      [src]="album.photo" alt="{{ album.title }}">
-    }
-  } @else if (this.type == 'song') {
-    <p>Hola</p>
-  } -->
-
-
   <!-- ----------------- WATCHLIST ------------------ -->
   @if (this.type === 'watchlistSongs') {
     @for (song of watchlistSongs; track $index) {
@@ -106,6 +37,24 @@
         <img 
           [src]="song.photo" 
           [alt]="song.title"
+          [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-5x2': columns === 5 && rows === 2,
+            'imagen_watchlist': columns === 8 && rows === 4
+          }"
+        />
+      </a>
+    }
+  }
+
+
+  @if (this.type === 'watchlistAlbums') {
+    @for (album  of watchlistAlbums; track $index) {
+      <a [routerLink]="['/song', album.id_album]">
+        <img 
+          [src]="album.photo" 
+          [alt]="album.title"
           [ngClass]="{
             'imagenPrueba-8x1': columns === 8 && rows === 1,
             'imagenPrueba-4x2': columns === 4 && rows === 2,

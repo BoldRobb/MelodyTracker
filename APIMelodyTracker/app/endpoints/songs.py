@@ -774,6 +774,7 @@ def watchlist_songs_user(
     return {"watchlist_songs": songs_info}
 
 
+
 @router.post("/rank_song/{id_user}")
 def rank_song(id_user: int, rank_request: RankSongRequest, db: Session = Depends(get_db)):
     # Verificar si el usuario existe

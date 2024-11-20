@@ -260,6 +260,7 @@ def add_album_watchlist(request: WatchlistAlbumRequest, db: Session = Depends(ge
 
 
 
+
 # Verificar si un álbum está en la watchlist del usuario
 @router.get("/is_album_in_watchlist")
 def is_album_in_watchlist(id_album: int, id_user: int, db: Session = Depends(get_db)):
@@ -311,6 +312,42 @@ def remove_album_watchlist(request: WatchlistAlbumRequest, db: Session = Depends
     db.commit()
 
     return {"message": "Album removed from watchlist successfully"}
+
+
+# Obtener los álbumes en la watchlist de un usuario
+@router.get("/watchlist_albums_user/{id_user}")
+def watchlist_albums_user(
+    id_user: int,
+    db: Session = Depends(get_db),
+):
+    # Consultar la watchlist del usuario para álbumes
+    watchlist_albums = (
+        db.query(WatchlistAlbums)
+        .filter(WatchlistAlbums.id_user == id_user)
+        .all()
+    )
+
+    if not watchlist_albums:
+        return {"message": "No albums found in the user's watchlist."}
+
+    # Obtener la información de los álbumes correspondientes
+    albums_info = []
+    for entry in watchlist_albums:
+        album = db.query(Album).filter(Album.id_album == entry.id_album).first()
+        if album:
+            # Asegurarse de que la foto sea tratada correctamente
+            photo = album.photo.decode('utf-8') if isinstance(album.photo, (bytes, bytearray)) else album.photo
+            albums_info.append({
+                "id_album": album.id_album,
+                "name": album.name,
+                "photo": photo,  # Decodificar si es binario, sino usar directamente
+                "id_artist": album.id_artist,
+                "released": album.released.strftime("%Y-%m-%d") if album.released else None,
+                "language": album.language,
+            })
+
+    return {"watchlist_albums": albums_info}
+
 
 
 

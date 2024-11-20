@@ -23,3 +23,16 @@ export interface AlbumDetailsResponse {
     released: string;
     language: string;
 }
+
+export interface Album {
+    id_album: number;
+    title: string;
+    photo: string;
+    artist: string;
+    releaseDate: string;
+    // Otros atributos que el álbum pueda tener
+  }
+  
+  export interface WatchListAlbumsResponse {
+    watchlist_albums: Album[];  // Usamos la interfaz Album para especificar la estructura de cada álbum
+  }

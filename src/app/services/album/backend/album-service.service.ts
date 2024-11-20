@@ -226,5 +226,12 @@ export class AlbumService {
   }
     
 
+  getWatchlistAlbumsByUser(id_user: number): Observable<{ watchlist_albums: any[] }> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se hace la solicitud
+  
+    return this.http.get<{ watchlist_albums: any[] }>(`${this.apiUrl}/albums/watchlist_albums_user/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide())  // Ocultar el spinner cuando termine la solicitud
+    );
+  }
   
 }
