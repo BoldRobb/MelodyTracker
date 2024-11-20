@@ -7,12 +7,13 @@ import { UsersService } from '../../services/users/backend/users.service';
   standalone: true,
   imports: [],
   templateUrl: './encabezado.component.html',
-  styleUrl: './encabezado.component.css'
+  styleUrls: ['./encabezado.component.css']
 })
 export class EncabezadoComponent implements OnInit {
-  userDetails: { username?: string; photo?: string; watchlist_count?: number } | null = null;
+  userDetails: { username?: string; photo?: string; watchlist_count?: number, watchlist_album_count?: number } | null = null;
   isLoading = false;
-  isWatchlist = false;
+  isWatchlistSongs = false;
+  isWatchlistAlbums = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -21,9 +22,13 @@ export class EncabezadoComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.url.subscribe((segments) => {
-      // Verifica si la URL contiene el segmento 'watchlist' seguido de un ID
-      this.isWatchlist = segments.length > 1 && segments[0].path === 'watchlist';
-      const id_user = this.isWatchlist ? +segments[1].path : null;
+      // Detectar si la URL es para 'watchlist_songs' o 'watchlist_albums'
+      this.isWatchlistSongs = segments[0].path === 'watchlist_songs';
+      this.isWatchlistAlbums = segments[0].path === 'watchlist_albums';
+  
+      console.log('isWatchlistAlbums:', this.isWatchlistAlbums); // Verifica que sea true cuando debería serlo
+  
+      const id_user = segments.length > 1 ? +segments[1].path : null;
       if (id_user) {
         this.getUserDetails(id_user);
       }
@@ -32,15 +37,32 @@ export class EncabezadoComponent implements OnInit {
 
   getUserDetails(id_user: number): void {
     this.isLoading = true;
-    this.usersService.detailsEncabezadoWatchlistSong(id_user).subscribe({
-      next: (data) => {
-        this.userDetails = data;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching user details', err);
-        this.isLoading = false;
-      }
-    });
+
+    // Llamar al servicio adecuado dependiendo del tipo de watchlist
+    if (this.isWatchlistSongs) {
+      this.usersService.detailsEncabezadoWatchlistSong(id_user).subscribe({
+        next: (data) => {
+          console.log('Datos de canciones:', data); // Agregado para depuración
+          this.userDetails = { ...data, watchlist_album_count: undefined }; // Limpiar el conteo de álbumes
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching user details for songs', err);
+          this.isLoading = false;
+        }
+      });
+    } else if (this.isWatchlistAlbums) {
+      this.usersService.detailsEncabezadoWatchlistAlbum(id_user).subscribe({
+        next: (data) => {
+          console.log('Datos de álbumes:', data); // Verifica que `watchlist_album_count` esté presente
+          this.userDetails = { ...data, watchlist_count: undefined }; // Limpiar el conteo de canciones
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching user details for albums', err);
+          this.isLoading = false;
+        }
+      });
+    }
   }
 }

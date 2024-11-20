@@ -10,7 +10,7 @@ from app.models.users import User, Profile, Followers
 
 from app.models.songs import ListenedSongs, RankedSongs, ReviewedSongs
 
-from app.models.albums import RankedAlbums, ReviewedAlbums
+from app.models.albums import RankedAlbums, ReviewedAlbums, WatchlistAlbums
 
 from app.schemas.users import UserCreate, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse 
 
@@ -244,3 +244,31 @@ def get_user_stats(id_user: int, db: Session = Depends(get_db)):
         total_ranked_songs_albums=total_ranked_songs_albums,
         total_reviews_songs_albums=total_reviews_songs_albums
     )
+
+
+# Endpoint para obtener los detalles del usuario y el encabezado de la watchlist de álbumes
+@router.get("/{id_user}/details_encabezado_watchlist_album")
+async def get_user_details(id_user: int, db: Session = Depends(get_db)):
+    # Consulta para obtener el username y la photo
+    user_data = (
+        db.query(User.username, Profile.photo)
+        .join(Profile, Profile.id_user == User.id_user)
+        .filter(User.id_user == id_user)
+        .first()
+    )
+
+    if not user_data:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Consulta para contar los álbumes en watchlist_albums
+    watchlist_album_count = (
+        db.query(func.count(WatchlistAlbums.id_album))
+        .filter(WatchlistAlbums.id_user == id_user)
+        .scalar()
+    )
+
+    return {
+        "username": user_data.username,
+        "photo": user_data.photo,
+        "watchlist_album_count": watchlist_album_count,
+    }

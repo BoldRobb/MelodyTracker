@@ -1,9 +1,13 @@
 <header class="contenedor_principal">
     <div class="contenedor_encabezado">
         <div class="lado_izquierdo">
-            @if (isWatchlist) {
+            @if (isWatchlistSongs) {
                 <img class="foto_user" [src]="userDetails?.photo" alt="Photo">
                 <p>{{ userDetails?.username }} wants to listen to {{ userDetails?.watchlist_count }} songs</p>
+            }
+            @if (isWatchlistAlbums) {
+                <img class="foto_user" [src]="userDetails?.photo" alt="Photo">
+                <p>{{ userDetails?.username }} wants to listen to {{ userDetails?.watchlist_album_count }} albums</p>
             }
         </div>
         <div class="lado_derecho">

@@ -128,6 +128,17 @@ export class UsersService {
   }
 
 
+
+  // Servicio para obtener los detalles del encabezado de la watchlist de álbumes
+  detailsEncabezadoWatchlistAlbum(id_user: number): Observable<{ username: string, photo: string, watchlist_album_count: number }> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se carga
+    return this.http.get<{ username: string, photo: string, watchlist_album_count: number }>(
+      `${this.apiUrl}/users/${id_user}/details_encabezado_watchlist_album`
+    ).pipe(
+      finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
+    );
+  }
+
    // Método para obtener los detalles del perfil del usuario y su actividad musical
    profileDatosUser(id_user: number): Observable<{ username: string, photo: string | null, songs_listened: number, total_following: number, total_followers: number }> {
     this.spinnerService.show(); // Muestra el spinner mientras se carga la información

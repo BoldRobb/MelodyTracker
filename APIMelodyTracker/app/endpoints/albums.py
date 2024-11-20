@@ -314,6 +314,8 @@ def remove_album_watchlist(request: WatchlistAlbumRequest, db: Session = Depends
     return {"message": "Album removed from watchlist successfully"}
 
 
+
+
 # Obtener los álbumes en la watchlist de un usuario
 @router.get("/watchlist_albums_user/{id_user}")
 def watchlist_albums_user(
