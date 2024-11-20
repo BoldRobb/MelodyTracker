@@ -1,11 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'; // Para obtener parámetros de la ruta
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'; // Para la navegación de rutas
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { BestAlbumsResponse, Album, WatchListAlbumsResponse } from '../../interfaces/album';
 import { AlbumService } from '../../services/album/backend/album-service.service';
 import { SongService } from '../../services/song/backend/song.service';
 import { WatchListUserResponse, WatchlistSong } from '../../interfaces/song';
-import { WatchListAlbumsResponse, Album } from '../../interfaces/album';  // Aquí importamos los tipos para álbumes
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-gridrow',
@@ -15,39 +14,71 @@ import { WatchListAlbumsResponse, Album } from '../../interfaces/album';  // Aqu
   styleUrls: ['./gridrow.component.css']
 })
 export class GridrowComponent implements OnInit {
-  @Input() type: string = '';  // Tipo de contenido, se pasa como entrada al componente
-  @Input() columns: number = 8;
-  @Input() rows: number = 1;
+  @Input() type: string = '';  // El tipo que se pasa al componente, como 'top10RankedAlbums' o 'watchlistAlbums'
+  @Input() columns: number = 8;  // Número de columnas por defecto
+  @Input() rows: number = 1;     // Número de filas por defecto
 
-  bestAlbums: Album[] = []; // Array para los mejores álbumes
-  watchlistSongs: WatchlistSong[] = []; // Array para las canciones de la watchlist
-  watchlistAlbums: Album[] = [];  // Nuevo array para los álbumes en la watchlist
-  userId: number | null = null;
+  bestAlbums: Album[] = [];          // Array para los mejores álbumes
+  watchlistSongs: WatchlistSong[] = [];  // Array para las canciones de la watchlist
+  watchlistAlbums: Album[] = [];     // Nuevo array para los álbumes en la watchlist
+  userId: string | null = null;  // Variable para almacenar el userId
 
   constructor(
     private songService: SongService,
     private albumService: AlbumService,
-    private route: ActivatedRoute  // Para obtener los parámetros de la ruta
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    // Obtenemos el id_user de la ruta
-    this.route.paramMap.subscribe((params) => {
-      this.userId = Number(params.get('id_user'));
-      console.log('User ID (reactivo):', this.userId);
+    // Obtén el userId de la ruta actual
+    this.route.params.subscribe(params => {
+      this.userId = params['id_user'];  // Guarda el id_user de la URL
+      console.log('userId desde la ruta:', this.userId);
 
-      // Ahora cargamos los álbumes y canciones de la watchlist con el id_user
-      if (this.userId) {
-        this.loadWatchlistAlbums();  // Cargar los álbumes de la watchlist
-        this.loadWatchlistSongs();   // Cargar las canciones de la watchlist
-      }
+      // Cargar contenido según el tipo y el userId
+      this.loadContentBasedOnType();
     });
+
+    // Si no hay un userId y el tipo es 'top10RankedAlbums', cargamos los mejores álbumes
+    if (!this.userId && this.type === 'top10RankedAlbums') {
+      this.loadBestAlbums();
+    }
+  }
+
+  loadContentBasedOnType(): void {
+    if (this.userId) {
+      switch (this.type) {
+        case 'top10RankedAlbums':
+          this.loadBestAlbums();  // Cargar los mejores álbumes
+          break;
+        case 'watchlistAlbums':
+          this.loadWatchlistAlbums();  // Cargar los álbumes en la watchlist
+          break;
+        case 'watchlistSongs':
+          this.loadWatchlistSongs();   // Cargar las canciones de la watchlist
+          break;
+        default:
+          console.error('Tipo no reconocido');
+      }
+    }
+  }
+
+  loadBestAlbums(): void {
+    this.albumService.getBestAlbums().subscribe(
+      (response: BestAlbumsResponse) => {
+        this.bestAlbums = response.best_albums;
+        console.log('Mejores álbumes:', this.bestAlbums);
+      },
+      (error) => {
+        console.error('Error loading best albums:', error);
+      }
+    );
   }
 
   loadWatchlistAlbums(): void {
     if (!this.userId) return;
 
-    this.albumService.getWatchlistAlbumsByUser(this.userId).subscribe(
+    this.albumService.getWatchlistAlbumsByUser(Number(this.userId)).subscribe(
       (response: WatchListAlbumsResponse) => {
         this.watchlistAlbums = response.watchlist_albums;
         console.log('Álbumes en la watchlist:', this.watchlistAlbums);
@@ -61,7 +92,7 @@ export class GridrowComponent implements OnInit {
   loadWatchlistSongs(): void {
     if (!this.userId) return;
 
-    this.songService.getWatchlistSongsByUser(this.userId).subscribe(
+    this.songService.getWatchlistSongsByUser(Number(this.userId)).subscribe(
       (response: WatchListUserResponse) => {
         this.watchlistSongs = response.watchlist_songs;
         console.log('Canciones de la watchlist:', this.watchlistSongs);
