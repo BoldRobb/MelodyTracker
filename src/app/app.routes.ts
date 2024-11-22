@@ -38,6 +38,7 @@ import { SongComponent } from './pages/song/song.component';
 import { FollowingComponent } from './pages/following/following.component';
 import { FollowersComponent } from './pages/followers/followers.component';
 import { MyListsComponent } from './pages/my-lists/my-lists.component';
+import { AlbumsListenedComponent } from './pages/albums-listened/albums-listened.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -46,7 +47,8 @@ export const routes: Routes = [
     { path: 'profile/:id', component: ProfileComponent, pathMatch: 'full', data: { idPattern: '\\d+' } },
     { path: 'watchlist_songs/:id_user', component: WatchlistComponent, pathMatch: 'full', data: { idPattern: '\\d+' } },
     { path: 'watchlist_albums/:id_user', component: WatchlistComponent, pathMatch: 'full', data: { idPattern: '\\d+' } },
-    { path: 'songsListened', component: SongsListenedComponent},
+    { path: 'songsListened/:id_user', component: SongsListenedComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
+    { path: 'albumsListened/:id_user', component: AlbumsListenedComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'bestUsers', component: BestUsersComponent},
     { path: 'rankedHistory', component: RankedHistoryComponent},
     { path: 'reviewHistory', component: ReviewHistoryComponent},

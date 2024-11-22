@@ -191,7 +191,15 @@ export class SongService {
       finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
     );
   }
+
+
+  // Servicio para obtener la información de las canciones escuchadas
+  getTotalSongsListenedInfo(id_user: number): Observable<any> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se carga
+    return this.http.get<any>(`${this.apiUrl}/songs/total_songs_listened_info/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
+    );
+  }
   
-
-
+  
 }

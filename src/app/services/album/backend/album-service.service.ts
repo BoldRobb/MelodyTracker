@@ -234,4 +234,16 @@ export class AlbumService {
     );
   }
   
+
+  // Servicio para obtener la información de los álbumes escuchados
+  getTotalAlbumsListenedInfo(id_user: number): Observable<any> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se carga
+    return this.http.get<any>(`${this.apiUrl}/albums/total_albums_listened_info/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
+    );
+  }
+
+
+
+
 }

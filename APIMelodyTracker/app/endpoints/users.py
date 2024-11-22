@@ -155,6 +155,27 @@ def get_following(id_user: int, db: Session = Depends(get_db)):
 
     return following_ids
 
+
+# Endpoint para obtener los followers de un usuario
+@router.get("/followers/{id_user}", response_model=List[int])
+def get_followers(id_user: int, db: Session = Depends(get_db)):
+    # Verificar si el usuario existe
+    user = db.query(User).filter(User.id_user == id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+    
+    # Obtener los IDs de los usuarios que están siguiendo al usuario con id_user
+    followers = db.query(Followers).filter(Followers.id_user == id_user).all()
+
+    if not followers:
+        return []  # Si el usuario no tiene followers, devolver una lista vacía.
+    
+    # Extraer solo los id_follower de los resultados
+    followers_ids = [follow.id_follower for follow in followers]
+
+    return followers_ids
+
+
 # Crear un modelo para aceptar un array de IDs en el cuerpo de la solicitud
 
 

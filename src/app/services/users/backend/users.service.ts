@@ -198,6 +198,13 @@ export class UsersService {
   }
 
 
+  getFollowersUsers(id_user: number): Observable<number[]> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se carga
+    return this.http.get<number[]>(`${this.apiUrl}/users/followers/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
+    );
+  }
+
 
   // Servicio para obtener los detalles de los usuarios seguidores
   getUsersDetails(userIds: number[]): Observable<any> {

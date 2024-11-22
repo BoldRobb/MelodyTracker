@@ -14,13 +14,15 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./gridrow.component.css']
 })
 export class GridrowComponent implements OnInit {
-  @Input() type: string = '';  // El tipo que se pasa al componente, como 'top10RankedAlbums' o 'watchlistAlbums'
+  @Input() type: string = '';  // El tipo que se pasa al componente, como 'top10RankedAlbums', 'watchlistAlbums', etc.
   @Input() columns: number = 8;  // Número de columnas por defecto
   @Input() rows: number = 1;     // Número de filas por defecto
 
   bestAlbums: Album[] = [];          // Array para los mejores álbumes
   watchlistSongs: WatchlistSong[] = [];  // Array para las canciones de la watchlist
-  watchlistAlbums: Album[] = [];     // Nuevo array para los álbumes en la watchlist
+  watchlistAlbums: Album[] = [];     // Array para los álbumes en la watchlist
+  listenedSongs: any[] = [];  // Array para las canciones escuchadas
+  listenedAlbums: any[] = [];  // Array para los álbumes escuchados
   userId: string | null = null;  // Variable para almacenar el userId
 
   constructor(
@@ -56,6 +58,12 @@ export class GridrowComponent implements OnInit {
         case 'watchlistSongs':
           this.loadWatchlistSongs();   // Cargar las canciones de la watchlist
           break;
+        case 'listenedSongs':
+          this.loadListenedSongs();  // Cargar las canciones escuchadas
+          break;
+        case 'listenedAlbums':
+          this.loadListenedAlbums();  // Cargar los álbumes escuchados
+          break;
         default:
           console.error('Tipo no reconocido');
       }
@@ -66,7 +74,6 @@ export class GridrowComponent implements OnInit {
     this.albumService.getBestAlbums().subscribe(
       (response: BestAlbumsResponse) => {
         this.bestAlbums = response.best_albums;
-        // console.log('Mejores álbumes:', this.bestAlbums);
       },
       (error) => {
         console.error('Error loading best albums:', error);
@@ -80,7 +87,6 @@ export class GridrowComponent implements OnInit {
     this.albumService.getWatchlistAlbumsByUser(Number(this.userId)).subscribe(
       (response: WatchListAlbumsResponse) => {
         this.watchlistAlbums = response.watchlist_albums;
-        // console.log('Álbumes en la watchlist:', this.watchlistAlbums);
       },
       (error) => {
         console.error('Error loading watchlist albums:', error);
@@ -94,10 +100,35 @@ export class GridrowComponent implements OnInit {
     this.songService.getWatchlistSongsByUser(Number(this.userId)).subscribe(
       (response: WatchListUserResponse) => {
         this.watchlistSongs = response.watchlist_songs;
-        // console.log('Canciones de la watchlist:', this.watchlistSongs);
       },
       (error) => {
         console.error('Error loading watchlist songs:', error);
+      }
+    );
+  }
+
+  loadListenedSongs(): void {
+    if (!this.userId) return;
+
+    this.songService.getTotalSongsListenedInfo(Number(this.userId)).subscribe(
+      (response: any) => {
+        this.listenedSongs = response.songs_info;  // Guardamos las canciones escuchadas
+      },
+      (error) => {
+        console.error('Error loading listened songs:', error);
+      }
+    );
+  }
+
+  loadListenedAlbums(): void {
+    if (!this.userId) return;
+
+    this.albumService.getTotalAlbumsListenedInfo(Number(this.userId)).subscribe(
+      (response: any) => {
+        this.listenedAlbums = response.albums_info;  // Guardamos los álbumes escuchados
+      },
+      (error) => {
+        console.error('Error loading listened albums:', error);
       }
     );
   }

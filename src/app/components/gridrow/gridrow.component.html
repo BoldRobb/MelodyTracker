@@ -49,12 +49,52 @@
   }
 
 
+
   @if (this.type === 'watchlistAlbums') {
     @for (album  of watchlistAlbums; track $index) {
       <a [routerLink]="['/song', album.id_album]">
         <img 
           [src]="album.photo" 
           [alt]="album.title"
+          [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-5x2': columns === 5 && rows === 2,
+            'imagen_watchlist': columns === 8 && rows === 4
+          }"
+        />
+      </a>
+    }
+  }
+
+
+  @if (this.type === 'listenedSongs') {
+    @for (song  of listenedSongs; track $index) {
+      <a [routerLink]="['/song', song.id_song]">
+        <img 
+          [src]="song.photo" 
+          [alt]="song.name"
+          [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-5x2': columns === 5 && rows === 2,
+            'imagen_watchlist': columns === 8 && rows === 4
+          }"
+        />
+      </a>
+    }
+  }
+
+
+
+
+
+  @if (this.type === 'listenedAlbums') {
+    @for (album  of listenedAlbums; track $index) {
+      <a [routerLink]="['/album', album.id_album]">
+        <img 
+          [src]="album.photo" 
+          [alt]="album.name"
           [ngClass]="{
             'imagenPrueba-8x1': columns === 8 && rows === 1,
             'imagenPrueba-4x2': columns === 4 && rows === 2,
