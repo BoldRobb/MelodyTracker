@@ -21,13 +21,15 @@
     row-gap: 3rem;
 }
 
-.contenedor_follows{
+.contenedor_follows {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    min-width: 40rem;
-    max-width: 150rem;
-    margin: 0 auto;
-}
+    gap: 2rem; /* Espaciado entre filas y columnas */
+    justify-content: center; /* Centra horizontalmente el contenido */
+    align-items: center; /* Centra verticalmente los elementos en sus celdas */
+    max-width: 1200px; /* Ajusta el ancho máximo si es necesario */
+    margin: 0 auto; /* Centrar todo el contenedor en la página */
+    margin-top: 5rem;
+  }
 
 .user{
     display: flex;

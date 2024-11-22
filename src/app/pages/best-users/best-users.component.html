@@ -15,5 +15,8 @@
   </div>
   
   <div class="contenedor_follows">
-    <app-follows [userIds]="getRemainingUserIds()"></app-follows>
+    @if (remainingUserIds.length > 0) {
+      <app-follows [userIds]="remainingUserIds"></app-follows>
+    }
+    
   </div>
