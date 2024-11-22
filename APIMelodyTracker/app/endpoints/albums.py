@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 from datetime import date
 from app.database.database import get_db
 
@@ -472,6 +472,36 @@ def total_albums_listened_info(
             })
 
     return {"total_albums_listened": len(albums_info), "albums_info": albums_info}
+
+
+
+# Detalles de un usuario y la cantidad de álbumes escuchados
+@router.get("/user/{id_user}/details_encabezado_albums_listened")
+async def get_user_details(id_user: int, db: Session = Depends(get_db)):
+    # Consulta para obtener el username y la photo
+    user_data = (
+        db.query(User.username, Profile.photo)
+        .join(Profile, Profile.id_user == User.id_user)
+        .filter(User.id_user == id_user)
+        .first()
+    )
+
+    if not user_data:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Consulta para contar los álbumes escuchados (listened_albums)
+    listened_albums_count = (
+        db.query(func.count(ListenedAlbums.id_album))
+        .filter(ListenedAlbums.id_user == id_user)
+        .scalar()
+    )
+
+    return {
+        "username": user_data.username,
+        "photo": user_data.photo,
+        "listened_albums_count": listened_albums_count,  # Se regresa la cantidad de álbumes escuchados
+    }
+
 
 
 # Extraer las fotos de los últimos 5 álbumes escuchados

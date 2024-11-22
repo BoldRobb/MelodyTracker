@@ -149,6 +149,54 @@ export class UsersService {
     );
   }
 
+
+  // Servicio para obtener los detalles del encabezado de las canciones escuchadas
+  detailsEncabezadoSongsListened(id_user: number): Observable<{ username: string, photo: string, listened_songs_count: number }> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se carga
+    return this.http.get<{ username: string, photo: string, listened_songs_count: number }>(
+      `${this.apiUrl}/songs/user/${id_user}/details_encabezado_songs_listened`
+    ).pipe(
+      finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
+    );
+  }
+
+
+
+  // Servicio para obtener los detalles del encabezado de los álbumes escuchados
+  detailsEncabezadoAlbumsListened(id_user: number): Observable<{ username: string, photo: string, listened_albums_count: number }> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se carga
+    return this.http.get<{ username: string, photo: string, listened_albums_count: number }>(
+      `${this.apiUrl}/albums/user/${id_user}/details_encabezado_albums_listened`
+    ).pipe(
+      finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
+    );
+  }
+
+
+  // Servicio para obtener los detalles del encabezado de los following
+  detailsEncabezadoFollowing(id_user: number): Observable<{ username: string, photo: string, total_following: number }> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se carga
+    return this.http.get<{ username: string, photo: string, total_following: number }>(
+      `${this.apiUrl}/users/${id_user}/details_encabezado_following`
+    ).pipe(
+      finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
+    );
+  }
+
+
+  // Servicio para obtener los detalles del encabezado de los followers
+  detailsEncabezadoFollowers(id_user: number): Observable<{ username: string, photo: string, total_followers: number }> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se carga
+    return this.http.get<{ username: string, photo: string, total_followers: number }>(
+      `${this.apiUrl}/users/${id_user}/details_encabezado_followers`
+    ).pipe(
+      finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
+    );
+  }
+
+
+
+
    // Método para obtener los detalles del perfil del usuario y su actividad musical
    profileDatosUser(id_user: number): Observable<{ username: string, photo: string | null, songs_listened: number, total_following: number, total_followers: number }> {
     this.spinnerService.show(); // Muestra el spinner mientras se carga la información

@@ -418,3 +418,60 @@ async def get_user_details(id_user: int, db: Session = Depends(get_db)):
         "photo": user_data.photo,
         "watchlist_album_count": watchlist_album_count,
     }
+
+
+# Endpoint para obtener los detalles de sus following
+@router.get("/{id_user}/details_encabezado_following")
+async def get_user_details(id_user: int, db: Session = Depends(get_db)):
+    # Consulta para obtener el username y la photo
+    user_data = (
+        db.query(User.username, Profile.photo)
+        .join(Profile, Profile.id_user == User.id_user)
+        .filter(User.id_user == id_user)
+        .first()
+    )
+
+    if not user_data:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Consulta para contar el total de usuarios que el usuario sigue (followers)
+    total_following = (
+        db.query(func.count(Followers.id_user))  # Cambia id_follower por id_user
+        .filter(Followers.id_follower == id_user)
+        .scalar()
+    )
+
+    return {
+        "username": user_data.username,
+        "photo": user_data.photo,
+        "total_following": total_following,  # Se regresa el total de usuarios que el usuario sigue
+    }
+
+
+
+@router.get("/{id_user}/details_encabezado_followers")
+async def get_user_details(id_user: int, db: Session = Depends(get_db)):
+    # Consulta para obtener el username y la photo
+    user_data = (
+        db.query(User.username, Profile.photo)
+        .join(Profile, Profile.id_user == User.id_user)
+        .filter(User.id_user == id_user)
+        .first()
+    )
+
+    if not user_data:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Consulta para contar el total de seguidores del usuario (followers)
+    total_followers = (
+        db.query(func.count(Followers.id_follower))  # Cambia id_user por id_follower
+        .filter(Followers.id_user == id_user)
+        .scalar()
+    )
+
+
+    return {
+        "username": user_data.username,
+        "photo": user_data.photo,
+        "total_followers": total_followers,  # Se regresa el total de seguidores
+    }

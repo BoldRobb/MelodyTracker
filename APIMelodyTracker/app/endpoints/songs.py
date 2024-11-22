@@ -150,6 +150,39 @@ async def get_user_details(id_user: int, db: Session = Depends(get_db)):
     }
 
 
+
+# OBTENER DETALLES ENCABEZADO CANCIONES ESCUCHADAS
+@router.get("/user/{id_user}/details_encabezado_songs_listened")
+async def get_user_details(id_user: int, db: Session = Depends(get_db)):
+    # Consulta para obtener el username y la photo
+    user_data = (
+        db.query(User.username, Profile.photo)
+        .join(Profile, Profile.id_user == User.id_user)
+        .filter(User.id_user == id_user)
+        .first()
+    )
+
+    if not user_data:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Consulta para contar las canciones escuchadas (song_listened)
+    listened_songs_count = (
+        db.query(func.count(ListenedSongs.id_song))
+        .filter(ListenedSongs.id_user == id_user)
+        .scalar()
+    )
+
+    return {
+        "username": user_data.username,
+        "photo": user_data.photo,
+        "listened_songs_count": listened_songs_count,  # Se regresa la cantidad de canciones escuchadas
+    }
+
+
+
+
+
+
 # Cancion Escuchada
 @router.post("/song_listened")
 def song_listened(song_data: SongListened, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
