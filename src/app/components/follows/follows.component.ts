@@ -9,13 +9,14 @@ import { UsersService } from '../../services/users/backend/users.service';
   styleUrls: ['./follows.component.css']
 })
 export class FollowsComponent implements OnInit {
-  @Input() userIds: number[] = []; // Recibe la lista de IDs como input
+  @Input() userIds: number[] = []; // Asegúrate de que es un arreglo de números (IDs)
   usersDetails: any[] = []; // Aquí se guardarán los detalles de los usuarios
   loading: boolean = false; // Bandera para manejar el estado de carga
 
   constructor(private followsService: UsersService) {}
 
   ngOnInit(): void {
+    console.log('Received userIds:', this.userIds); // Verifica que los IDs se reciben correctamente
     if (this.userIds.length > 0) {
       this.fetchUserDetails();
     }

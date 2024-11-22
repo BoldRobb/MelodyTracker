@@ -494,3 +494,56 @@ async def get_user_details(id_user: int, db: Session = Depends(get_db)):
         "photo": user_data.photo,
         "total_followers": total_followers,  # Se regresa el total de seguidores
     }
+
+@router.get("/top_users", response_model=List[dict])
+def get_top_users(db: Session = Depends(get_db)):
+    users_stats = []
+
+    # Obtener todos los usuarios
+    users = db.query(User).all()
+
+    if not users:
+        raise HTTPException(status_code=404, detail="No users found.")
+
+    # Obtener detalles de cada usuario
+    for user in users:
+        user_id = user.id_user
+        
+        # Obtener el perfil del usuario
+        profile = db.query(Profile).filter(Profile.id_user == user_id).first()
+
+        # Obtener los stats del usuario
+        total_listened_songs = db.query(ListenedSongs).filter(ListenedSongs.id_user == user_id).count()
+        total_listened_albums = db.query(ListenedAlbums).filter(ListenedAlbums.id_user == user_id).count()
+        total_listened = total_listened_songs + total_listened_albums
+
+        total_reviews_songs = db.query(ReviewedSongs).filter(ReviewedSongs.id_user == user_id).count()
+        total_reviews_albums = db.query(ReviewedAlbums).filter(ReviewedAlbums.id_user == user_id).count()
+        total_reviews = total_reviews_songs + total_reviews_albums
+
+        total_liked_songs = db.query(LikedSongs).filter(LikedSongs.id_user == user_id).count()
+        total_liked_albums = db.query(LikedAlbums).filter(LikedAlbums.id_user == user_id).count()
+        total_liked = total_liked_songs + total_liked_albums
+
+        total_lists_created = db.query(Lists).filter(Lists.id_user == user_id).count()
+
+        # Crear la puntuación del usuario basado en sus stats
+        user_score = total_listened + total_reviews + total_liked + total_lists_created
+
+        # Agregar la información del usuario a la lista
+        users_stats.append({
+            "id_user": user.id_user,  # Se agrega el id_user
+            "username": user.username,
+            "photo": profile.photo if profile else None,  # Si no tiene perfil, se asigna None
+            "total_listened": total_listened,
+            "total_reviews": total_reviews,
+            "total_lists_created": total_lists_created,
+            "total_liked": total_liked,
+            "user_score": user_score  # Puntuación total
+        })
+
+    # Ordenar los usuarios por la puntuación total (de mayor a menor)
+    users_stats = sorted(users_stats, key=lambda x: x["user_score"], reverse=True)
+
+    # Devolver los primeros 50 usuarios (o menos si no hay suficientes)
+    return users_stats[:50]

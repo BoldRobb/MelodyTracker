@@ -277,4 +277,12 @@ export class UsersService {
 
 
 
+   // Servicio para obtener los usuarios más activos
+   getTopUsers(): Observable<any[]> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se carga
+    return this.http.get<any[]>(`${this.apiUrl}/users/top_users`).pipe(
+      finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
+    );
+  }
+
 }

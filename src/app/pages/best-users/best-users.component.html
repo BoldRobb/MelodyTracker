@@ -1,25 +1,19 @@
-<app-encabezado></app-encabezado>
-
 <div class="contenedor_principal">
     <h1 class="titulo">Best users</h1>
     <div class="contenedor_users">
-        <app-best-user></app-best-user>
-        <app-best-user></app-best-user>
-        <app-best-user></app-best-user>
-        <app-best-user></app-best-user>
-        <app-best-user></app-best-user>
-        <app-best-user></app-best-user>
-        <app-best-user></app-best-user>
-        <app-best-user></app-best-user>
+      <!-- Recorremos los top users y pasamos los parámetros necesarios a app-best-user -->
+       @for (user of getTop8Users(); track $index) {
+        <app-best-user
+            [username]="user.username"
+            [photo]="user.photo"
+            [songs]="user.total_listened"
+            [rankeds]="user.user_score"
+            [reviews]="user.total_reviews">
+        </app-best-user>
+       }
     </div>
-    
-</div>
-
-<div class="contenedor_follows">
-    <app-follows></app-follows>
-    <app-follows></app-follows>
-    <app-follows></app-follows>
-    <app-follows></app-follows>
-</div>
-
-<app-btn-view-more></app-btn-view-more>
+  </div>
+  
+  <div class="contenedor_follows">
+    <app-follows [userIds]="getRemainingUserIds()"></app-follows>
+  </div>
