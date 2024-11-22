@@ -254,6 +254,25 @@ def unfollow_user(
     return {"message": f"User {request.id_follower} has unfollowed User {request.id_user}."}
 
 
+# Endpoint para verificar si un usuario sigue a otro
+@router.get("/is_following/")
+def is_following(id_user: int, id_follower: int, db: Session = Depends(get_db)):
+    """
+    Verifica si un usuario sigue a otro.
+    """
+    # Validación: No tiene sentido verificar si un usuario se sigue a sí mismo.
+    if id_user == id_follower:
+        raise HTTPException(status_code=400, detail="A user cannot follow themselves.")
+
+    # Buscar la relación de seguimiento en la base de datos
+    is_following = db.query(Followers).filter(
+        Followers.id_user == id_user,
+        Followers.id_follower == id_follower
+    ).first()
+
+    # Devolver true o false según exista la relación
+    return {"is_following": is_following is not None}
+
 
 # Endpoint para obtener el total de following y followers
 @router.get("/total_stats_follows/{id_user}")

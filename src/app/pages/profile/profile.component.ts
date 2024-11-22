@@ -44,23 +44,38 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.idUser = this.getUserIdFromToken(); // Extraer el id del token
-
+  
     // Obtener el parámetro 'id' de la URL y cargar el perfil
     this.route.params.subscribe(params => {
       this.idProfile = +params['id'];
       if (this.idProfile && !isNaN(this.idProfile)) {
         this.loadUserProfile(this.idProfile); // Llamar al servicio para cargar el perfil
         this.loadUserStats(this.idProfile); // Llamar al servicio para cargar las estadísticas
+  
+        // Verificar si el usuario sigue al perfil
+        if (this.idUser) {
+          this.checkIfUserIsFollowed(this.idProfile, this.idUser);
+        }
       } else {
         this.router.navigate(['/404']); // Redirigir a 404 si el ID no es válido
       }
     });
-
-    // console.log("AAAAAAA: ", this.idUser,"AAAA: ", this.idProfile);
   }
 
 
   
+  checkIfUserIsFollowed(idProfile: number, idUser: number): void {
+    this.userService.isUserFollowing(idProfile, idUser).subscribe({
+      next: (response) => {
+        this.isFollowed = response.is_following; // Configura el estado inicial
+      },
+      error: (err) => {
+        console.error('Error checking follow status:', err);
+        this.errorMessage = 'No se pudo verificar el estado de seguimiento';
+      }
+    });
+  }
+
 
   toggleFollow() {
     if (this.isFollowed) {

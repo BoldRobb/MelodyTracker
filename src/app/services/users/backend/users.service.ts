@@ -266,5 +266,15 @@ export class UsersService {
   }
 
 
+  isUserFollowing(id_user: number, id_follower: number): Observable<{ is_following: boolean }> {
+    this.spinnerService.show(); // Mostrar el spinner mientras se carga
+    return this.http.get<{ is_following: boolean }>(
+      `${this.apiUrl}/users/is_following/?id_user=${id_user}&id_follower=${id_follower}`
+    ).pipe(
+      finalize(() => this.spinnerService.hide()) // Esconde el spinner cuando la solicitud termina
+    );
+  }
+
+
 
 }
