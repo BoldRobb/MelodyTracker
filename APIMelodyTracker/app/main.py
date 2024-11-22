@@ -34,4 +34,3 @@ configure_cors(app)
 #INSTALAR VENV
 #   python -m venv .venv
 
-# RELACION ENDPOINT ROL

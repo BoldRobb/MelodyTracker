@@ -189,6 +189,7 @@ export class UsersService {
   }
 
 
+
   getFollowingUsers(id_user: number): Observable<number[]> {
     this.spinnerService.show();  // Mostrar el spinner mientras se carga
     return this.http.get<number[]>(`${this.apiUrl}/users/following/${id_user}`).pipe(
@@ -203,11 +204,12 @@ export class UsersService {
     this.spinnerService.show();  // Mostrar el spinner mientras se carga
 
     return this.http
-      .post<any>(`${this.apiUrl}/users/details_followers`, { user_ids: userIds })
+      .post<any>(`${this.apiUrl}/users/details_following`, { user_ids: userIds })
       .pipe(
         finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
       );
   }
+
 
 
 }

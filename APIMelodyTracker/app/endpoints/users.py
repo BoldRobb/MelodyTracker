@@ -14,7 +14,7 @@ from app.models.lists import Lists
 
 from app.models.songs import LikedSongs, ListenedSongs, RankedSongs, ReviewedSongs
 
-from app.models.albums import RankedAlbums, ReviewedAlbums, WatchlistAlbums
+from app.models.albums import LikedAlbums, ListenedAlbums, RankedAlbums, ReviewedAlbums, WatchlistAlbums
 
 from app.schemas.users import UserCreate, UserIdsRequest, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse 
 
@@ -157,8 +157,10 @@ def get_following(id_user: int, db: Session = Depends(get_db)):
 
 # Crear un modelo para aceptar un array de IDs en el cuerpo de la solicitud
 
+
+
 # endpoint para obtener los detalles de los usuarios followers
-@router.post("/details_followers", response_model=List[dict])
+@router.post("/details_following", response_model=List[dict])
 def get_users_details(request: UserIdsRequest, db: Session = Depends(get_db)):
     users_details = []
 
@@ -171,31 +173,41 @@ def get_users_details(request: UserIdsRequest, db: Session = Depends(get_db)):
         # Obtener el perfil del usuario
         profile = db.query(Profile).filter(Profile.id_user == user_id).first()
 
-        # Obtener la cantidad de canciones escuchadas por el usuario
+        # Obtener la cantidad total de canciones y álbumes escuchados
         total_listened_songs = db.query(ListenedSongs).filter(ListenedSongs.id_user == user_id).count()
+        total_listened_albums = db.query(ListenedAlbums).filter(ListenedAlbums.id_user == user_id).count()
+        total_listened = total_listened_songs + total_listened_albums
 
-        # Obtener la cantidad de reseñas hechas por el usuario
-        total_reviews = db.query(ReviewedSongs).filter(ReviewedSongs.id_user == user_id).count()
+        # Obtener la cantidad total de reseñas de canciones y álbumes
+        total_reviews_songs = db.query(ReviewedSongs).filter(ReviewedSongs.id_user == user_id).count()
+        total_reviews_albums = db.query(ReviewedAlbums).filter(ReviewedAlbums.id_user == user_id).count()
+        total_reviews = total_reviews_songs + total_reviews_albums
+
+        # Obtener la cantidad total de canciones y álbumes marcados como "Me gusta"
+        total_liked_songs = db.query(LikedSongs).filter(LikedSongs.id_user == user_id).count()
+        total_liked_albums = db.query(LikedAlbums).filter(LikedAlbums.id_user == user_id).count()
+        total_liked = total_liked_songs + total_liked_albums
 
         # Obtener la cantidad de listas creadas por el usuario
         total_lists_created = db.query(Lists).filter(Lists.id_user == user_id).count()
-
-        # Obtener la cantidad de canciones que el usuario ha marcado como "Me gusta"
-        total_liked_songs = db.query(LikedSongs).filter(LikedSongs.id_user == user_id).count()
 
         # Crear el diccionario con la información que se necesita
         user_info = {
             "username": user.username,
             "photo": profile.photo if profile else None,  # Si no tiene perfil, se asigna None
-            "total_listened_songs": total_listened_songs,
+            "total_listened": total_listened,
             "total_reviews": total_reviews,
             "total_lists_created": total_lists_created,
-            "total_liked_songs": total_liked_songs
+            "total_liked": total_liked
         }
 
         users_details.append(user_info)
 
     return users_details
+
+
+
+
 @router.delete("/unfollow_user/")
 def unfollow_user(
     request: FollowUserRequest,  # Usamos el mismo modelo para recibir los datos
