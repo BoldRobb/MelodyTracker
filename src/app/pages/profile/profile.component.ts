@@ -2,11 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../../services/users/backend/users.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ProfileDatosUserComponent } from "../../components/profile-datos-user/profile-datos-user.component";
+import { ProfileBioStatsComponent } from "../../components/profile-bio-stats/profile-bio-stats.component";
+import { ProfileHistoryComponent } from "../../components/profile-history/profile-history.component";
+import { ProfilePopularListsComponent } from "../../components/profile-popular-lists/profile-popular-lists.component";
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProfileDatosUserComponent, ProfileBioStatsComponent, ProfileHistoryComponent, ProfilePopularListsComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })

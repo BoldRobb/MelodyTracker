@@ -1,0 +1,24 @@
+<div class="contenedor_bio_stats">
+    <div class="contenedor_biografia">
+        <p class="titulo_bio">Bio</p>
+        <p class="texto_bio">{{ bio || 'Sin biografía disponible.' }}</p>
+      </div>
+    
+      <!-- Estadísticas del usuario -->
+      <div class="contenedor_stats_bio">
+        <div class="contenedor_ranked_reviews">
+          <p class="titulo_ranked_review">Total Ranked</p>
+          <div class="contenedor_imagen_texto_review_ranked">
+            <img class="imagen_ranked_review" src="images/ranked.png" alt="Ranked Icon">
+            <p class="texto_ranked_review">{{ totalRanked }}</p>
+          </div>
+        </div>
+        <div class="contenedor_ranked_reviews">
+          <p class="titulo_ranked_review">Total Review</p>
+          <div class="contenedor_imagen_texto_review_ranked">
+            <img class="imagen_ranked_review" src="images/comment.png" alt="Review Icon">
+            <p class="texto_ranked_review">{{ totalReview }}</p>
+          </div>
+        </div>
+      </div>
+</div>

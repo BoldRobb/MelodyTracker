@@ -1,0 +1,32 @@
+<div class="contenedor_datos_user">
+    <div class="contenedor_edit_profile">
+      <p>Edit Profile</p>
+      <img class="foto_engranaje" src="images/engranaje.png" alt="">
+    </div>
+    <div class="contenedor_foto">
+        <img class="foto_user" [src]="userProfile.photo || 'images/foto_user_default.png'" alt="">
+        @if (this.idUser != this.idProfile) {
+            <button 
+                class="btn_follow"  
+                (click)="toggleFollow()">
+                {{ isFollowed ? '✓' : '+' }}
+            </button>
+        }
+        
+        <p class="nombre_user">{{ userProfile.username || 'Usuario no encontrado' }}</p>
+      </div>
+    <div class="contenedor_stats_user">
+      <div>
+        <p class="valor_stats">{{ userProfile.songs_listened }}</p>
+        <p class="titulo_stats">Songs</p>
+      </div>
+      <div>
+        <p class="valor_stats">{{ userProfile.total_following }}</p>
+        <p class="titulo_stats">Following</p>
+      </div>
+      <div>
+        <p class="valor_stats">{{ userProfile.total_followers }}</p>
+        <p class="titulo_stats">Followers</p>
+      </div>
+    </div>
+  </div>

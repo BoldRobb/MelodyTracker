@@ -39,6 +39,11 @@ import { FollowingComponent } from './pages/following/following.component';
 import { FollowersComponent } from './pages/followers/followers.component';
 import { MyListsComponent } from './pages/my-lists/my-lists.component';
 import { AlbumsListenedComponent } from './pages/albums-listened/albums-listened.component';
+import { ProfileDatosUserComponent } from './components/profile-datos-user/profile-datos-user.component';
+import { profile } from 'console';
+import { ProfileBioStatsComponent } from './components/profile-bio-stats/profile-bio-stats.component';
+import { ProfileHistoryComponent } from './components/profile-history/profile-history.component';
+import { ProfilePopularListsComponent } from './components/profile-popular-lists/profile-popular-lists.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -86,6 +91,10 @@ export const routes: Routes = [
     { path: 'datosSongAlbum', component: DatosSongAlbumComponent},
     { path: 'bestUser', component: BestUserComponent},
     { path: 'songsOnAlbum', component: SongsOnAlbumComponent},
+    { path: 'profileDatosUser', component: ProfileDatosUserComponent},
+    { path: 'profileBioStats', component: ProfileBioStatsComponent},
+    { path: 'profileHistory', component: ProfileHistoryComponent},
+    { path: 'profilePopularLists', component: ProfilePopularListsComponent},
     { path: '**', pathMatch: 'full', redirectTo: 'homepage' }
 ];
 

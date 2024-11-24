@@ -2,219 +2,24 @@
 
 <!-- Mostrar los datos del perfil -->
 <div class="contenedor_principal">
-  <div class="contenedor_datos_user">
-    <div class="contenedor_edit_profile">
-      <p>Edit Profile</p>
-      <img class="foto_engranaje" src="images/engranaje.png" alt="">
-    </div>
-    <div class="contenedor_foto">
-        <img class="foto_user" [src]="userProfile.photo || 'images/foto_user_default.png'" alt="">
-        @if (this.idUser != this.idProfile) {
-            <button 
-                class="btn_follow" 
-                [ngClass]="{ 'btn_follow_clicked': isFollowed }" 
-                (click)="toggleFollow()">
-                {{ isFollowed ? '✓' : '+' }}
-            </button>
-        }
-        
-        <p class="nombre_user">{{ userProfile.username || 'Usuario no encontrado' }}</p>
-      </div>
-    <div class="contenedor_stats_user">
-      <div>
-        <p class="valor_stats">{{ userProfile.songs_listened }}</p>
-        <p class="titulo_stats">Songs</p>
-      </div>
-      <div>
-        <p class="valor_stats">{{ userProfile.total_following }}</p>
-        <p class="titulo_stats">Following</p>
-      </div>
-      <div>
-        <p class="valor_stats">{{ userProfile.total_followers }}</p>
-        <p class="titulo_stats">Followers</p>
-      </div>
-    </div>
-  </div>
+  <app-profile-datos-user></app-profile-datos-user>
+
+
 
 
 <!-- contedor_bio_stats -->
-    <div class="contenedor_bio_stats">
-        <div class="contenedor_biografia">
-            <p class="titulo_bio">Bio</p>
-            <p class="texto_bio">{{ bio || 'Sin biografía disponible.' }}</p>
-          </div>
-        
-          <!-- Estadísticas del usuario -->
-          <div class="contenedor_stats_bio">
-            <div class="contenedor_ranked_reviews">
-              <p class="titulo_ranked_review">Total Ranked</p>
-              <div class="contenedor_imagen_texto_review_ranked">
-                <img class="imagen_ranked_review" src="images/ranked.png" alt="Ranked Icon">
-                <p class="texto_ranked_review">{{ totalRanked }}</p>
-              </div>
-            </div>
-            <div class="contenedor_ranked_reviews">
-              <p class="titulo_ranked_review">Total Review</p>
-              <div class="contenedor_imagen_texto_review_ranked">
-                <img class="imagen_ranked_review" src="images/comment.png" alt="Review Icon">
-                <p class="texto_ranked_review">{{ totalReview }}</p>
-              </div>
-            </div>
-          </div>
-    </div>
+    <app-profile-bio-stats></app-profile-bio-stats>
+
+
+
+
 <!-- contenedor_history -->
-    <div class="contenedor_history">
-        <div class="contenedorx4">
-            <p class="titulox4">Songs Listened To <span class="cantidadx4">674</span></p>
-            <div class="imagenesx4">
-                <img class="imagenx4" src="images/BeautyBehindtheMadness.jpg" alt="">
-                <img class="imagenx4" src="images/purpose.jpg" alt="">
-                <img class="imagenx4" src="images/changes.jpg" alt="">
-                <img class="imagenx4" src="images/starboy.jpg" alt="">
-                <img class="imagenx4" src="images/purpose.jpg" alt="">
-            </div>
-        </div>
-        <div class="contenedorx4">
-            <p class="titulox4">Albums listened to <span class="cantidadx4">42</span></p>
-            <div class="imagenesx4">
-                <img class="imagenx4" src="images/BeautyBehindtheMadness.jpg" alt="">
-                <img class="imagenx4" src="images/purpose.jpg" alt="">
-                <img class="imagenx4" src="images/changes.jpg" alt="">
-                <img class="imagenx4" src="images/starboy.jpg" alt="">
-                <img class="imagenx4" src="images/purpose.jpg" alt="">
-            </div>
-        </div>
-        <div class="contenedorx4">
-            <p class="titulox4">Created Lists <span class="cantidadx4">21</span></p>
-            <div class="imagenesx4">
-                <img class="imagenx4" src="images/BeautyBehindtheMadness.jpg" alt="">
-                <img class="imagenx4" src="images/purpose.jpg" alt="">
-                <img class="imagenx4" src="images/changes.jpg" alt="">
-                <img class="imagenx4" src="images/starboy.jpg" alt="">
-                <img class="imagenx4" src="images/purpose.jpg" alt="">
-            </div>
-        </div>
-        <div class="contenedorx4">
-            <p class="titulox4">Watch List <span class="cantidadx4">390</span></p>
-            <div class="imagenesx4">
-                <img class="imagenx4" src="images/BeautyBehindtheMadness.jpg" alt="">
-                <img class="imagenx4" src="images/purpose.jpg" alt="">
-                <img class="imagenx4" src="images/changes.jpg" alt="">
-                <img class="imagenx4" src="images/starboy.jpg" alt="">
-                <img class="imagenx4" src="images/purpose.jpg" alt="">
-            </div>
-        </div>
-    </div>
+    <app-profile-history></app-profile-history>
+
+
+
 <!-- contenedor_lists -->
-    <div class="contenedor_popular_lists">
-        <p class="contenedor_titulo">Most Popular Lists</p>
-        <div class="fourth_lists">
-            <div class="popular_list">
-                <img class="imagen_popular_list" src="images/BeautyBehindtheMadness.jpg" alt="">
-                <img class="imagen_popular_list" src="images/purpose.jpg" alt="">
-                <img class="imagen_popular_list" src="images/changes.jpg" alt="">
-                <img class="imagen_popular_list" src="images/starboy.jpg" alt="">
+    <app-profile-popular-lists></app-profile-popular-lists>
 
-                <div class="contenido_popular_list">
-                    <div class="nombre_lista">
-                        <p>Canciones pa barrer</p>
-                    </div>
-                    <div class="stats_lista">
-                        <div class="stat">
-                            <p class="cantidad">25 songs</p>
-                        </div>
-                        <div class="stat">
-                            <img class="imagen_stat" src="images/heart.png" alt="imagenCorazon">
-                            <p class="cantidad">32.1k</p>
-                        </div>
-                        <div class="stat">
-                            <img class="imagen_stat" src="images/comment.png" alt="imagenCorazon">
-                            <p class="cantidad">231</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="popular_list">
-                <img class="imagen_popular_list" src="images/BeautyBehindtheMadness.jpg" alt="">
-                <img class="imagen_popular_list" src="images/purpose.jpg" alt="">
-                <img class="imagen_popular_list" src="images/changes.jpg" alt="">
-                <img class="imagen_popular_list" src="images/starboy.jpg" alt="">
-
-                <div class="contenido_popular_list">
-                    <div class="nombre_lista">
-                        <p>Canciones pa barrer</p>
-                    </div>
-                    <div class="stats_lista">
-                        <div class="stat">
-                            <p class="cantidad">25 songs</p>
-                        </div>
-                        <div class="stat">
-                            <img class="imagen_stat" src="images/heart.png" alt="imagenCorazon">
-                            <p class="cantidad">32.1k</p>
-                        </div>
-                        <div class="stat">
-                            <img class="imagen_stat" src="images/comment.png" alt="imagenCorazon">
-                            <p class="cantidad">231</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="popular_list">
-                <img class="imagen_popular_list" src="images/BeautyBehindtheMadness.jpg" alt="">
-                <img class="imagen_popular_list" src="images/purpose.jpg" alt="">
-                <img class="imagen_popular_list" src="images/changes.jpg" alt="">
-                <img class="imagen_popular_list" src="images/starboy.jpg" alt="">
-
-                <div class="contenido_popular_list">
-                    <div class="nombre_lista">
-                        <p>Canciones pa barrer</p>
-                    </div>
-                    <div class="stats_lista">
-                        <div class="stat">
-                            <p class="cantidad">25 songs</p>
-                        </div>
-                        <div class="stat">
-                            <img class="imagen_stat" src="images/heart.png" alt="imagenCorazon">
-                            <p class="cantidad">32.1k</p>
-                        </div>
-                        <div class="stat">
-                            <img class="imagen_stat" src="images/comment.png" alt="imagenCorazon">
-                            <p class="cantidad">231</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="popular_list">
-                <img class="imagen_popular_list" src="images/BeautyBehindtheMadness.jpg" alt="">
-                <img class="imagen_popular_list" src="images/purpose.jpg" alt="">
-                <img class="imagen_popular_list" src="images/changes.jpg" alt="">
-                <img class="imagen_popular_list" src="images/starboy.jpg" alt="">
-
-                <div class="contenido_popular_list">
-                    <div class="nombre_lista">
-                        <p>Canciones pa barrer</p>
-                    </div>
-                    <div class="stats_lista">
-                        <div class="stat">
-                            <p class="cantidad">25 songs</p>
-                        </div>
-                        <div class="stat">
-                            <img class="imagen_stat" src="images/heart.png" alt="imagenCorazon">
-                            <p class="cantidad">32.1k</p>
-                        </div>
-                        <div class="stat">
-                            <img class="imagen_stat" src="images/comment.png" alt="imagenCorazon">
-                            <p class="cantidad">231</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-    </div>
-</div>
-
-<div class="favorites">
 
 </div>
