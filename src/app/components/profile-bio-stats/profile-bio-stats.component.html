@@ -1,9 +1,15 @@
 <div class="contenedor_bio_stats">
-    <div class="contenedor_biografia">
-        <p class="titulo_bio">Bio</p>
-        <p class="texto_bio">{{ bio || 'Sin biografía disponible.' }}</p>
-      </div>
-    
+  <div class="contenedor_biografia">
+    @if (isEditMode) {
+      <p class="titulo_bio">Bio <span class="titulo_descripcion">Edit your description (Click Below)</span></p>
+      <textarea class="texto_bio" maxlength="900" [value]="bio" (input)="onBioChange($event)" spellcheck="false"></textarea>
+    }
+    @if (!isEditMode) {
+      <p class="titulo_bio">Bio</p>
+      <textarea class="texto_bio" maxlength="900" [value]="bio" spellcheck="false" readonly></textarea>
+
+    }
+  </div>
       <!-- Estadísticas del usuario -->
       <div class="contenedor_stats_bio">
         <div class="contenedor_ranked_reviews">

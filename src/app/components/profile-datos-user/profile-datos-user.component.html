@@ -1,8 +1,12 @@
 <div class="contenedor_datos_user">
-    <div class="contenedor_edit_profile">
+
+  @if (idUser === idProfile && isProfilePage) {
+    <div class="contenedor_edit_profile"  (click)="redirectToEditProfile()">
       <p>Edit Profile</p>
       <img class="foto_engranaje" src="images/engranaje.png" alt="">
     </div>
+  }
+    
     <div class="contenedor_foto">
         <img class="foto_user" [src]="userProfile.photo || 'images/foto_user_default.png'" alt="">
         @if (this.idUser != this.idProfile) {
@@ -13,7 +17,7 @@
             </button>
         }
         
-        <p class="nombre_user">{{ userProfile.username || 'Usuario no encontrado' }}</p>
+        <p class="nombre_user">{{ userProfile.username || 'Usuario no encontrado' }} <i class="fa-solid fa-pencil lapiz"></i> </p>
       </div>
     <div class="contenedor_stats_user">
       <div>

@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Jockey+One&display=swap');
+
+:host {
+    font-family: 'Jockey One', sans-serif; /* Aplica la fuente a todo el componente */
+}
+
+p{
+    margin: 0;
+    padding: 0;
+}
+
+.contenedor_principal {
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.5fr 1fr;
+    align-items: center;
+    gap: 3rem;
+    width: 177.5rem;
+    height: 62rem;
+    margin: 0 auto;
+}
+
+.contenedor_botones {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    gap: 2rem; /* Espaciado entre botones */
+    margin-top: 5rem; /* Opcional: Espaciado superior si lo necesitas */
+}
+
+.boton_guardar{
+    font-family: 'Jockey One', sans-serif;
+    width: 12rem;
+    height: 7rem;
+    font-size: 3rem;
+    background-color: #0F9A24;
+    border: none;
+    color: white;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.boton_cancelar{
+    font-family: 'Jockey One', sans-serif;
+    width: 12rem;
+    height: 7rem;
+    font-size: 3rem;
+    background-color: #CC0003;
+    border: none;
+    color: white;
+    border-radius: 1rem;
+    cursor: pointer;
+}

@@ -44,12 +44,14 @@ import { profile } from 'console';
 import { ProfileBioStatsComponent } from './components/profile-bio-stats/profile-bio-stats.component';
 import { ProfileHistoryComponent } from './components/profile-history/profile-history.component';
 import { ProfilePopularListsComponent } from './components/profile-popular-lists/profile-popular-lists.component';
+import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 
 export const routes: Routes = [
     /* PAGINAS */
     { path: 'homepage', component: HomepageComponent},
     { path: 'login', component: LoginComponent},
     { path: 'profile/:id', component: ProfileComponent, pathMatch: 'full', data: { idPattern: '\\d+' } },
+    { path: 'editProfile/:id', component: EditProfileComponent, pathMatch: 'full', data: { idPattern: '\\d+' } },
     { path: 'watchlist_songs/:id_user', component: WatchlistComponent, pathMatch: 'full', data: { idPattern: '\\d+' } },
     { path: 'watchlist_albums/:id_user', component: WatchlistComponent, pathMatch: 'full', data: { idPattern: '\\d+' } },
     { path: 'songsListened/:id_user', component: SongsListenedComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id

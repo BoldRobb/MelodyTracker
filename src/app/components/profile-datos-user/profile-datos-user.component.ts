@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   standalone: true,
   imports: [],
   templateUrl: './profile-datos-user.component.html',
-  styleUrl: './profile-datos-user.component.css'
+  styleUrls: ['./profile-datos-user.component.css']
 })
 export class ProfileDatosUserComponent implements OnInit {
   userProfile = {
@@ -21,6 +21,7 @@ export class ProfileDatosUserComponent implements OnInit {
   isFollowed = false;
   idUser: number | null = null;
   idProfile: number | null = null;
+  isProfilePage = false; // Verifica si estamos en /profile/:id
 
   constructor(
     private userService: UsersService,
@@ -31,9 +32,14 @@ export class ProfileDatosUserComponent implements OnInit {
   ngOnInit(): void {
     this.idUser = this.getUserIdFromToken(); // Extraer el id del token
 
-    // Obtener el parámetro 'id' de la URL y cargar el perfil
+    // Obtener el parámetro 'id' de la URL y verificar el path
     this.route.params.subscribe(params => {
-      this.idProfile = +params['id'];
+      this.idProfile = +params['id']; // Convertir el parámetro a número
+
+      // Verificar si la URL actual es exactamente /profile/:id
+      const currentRoute = this.router.url;
+      this.isProfilePage = currentRoute.startsWith(`/profile/`) && !currentRoute.includes('/editProfile/');
+
       if (this.idProfile && !isNaN(this.idProfile)) {
         this.loadUserProfile(this.idProfile);
 
@@ -78,6 +84,15 @@ export class ProfileDatosUserComponent implements OnInit {
         console.error('Error following user:', err);
       }
     });
+  }
+
+  redirectToEditProfile(): void {
+    if (this.idUser) {
+      // Redirige a /editProfile/:id usando el router
+      this.router.navigate([`/editProfile/${this.idUser}`]);
+    } else {
+      console.error('No se pudo redirigir: idUser es nulo.');
+    }
   }
 
   unfollowUser(): void {

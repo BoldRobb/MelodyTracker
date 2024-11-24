@@ -16,7 +16,7 @@ from app.models.songs import LikedSongs, ListenedSongs, RankedSongs, ReviewedSon
 
 from app.models.albums import LikedAlbums, ListenedAlbums, RankedAlbums, ReviewedAlbums, WatchlistAlbums
 
-from app.schemas.users import UserCreate, UserIdsRequest, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse 
+from app.schemas.users import BioUpdateRequest, UserCreate, UserIdsRequest, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse 
 
 from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_current_user  # Asegúrate de importar hash_password
 
@@ -495,6 +495,9 @@ async def get_user_details(id_user: int, db: Session = Depends(get_db)):
         "total_followers": total_followers,  # Se regresa el total de seguidores
     }
 
+
+
+
 @router.get("/top_users", response_model=List[dict])
 def get_top_users(db: Session = Depends(get_db)):
     users_stats = []
@@ -547,3 +550,20 @@ def get_top_users(db: Session = Depends(get_db)):
 
     # Devolver los primeros 50 usuarios (o menos si no hay suficientes)
     return users_stats[:50]
+
+
+
+# Endpoint para actualizar la biografía de un usuario
+@router.put("/{id_user}/update_bio")
+async def update_user_bio(id_user: int, request: BioUpdateRequest, db: Session = Depends(get_db)):
+    # Buscar el perfil del usuario
+    profile = db.query(Profile).filter(Profile.id_user == id_user).first()
+
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+
+    # Actualizar la biografía
+    profile.bio = request.new_bio
+    db.commit()
+
+    return {"message": "Biography updated successfully", "bio": profile.bio}

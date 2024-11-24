@@ -285,4 +285,15 @@ export class UsersService {
     );
   }
 
+
+
+  updateBio(id_user: number, newBio: string): Observable<{ message: string; bio: string }> {
+    this.spinnerService.show(); // Mostrar el spinner mientras se realiza la solicitud
+    return this.http
+      .put<{ message: string; bio: string }>(`${this.apiUrl}/users/${id_user}/update_bio`, { new_bio: newBio })
+      .pipe(
+        finalize(() => this.spinnerService.hide()) // Esconder el spinner cuando la solicitud termine
+      );
+  }
+
 }

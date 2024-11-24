@@ -44,3 +44,6 @@ class UserStatsResponse(BaseModel):
 
 class UserIdsRequest(BaseModel):
     user_ids: List[int]
+
+class BioUpdateRequest(BaseModel):
+    new_bio: str
