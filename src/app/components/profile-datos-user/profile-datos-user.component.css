@@ -103,3 +103,21 @@ p {
     opacity: 60%;
 }
 
+.nombre_user {
+    font-family: 'Jockey One', sans-serif;
+    background-color: #0D0B29;
+    color: white;
+    border: none;
+    resize: none; /* Para que no se pueda redimensionar */
+    outline: none;
+    text-align: center;
+    height: 60px; /* Ajusta la altura que desees */
+    width: 30rem;
+    resize: none;
+    background-color: #0A0824;
+  }
+
+.titulo_descripcion{
+    font-size: 1.5rem;
+    color: white;
+}

@@ -31,18 +31,18 @@ export class ProfileDatosUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.idUser = this.getUserIdFromToken(); // Extraer el id del token
-
+  
     // Obtener el parámetro 'id' de la URL y verificar el path
     this.route.params.subscribe(params => {
       this.idProfile = +params['id']; // Convertir el parámetro a número
-
+  
       // Verificar si la URL actual es exactamente /profile/:id
       const currentRoute = this.router.url;
       this.isProfilePage = currentRoute.startsWith(`/profile/`) && !currentRoute.includes('/editProfile/');
-
+  
       if (this.idProfile && !isNaN(this.idProfile)) {
         this.loadUserProfile(this.idProfile);
-
+  
         // Verificar si el usuario sigue al perfil
         if (this.idUser) {
           this.checkIfUserIsFollowed(this.idProfile, this.idUser);

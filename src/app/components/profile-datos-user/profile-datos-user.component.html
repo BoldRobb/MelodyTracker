@@ -17,7 +17,8 @@
             </button>
         }
         
-        <p class="nombre_user">{{ userProfile.username || 'Usuario no encontrado' }} <i class="fa-solid fa-pencil lapiz"></i> </p>
+        <!-- <p class="nombre_user">{{ userProfile.username || 'Usuario no encontrado' }} </p> -->
+        <textarea class="nombre_user" maxlength="14" [value]="userProfile.username" spellcheck="false" [readonly]="isProfilePage"></textarea>
       </div>
     <div class="contenedor_stats_user">
       <div>
