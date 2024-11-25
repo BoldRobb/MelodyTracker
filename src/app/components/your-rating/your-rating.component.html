@@ -1,10 +1,33 @@
 <div class="contenedor_principal">
     <p class="texto">Your Rating</p>
-    <div class="contenedor_rate">
-        <img class="imagen_estrella" src="images/star.png" alt="">
-        <img class="imagen_estrella" src="images/star.png" alt="">
-        <img class="imagen_estrella" src="images/star.png" alt="">
-        <img class="imagen_estrella" src="images/star.png" alt="">
-        <img class="imagen_estrella" src="images/star.png" alt="">
+    <div class="contenedor_rate" (mousemove)="handleMouseMove($event)" (mouseleave)="clearHover()">
+      <div class="contenedor_borrar_rating" (click)="resetRating()">
+        <p class="borrar_rating">X</p>
+      </div>
+      <div
+        class="estrella"
+        *ngFor="let star of stars; let index = index"
+        [attr.data-index]="index"
+        (click)="setRating(index, $event)"
+      >
+        <img
+          class="imagen_estrella fondo"
+          src="images/star.png"
+          alt=""
+        />
+        <img
+          class="imagen_estrella foreground"
+          src="images/star.png"
+          alt=""
+          [ngClass]="{
+            'hovered': hoverIndex >= index + 1,
+            'half-hovered': hoverIndex > index && hoverIndex < index + 1,
+            'selected': selectedRating >= index + 1,
+            'half-selected': selectedRating > index && selectedRating < index + 1,
+            'neutral': hoverIndex === 0 && selectedRating === 0
+          }"
+        />
+      </div>
     </div>
-</div>
+  </div>
+  

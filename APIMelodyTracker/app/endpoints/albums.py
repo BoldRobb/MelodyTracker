@@ -157,9 +157,6 @@ def rank_album(rank_data: RankedAlbum, db: Session = Depends(get_db), current_us
 
     user, role = current_user
 
-    if role != "admin":
-        raise HTTPException(status_code=403, detail="Not authorized")
-
 
     # Verificar si el álbum ya ha sido rankeado por el usuario
     existing_rank = db.query(RankedAlbums).filter(
@@ -184,6 +181,44 @@ def rank_album(rank_data: RankedAlbum, db: Session = Depends(get_db), current_us
 
     return {"msg": "Album ranked successfully", "rank_data": new_rank}
 
+
+
+@router.delete("/rankAlbum/{id_user}/{id_album}")
+def delete_ranked_album(id_user: int, id_album: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    user, role = current_user
+
+
+
+    # Buscar el ranking a eliminar
+    ranked_album = db.query(RankedAlbums).filter(
+        RankedAlbums.id_user == id_user,
+        RankedAlbums.id_album == id_album
+    ).first()
+
+    if not ranked_album:
+        raise HTTPException(status_code=404, detail="Ranked album not found")
+
+    # Eliminar el ranking
+    db.delete(ranked_album)
+    db.commit()
+
+    return {"msg": "Ranked album deleted successfully"}
+
+
+@router.get("/hasRankAlbum")
+def has_rank_album(id_user: int, id_album: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    user, role = current_user  # Obtener el usuario actual (si es necesario para validación)
+
+    # Verificar si el álbum ya ha sido rankeado por el usuario
+    existing_rank = db.query(RankedAlbums).filter(
+        RankedAlbums.id_user == id_user,
+        RankedAlbums.id_album == id_album
+    ).first()
+
+    if existing_rank:
+        return {"has_rank": True, "score": existing_rank.score}  # Retornar True y el puntaje si existe el ranking
+    else:
+        return {"has_rank": False, "score": None}  # Retornar False si no existe el ranking
 
 
 # Sacar los Top 10 Ranked Albums

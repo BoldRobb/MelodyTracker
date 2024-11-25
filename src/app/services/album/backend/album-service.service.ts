@@ -244,6 +244,64 @@ export class AlbumService {
   }
 
 
+ // Función para obtener el token desde localStorage
+ private getAuthToken(): string | null {
+  return localStorage.getItem('access_token'); // Obtener el token del localStorage
+}
 
+// Función para agregar el token en los encabezados
+private getAuthHeaders(): HttpHeaders {
+  const token = this.getAuthToken();
+  let headers = new HttpHeaders();
+
+  if (token) {
+    headers = headers.set('Authorization', `Bearer ${token}`);
+  }
+
+  return headers;
+}
+
+// Servicio para calificar el álbum
+rankAlbum(id_user: number, id_album: number, score: number): Observable<{ msg: string, rank_data: any }> {
+  this.spinnerService.show(); // Mostrar el spinner
+
+  const rankData = {
+    id_user: id_user,
+    id_album: id_album,
+    score: score,
+  };
+
+  return this.http
+    .post<{ msg: string, rank_data: any }>(
+      `${this.apiUrl}/albums/rankAlbum`,
+      rankData,
+      { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner cuando termine
+}
+
+// Servicio para eliminar el ranking de un álbum
+deleteRankedAlbum(id_user: number, id_album: number): Observable<{ msg: string }> {
+  this.spinnerService.show(); // Mostrar el spinner
+
+  return this.http
+    .delete<{ msg: string }>(
+      `${this.apiUrl}/albums/rankAlbum/${id_user}/${id_album}`,
+      { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+// Servicio para verificar si un usuario ha rankeado un álbum
+hasRankAlbum(id_user: number, id_album: number): Observable<{ has_rank: boolean, score: number | null }> {
+  this.spinnerService.show(); // Mostrar el spinner
+
+  return this.http
+    .get<{ has_rank: boolean, score: number | null }>(
+      `${this.apiUrl}/albums/hasRankAlbum?id_user=${id_user}&id_album=${id_album}`,
+      { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner cuando termine
+}
 
 }

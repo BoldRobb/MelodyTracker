@@ -24,8 +24,55 @@
     gap: 0.6rem;
 }
 
-.imagen_estrella{
+/* Normal */
+.imagen_estrella {
     width: 7rem;
     height: 7rem;
     cursor: pointer;
-}
+    position: absolute;
+  }
+  
+  .fondo {
+    filter: grayscale(100%);
+  }
+  .foreground {
+    clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
+    filter: grayscale(100%);
+  }
+  
+  .foreground.hovered,
+  .foreground.selected {
+    filter: grayscale(0%);
+  }
+  
+  .foreground.half-hovered,
+  .foreground.half-selected {
+    clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+    filter: grayscale(0%);
+  }
+  
+  .foreground.neutral {
+    filter: grayscale(100%);
+  }
+  
+  /* Para asegurarse de que las estrellas se superpongan */
+  .estrella {
+    position: relative;
+    display: inline-block;
+    width: 7rem;
+    height: 7rem;
+  }
+  
+
+  .contenedor_borrar_rating{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .borrar_rating{
+    margin: 0;
+    font-size: 5rem;
+    margin-top: 2rem;
+    margin-right: 1rem;
+  }
