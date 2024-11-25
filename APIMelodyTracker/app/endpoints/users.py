@@ -24,16 +24,21 @@ router = APIRouter()
 
 @router.post("/token")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    # Buscar el usuario por nombre de usuario
     user = db.query(User).filter(User.username == form_data.username).first()
 
-    if not verify_password(form_data.password, user.password):  # Asegúrate de usar user.hashed_password
+    # Verificar si el usuario existe
+    if user is None:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    # Verificar si la contraseña es correcta
+    if not verify_password(form_data.password, user.password):  # Asegúrate de usar user.password
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     # Pasa el objeto User a la función create_jwt_token
     token = create_jwt_token(user)
     
     return {"access_token": token, "token_type": "bearer"}
-
 
 @router.get("/me")
 def read_users_me(current_user: User = Depends(get_current_user)):

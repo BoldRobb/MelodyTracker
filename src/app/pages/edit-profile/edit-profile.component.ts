@@ -76,10 +76,19 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
-  saveBio(): void {
-    if (this.profileBioStatsComponent && this.bio !== null && this.idUser !== null) {
-      const newBio = this.profileBioStatsComponent.bio.trim();
+  saveinfo(): void {
+    if (this.profileBioStatsComponent && this.profileDatosUserComponent) {
+      this.saveBio();
+      this.saveProfile();
+    } else {
+      console.error('Componentes no inicializados correctamente.');
+    }
+  }
 
+  saveBio(): void {
+    if (this.profileBioStatsComponent && this.idUser !== null) {
+      const newBio = this.profileBioStatsComponent.bio.trim();
+      console.log('Guardando nueva bio:', newBio);
       this.userService.updateBio(this.idUser, newBio).subscribe({
         next: (response) => {
           console.log('Biografía actualizada:', response.bio);
@@ -93,32 +102,25 @@ export class EditProfileComponent implements OnInit {
       });
     }
   }
-
+  
   saveProfile(): void {
     if (this.idUser && this.profileDatosUserComponent) {
-      // Llama al método del componente hijo para actualizar el username
       this.profileDatosUserComponent.updateUsername(this.idUser);
-  
-      // Obtén el nuevo username desde el componente hijo
       const nuevoUsername = this.profileDatosUserComponent.newUsername;
+      console.log('Nuevo username:', nuevoUsername);
   
       if (nuevoUsername) {
-        console.log('Nuevo username:', nuevoUsername);
-  
-        // Aquí puedes enviar el nuevo username al backend
         this.userService.updateUsername(this.idUser, nuevoUsername).subscribe({
           next: response => {
-            console.log('Username actualizado exitosamente en el backend:', response);
+            console.log('Username actualizado:', response);
           },
           error: err => {
-            console.error('Error actualizando el username en el backend:', err);
+            console.error('Error actualizando el username:', err);
           }
         });
       } else {
         console.error('El nuevo username está vacío.');
       }
-    } else {
-      console.error('No se pudo actualizar el perfil. idUser o profileDatosUserComponent no están definidos.');
     }
   }
 
