@@ -43,6 +43,21 @@ export class UsersService {
       );
   }
 
+  // Método para registrar al usuario
+  registerNewUser(formData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/users/createUser`, formData);
+  }
+
+  getNewToken(username: string, password: string): Observable<any> {
+    const body = new URLSearchParams();
+    body.set('username', username);
+    body.set('password', password);
+    
+    return this.http.post(`${this.apiUrl}/users/token`, body.toString(), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+  }
+
   // Método de registro de usuario
   registerUser(data: RegisterData): Observable<any> {
     return this.http.post(`${this.apiUrl}/users/users/createUser`, data);
@@ -84,6 +99,9 @@ export class UsersService {
       });
     }
   }
+
+
+  
 
   // Cerrar sesión y limpiar el token
   logout(): void {
@@ -311,5 +329,5 @@ export class UsersService {
 
 
 
-  
+
 }

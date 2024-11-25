@@ -25,9 +25,6 @@ router = APIRouter()
 @router.post("/token")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == form_data.username).first()
-    
-    if user is None:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
 
     if not verify_password(form_data.password, user.password):  # Asegúrate de usar user.hashed_password
         raise HTTPException(status_code=401, detail="Invalid credentials")
@@ -81,12 +78,14 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
 
-    # Crear el perfil del usuario
-    new_profile = Profile(id_user=new_user.id_user, bio=None, photo=None)  # Establecer bio y photo como None
+    # Crear el perfil del usuario con una foto predeterminada
+    default_photo_url = "https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FavatarDefault.png?alt=media&token=8aa7f9ce-79a4-4fd4-9133-8fd8b000b0e4"
+    new_profile = Profile(id_user=new_user.id_user, bio=None, photo=default_photo_url)  # Establecer la foto por defecto
     db.add(new_profile)
     db.commit()
 
     return {"msg": "User created successfully", "user_id": new_user.id_user}
+
 
 
 @router.get("/info_profile/{id_user}", response_model=ProfileResponse)

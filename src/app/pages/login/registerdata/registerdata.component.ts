@@ -38,18 +38,31 @@ export class RegisterdataComponent {
       const formData = {
         username: this.registerForm.value.username,
         email: this.registerForm.value.email,
-        password: this.registerForm.value.password,
-        confirmPassword: this.registerForm.value.confirmPassword, // Incluyendo confirmPassword
+        password: this.registerForm.value.password, // Solo la contraseña
         role: 'user' // Asignamos el rol "user"
       };
-      
-      this.usersService.registerUser(formData).subscribe(
+  
+      // Registramos al usuario
+      this.usersService.registerNewUser(formData).subscribe(
         (response) => {
-          console.log(response);
-          alert('User registered successfully');
+          console.log('User registered successfully', response);
+          this.usersService.getNewToken(formData.username, formData.password).subscribe(
+            (tokenResponse) => {
+              const token = tokenResponse.access_token;
+              if (token) {
+                localStorage.setItem('access_token', token);
+                console.log('Token saved in localStorage');
+                alert('User registered successfully and token saved');
+              }
+            },
+            (error) => {
+              console.error('Error retrieving token:', error);
+              alert('Error retrieving token after registration');
+            }
+          );
         },
         (error) => {
-          console.error(error);
+          console.error('Error registering user:', error);
           alert('Error registering user: ' + (error.error.detail || error.message || 'Unknown error'));
         }
       );
