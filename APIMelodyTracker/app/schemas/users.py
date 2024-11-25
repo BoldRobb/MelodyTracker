@@ -47,3 +47,6 @@ class UserIdsRequest(BaseModel):
 
 class BioUpdateRequest(BaseModel):
     new_bio: str
+
+class UsernameUpdateRequest(BaseModel):
+    new_username: str

@@ -18,6 +18,8 @@ export class ProfileDatosUserComponent implements OnInit {
     total_followers: 0,
   };
 
+  newUsername: string = this.userProfile?.username || '';
+
   isFollowed = false;
   idUser: number | null = null;
   idProfile: number | null = null;
@@ -52,6 +54,9 @@ export class ProfileDatosUserComponent implements OnInit {
       }
     });
   }
+
+
+  
 
   checkIfUserIsFollowed(idProfile: number, idUser: number): void {
     this.userService.isUserFollowing(idProfile, idUser).subscribe({
@@ -107,6 +112,17 @@ export class ProfileDatosUserComponent implements OnInit {
         console.error('Error unfollowing user:', err);
       }
     });
+  }
+
+  // Método para actualizar el username
+  updateUsername(idUser: number): void {
+    const usernameTextarea = document.querySelector('.nombre_user') as HTMLTextAreaElement;
+    if (usernameTextarea) {
+      this.newUsername = usernameTextarea.value.trim();
+      console.log(`Username actualizado a: ${this.newUsername} para el usuario con ID: ${idUser}`);
+    } else {
+      console.error('No se encontró el campo de username.');
+    }
   }
 
   loadUserProfile(idProfile: number): void {

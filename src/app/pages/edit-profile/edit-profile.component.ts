@@ -18,6 +18,7 @@ import { ProfilePopularListsComponent } from "../../components/profile-popular-l
 export class EditProfileComponent implements OnInit {
 
   @ViewChild(ProfileBioStatsComponent) profileBioStatsComponent!: ProfileBioStatsComponent; // Referencia al componente hijo
+  @ViewChild(ProfileDatosUserComponent) profileDatosUserComponent!: ProfileDatosUserComponent; // Referencia al componente hijo
 
   userProfile: {
     username: string;
@@ -92,6 +93,35 @@ export class EditProfileComponent implements OnInit {
       });
     }
   }
+
+  saveProfile(): void {
+    if (this.idUser && this.profileDatosUserComponent) {
+      // Llama al método del componente hijo para actualizar el username
+      this.profileDatosUserComponent.updateUsername(this.idUser);
+  
+      // Obtén el nuevo username desde el componente hijo
+      const nuevoUsername = this.profileDatosUserComponent.newUsername;
+  
+      if (nuevoUsername) {
+        console.log('Nuevo username:', nuevoUsername);
+  
+        // Aquí puedes enviar el nuevo username al backend
+        this.userService.updateUsername(this.idUser, nuevoUsername).subscribe({
+          next: response => {
+            console.log('Username actualizado exitosamente en el backend:', response);
+          },
+          error: err => {
+            console.error('Error actualizando el username en el backend:', err);
+          }
+        });
+      } else {
+        console.error('El nuevo username está vacío.');
+      }
+    } else {
+      console.error('No se pudo actualizar el perfil. idUser o profileDatosUserComponent no están definidos.');
+    }
+  }
+
 
   cancelEdit(): void {
     this.location.back(); // Navega hacia la página anterior en el historial

@@ -296,4 +296,20 @@ export class UsersService {
       );
   }
 
+
+  updateUsername(id_user: number, newUsername: string): Observable<{ message: string; username: string }> {
+    this.spinnerService.show(); // Mostrar el spinner mientras se realiza la solicitud
+    return this.http
+      .put<{ message: string; username: string }>(
+        `${this.apiUrl}/users/${id_user}/update_username`, 
+        { new_username: newUsername }
+      )
+      .pipe(
+        finalize(() => this.spinnerService.hide()) // Esconder el spinner cuando la solicitud termine
+      );
+  }
+
+
+
+  
 }

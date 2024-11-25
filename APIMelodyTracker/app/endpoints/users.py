@@ -16,7 +16,7 @@ from app.models.songs import LikedSongs, ListenedSongs, RankedSongs, ReviewedSon
 
 from app.models.albums import LikedAlbums, ListenedAlbums, RankedAlbums, ReviewedAlbums, WatchlistAlbums
 
-from app.schemas.users import BioUpdateRequest, UserCreate, UserIdsRequest, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse 
+from app.schemas.users import BioUpdateRequest, UserCreate, UserIdsRequest, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse, UsernameUpdateRequest 
 
 from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_current_user  # Asegúrate de importar hash_password
 
@@ -567,3 +567,32 @@ async def update_user_bio(id_user: int, request: BioUpdateRequest, db: Session =
     db.commit()
 
     return {"message": "Biography updated successfully", "bio": profile.bio}
+
+
+
+# Endpoint para actualizar el username de un usuario
+@router.put("/{id_user}/update_username")
+async def update_user_username(
+    id_user: int, 
+    request: UsernameUpdateRequest, 
+    db: Session = Depends(get_db)
+):
+    # Validar que el nuevo username no esté vacío
+    if not request.new_username.strip():
+        raise HTTPException(status_code=400, detail="Username cannot be empty")
+
+    # Verificar si el nuevo username ya está en uso
+    existing_user = db.query(User).filter(User.username == request.new_username).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Username already taken")
+
+    # Buscar el usuario actual en la base de datos
+    user = db.query(User).filter(User.id_user == id_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Actualizar el username
+    user.username = request.new_username
+    db.commit()
+
+    return {"message": "Username updated successfully", "username": user.username}
