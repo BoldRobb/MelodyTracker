@@ -26,7 +26,7 @@ CREATE TABLE `album` (
   `id_album` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `id_artist` bigint NOT NULL,
-  `photo` blob,
+  `photo` varchar(255) DEFAULT NULL,
   `released` date NOT NULL,
   `language` varchar(255) NOT NULL,
   PRIMARY KEY (`id_album`),
@@ -41,7 +41,7 @@ CREATE TABLE `album` (
 
 LOCK TABLES `album` WRITE;
 /*!40000 ALTER TABLE `album` DISABLE KEYS */;
-INSERT INTO `album` VALUES (1,'Purpose',5,NULL,'2015-11-13','English'),(2,'Believe',5,NULL,'2012-06-15','English'),(3,'My World 2.0',5,NULL,'2010-03-19','English'),(4,'Justice',5,NULL,'2021-03-19','English'),(5,'Changes',5,NULL,'2020-02-14','English'),(7,'After Hours',4,NULL,'2020-03-20','English'),(8,'Starboy',4,NULL,'2016-11-25','English'),(9,'Beauty Behind the Madness',4,NULL,'2015-08-28','English'),(10,'Kiss Land',4,NULL,'2013-09-10','English'),(11,'Dawn FM',4,NULL,'2022-01-07','English'),(12,'Dale Play',7,NULL,'2020-03-27','Spanish'),(13,'El Último Romántico',7,NULL,'2021-06-11','Spanish'),(14,'TPZK',7,NULL,'2021-12-10','Spanish'),(15,'Tiempos',7,NULL,'2023-06-23','Spanish'),(16,'Música de la Calle',7,NULL,'2023-08-25','Spanish');
+INSERT INTO `album` VALUES (1,'Purpose',5,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fpurpose.jpg?alt=media&token=c7e2ed31-747b-49ca-9921-1808f95b9a42','2015-11-13','English'),(2,'Believe',5,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fbelieve.jpg?alt=media&token=a3fe987b-1267-4ed1-8ca7-d6c4f3367dbd','2012-06-15','English'),(3,'My World 2.0',5,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fmyworld20.jpg?alt=media&token=d894932a-61ab-48dc-83cd-86d59cefd09f','2010-03-19','English'),(4,'Justice',5,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fjustice.jpg?alt=media&token=8b6a6d9b-b2e4-4d6a-8246-6e805ee6bcf9','2021-03-19','English'),(5,'Changes',5,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fchanges.jpg?alt=media&token=04ca3a34-02c5-4700-89d6-168120e13380','2020-02-14','English'),(7,'After Hours',4,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fafterhours.jpg?alt=media&token=c279a280-06eb-4fed-aaa2-0e7f5a1168c1','2020-03-20','English'),(8,'Starboy',4,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88','2016-11-25','English'),(9,'Beauty Behind the Madness',4,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2FBeautyBehindtheMadness.jpg?alt=media&token=4b10c8ca-ad82-418a-b777-910c4ccb77fc','2015-08-28','English'),(10,'Kiss Land',4,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fkissland.jpg?alt=media&token=35073b34-223d-4f73-80fc-71b1a632655d','2013-09-10','English'),(11,'Dawn FM',4,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fdawnfm.jpg?alt=media&token=da7b6c40-1894-41a1-a555-596df872c4d4','2022-01-07','English'),(12,'Portales',7,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fportales.jpg?alt=media&token=c1be0f28-d412-41df-a18e-bc126c8a58b8','2020-03-27','Spanish'),(13,'GOTTI A',7,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2FGOTTIA.jpg?alt=media&token=57e99274-053b-4763-9207-f8fdf209764b','2021-06-11','Spanish'),(14,'TPZK',7,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2FGOTTIA.jpg?alt=media&token=57e99274-053b-4763-9207-f8fdf209764b','2021-12-10','Spanish'),(15,'Cato Soundtrack',7,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fcato.jpg?alt=media&token=6f6cb010-59d0-46b3-9b87-f679f8f9704a','2023-06-23','Spanish'),(16,'Valor de la Calle',7,'https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fvalordelacalle.jpg?alt=media&token=6ed737b5-d6f4-4221-aba3-6d424da6af86','2023-08-25','Spanish');
 /*!40000 ALTER TABLE `album` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS `artist`;
 CREATE TABLE `artist` (
   `id_artist` bigint NOT NULL AUTO_INCREMENT,
   `bio` text NOT NULL,
-  `photo` blob NOT NULL,
+  `photo` varchar(255) NOT NULL,
   `spotify` text,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id_artist`),
@@ -69,7 +69,7 @@ CREATE TABLE `artist` (
 
 LOCK TABLES `artist` WRITE;
 /*!40000 ALTER TABLE `artist` DISABLE KEYS */;
-INSERT INTO `artist` VALUES (1,'Carlos Vives es un cantante, compositor y actor colombiano, conocido por su música de vallenato y su fusión con otros géneros.',_binary 'url_de_la_foto_carlos_vives.jpg','https://open.spotify.com/artist/carlosvives','Carlos Vives'),(2,'Luis Fonsi es un cantante y compositor puertorriqueño, famoso por su éxito \"Despacito\".',_binary 'url_de_la_foto_luis_fonsi.jpg','https://open.spotify.com/artist/luisfonsi','Luis Fonsi'),(3,'Ed Sheeran es un cantante y compositor británico, conocido por sus baladas emotivas y su estilo único.',_binary 'url_de_la_foto_ed_sheeran.jpg','https://open.spotify.com/artist/edsheeran','Ed Sheeran'),(4,'The Weeknd es un cantante y productor canadiense, famoso por su estilo innovador y su música R&B.',_binary 'url_de_la_foto_the_weeknd.jpg','https://open.spotify.com/artist/theweeknd','The Weeknd'),(5,'Justin Bieber es un cantante canadiense que ha sido una sensación mundial desde su adolescencia.',_binary 'url_de_la_foto_justin_bieber.jpg','https://open.spotify.com/artist/justinbieber','Justin Bieber'),(7,'Tiago PZK es un cantante y rapero argentino, conocido por su música que mezcla géneros como el trap, reggaetón y pop.','','https://open.spotify.com/artist/6opBkyWwqkGa2ZgB1swh9a','Tiago PZK');
+INSERT INTO `artist` VALUES (1,'Carlos Vives es un cantante, compositor y actor colombiano, conocido por su música de vallenato y su fusión con otros géneros.','url_de_la_foto_carlos_vives.jpg','https://open.spotify.com/artist/carlosvives','Carlos Vives'),(2,'Luis Fonsi es un cantante y compositor puertorriqueño, famoso por su éxito \"Despacito\".','url_de_la_foto_luis_fonsi.jpg','https://open.spotify.com/artist/luisfonsi','Luis Fonsi'),(3,'Ed Sheeran es un cantante y compositor británico, conocido por sus baladas emotivas y su estilo único.','url_de_la_foto_ed_sheeran.jpg','https://open.spotify.com/artist/edsheeran','Ed Sheeran'),(4,'The Weeknd es un cantante y productor canadiense, famoso por su estilo innovador y su música R&B.','url_de_la_foto_the_weeknd.jpg','https://open.spotify.com/artist/theweeknd','The Weeknd'),(5,'Justin Bieber es un cantante canadiense que ha sido una sensación mundial desde su adolescencia.','url_de_la_foto_justin_bieber.jpg','https://open.spotify.com/artist/justinbieber','Justin Bieber'),(7,'Tiago PZK es un cantante y rapero argentino, conocido por su música que mezcla géneros como el trap, reggaetón y pop.','','https://open.spotify.com/artist/6opBkyWwqkGa2ZgB1swh9a','Tiago PZK');
 /*!40000 ALTER TABLE `artist` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,7 +232,7 @@ CREATE TABLE `followers` (
 
 LOCK TABLES `followers` WRITE;
 /*!40000 ALTER TABLE `followers` DISABLE KEYS */;
-INSERT INTO `followers` VALUES (1,2),(1,3),(1,5),(3,1),(3,2),(3,5),(3,6),(3,7);
+INSERT INTO `followers` VALUES (1,2),(1,3),(1,5),(3,1),(3,2),(3,5),(3,6),(3,7),(9,3),(7,3),(6,3),(5,3),(8,1),(6,8),(1,8),(2,8),(5,8),(7,8),(9,8),(3,8),(7,10),(8,22);
 /*!40000 ALTER TABLE `followers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,6 +260,7 @@ CREATE TABLE `liked_albums` (
 
 LOCK TABLES `liked_albums` WRITE;
 /*!40000 ALTER TABLE `liked_albums` DISABLE KEYS */;
+INSERT INTO `liked_albums` VALUES (2,13,'2024-11-14'),(8,14,'2024-11-15'),(8,1,'2024-11-19'),(8,8,'2024-11-20'),(10,14,'2024-11-22'),(10,8,'2024-11-22'),(22,14,'2024-11-25');
 /*!40000 ALTER TABLE `liked_albums` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -377,11 +378,11 @@ DROP TABLE IF EXISTS `liked_songs`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `liked_songs` (
   `id_user` bigint NOT NULL,
-  `id_songs` bigint NOT NULL,
+  `id_song` bigint NOT NULL,
   `date` date NOT NULL,
-  KEY `liked_songs_id_songs_fk` (`id_songs`),
+  KEY `liked_songs_id_songs_fk` (`id_song`),
   KEY `liked_songs_id_user_fk` (`id_user`),
-  CONSTRAINT `liked_songs_id_songs_fk` FOREIGN KEY (`id_songs`) REFERENCES `songs` (`id_song`),
+  CONSTRAINT `liked_songs_id_songs_fk` FOREIGN KEY (`id_song`) REFERENCES `songs` (`id_song`),
   CONSTRAINT `liked_songs_id_user_fk` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -392,6 +393,7 @@ CREATE TABLE `liked_songs` (
 
 LOCK TABLES `liked_songs` WRITE;
 /*!40000 ALTER TABLE `liked_songs` DISABLE KEYS */;
+INSERT INTO `liked_songs` VALUES (5,7,'2024-11-13'),(1,7,'2024-11-13'),(2,7,'2024-11-13'),(3,7,'2024-11-13'),(8,7,'2024-11-14'),(8,9,'2024-11-19'),(8,14,'2024-11-19'),(10,8,'2024-11-22'),(10,9,'2024-11-22'),(22,8,'2024-11-25');
 /*!40000 ALTER TABLE `liked_songs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -407,10 +409,11 @@ CREATE TABLE `list` (
   `id_user` bigint NOT NULL,
   `name` varchar(255) NOT NULL,
   `comment` text NOT NULL,
+  `photo` varchar(255) NOT NULL,
   PRIMARY KEY (`id_list`),
   KEY `list_user_fk_idx` (`id_user`),
   CONSTRAINT `list_user_fk` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -419,6 +422,7 @@ CREATE TABLE `list` (
 
 LOCK TABLES `list` WRITE;
 /*!40000 ALTER TABLE `list` DISABLE KEYS */;
+INSERT INTO `list` VALUES (1,8,'Mi Primera Lista','Esta es una lista de prueba Numero 1.','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fportales.jpg?alt=media&token=c1be0f28-d412-41df-a18e-bc126c8a58b8'),(2,8,'Mi Segunda Lista','Esta es una lista de prueba Numero 2.','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fportales.jpg?alt=media&token=c1be0f28-d412-41df-a18e-bc126c8a58b8'),(3,8,'asdasd','asdasdasd','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Faudifonos%20(1).png?alt=media&token=5db0f39a-d88f-48e4-b08a-655e66c2c33e'),(4,8,'Creacion desde Modal','UAUAUAUAUA','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fheart.png?alt=media&token=4c1a8ac2-3277-476b-9103-15bb472639bf'),(5,8,'Para Probar Webp','JEJEJEJEJE','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemowebp.webp?alt=media&token=9c707911-d44a-4250-bbe9-f9de1891226a'),(6,8,'asdasd','Jejeje','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemowebp.webp?alt=media&token=b85f1990-6f10-4471-941a-4d0a68e2e8ff'),(7,8,'sdfgsdfg','sdfgsdfg','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FCredencial%20Jaziel.webp?alt=media&token=aedefbf9-00a1-487b-86fb-09fdd375f073');
 /*!40000 ALTER TABLE `list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -446,7 +450,7 @@ CREATE TABLE `listened_albums` (
 
 LOCK TABLES `listened_albums` WRITE;
 /*!40000 ALTER TABLE `listened_albums` DISABLE KEYS */;
-INSERT INTO `listened_albums` VALUES (3,1,'2024-10-01'),(3,7,'2024-10-01'),(3,12,'2024-10-01');
+INSERT INTO `listened_albums` VALUES (3,1,'2024-10-01'),(3,7,'2024-10-01'),(3,12,'2024-10-01'),(8,8,'2024-11-14'),(8,1,'2024-11-19'),(8,14,'2024-11-21'),(10,14,'2024-11-22'),(10,8,'2024-11-22'),(10,10,'2024-11-22'),(22,14,'2024-11-25'),(22,5,'2024-11-25'),(22,7,'2024-11-25'),(22,8,'2024-11-25'),(22,9,'2024-11-25'),(22,10,'2024-11-25'),(8,5,'2024-11-25'),(8,10,'2024-11-25'),(8,9,'2024-11-25');
 /*!40000 ALTER TABLE `listened_albums` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -474,7 +478,7 @@ CREATE TABLE `listened_songs` (
 
 LOCK TABLES `listened_songs` WRITE;
 /*!40000 ALTER TABLE `listened_songs` DISABLE KEYS */;
-INSERT INTO `listened_songs` VALUES (7,7,'2024-10-01'),(7,8,'2024-10-01'),(7,9,'2024-10-01'),(1,12,'2024-10-01'),(1,9,'2024-10-01'),(1,8,'2024-10-01'),(1,7,'2024-10-01');
+INSERT INTO `listened_songs` VALUES (7,7,'2024-10-01'),(7,8,'2024-10-01'),(7,9,'2024-10-01'),(1,12,'2024-10-01'),(1,9,'2024-10-01'),(1,8,'2024-10-01'),(1,7,'2024-10-01'),(9,7,'2024-11-13'),(6,7,'2024-11-13'),(5,7,'2024-11-13'),(3,7,'2024-11-13'),(2,7,'2024-11-13'),(8,7,'2024-11-14'),(8,13,'2024-11-17'),(8,9,'2024-11-19'),(8,8,'2024-11-21'),(10,8,'2024-11-22'),(10,9,'2024-11-22'),(22,8,'2024-11-25');
 /*!40000 ALTER TABLE `listened_songs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -488,7 +492,7 @@ DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
   `id_user` bigint NOT NULL,
   `bio` text,
-  `photo` blob,
+  `photo` varchar(255) DEFAULT NULL,
   KEY `id_user_profile_idx` (`id_user`),
   CONSTRAINT `id_user_profile` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -500,7 +504,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES (6,'Soy un Chavito Bien que le gusta programar Pero Tiene Mucho que aprender',NULL),(7,'ඞඞඞඞඞඞ','');
+INSERT INTO `profile` VALUES (6,'Soy un Chavito Bien que le gusta programar Pero Tiene Mucho que aprender',''),(7,'ඞඞඞඞඞඞ',''),(9,'Sin biografía disponible.eee',NULL),(8,'Aasdasdasdaaadfgdfgaaaa','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemo2.jpeg?alt=media&token=fac20b12-71ba-4e32-9f36-57f02800307c'),(3,'Holis','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemo2.jpeg?alt=media&token=fac20b12-71ba-4e32-9f36-57f02800307c'),(10,'Que tranza chavalosaaaaa','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemo2.jpeg?alt=media&token=fac20b12-71ba-4e32-9f36-57f02800307c'),(11,'Dios te escucheeeeee','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemo2.jpeg?alt=media&token=fac20b12-71ba-4e32-9f36-57f02800307c'),(22,'Prototipo de user Numero 4','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FavatarDefault.png?alt=media&token=8aa7f9ce-79a4-4fd4-9133-8fd8b000b0e4');
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -642,6 +646,7 @@ CREATE TABLE `ranked_songs` (
 
 LOCK TABLES `ranked_songs` WRITE;
 /*!40000 ALTER TABLE `ranked_songs` DISABLE KEYS */;
+INSERT INTO `ranked_songs` VALUES (8,13,2.5,'2024-11-17'),(8,8,4,'2024-11-17'),(1,8,4,'2024-11-17'),(2,8,4,'2024-11-17');
 /*!40000 ALTER TABLE `ranked_songs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -663,7 +668,7 @@ CREATE TABLE `reviewed_albums` (
   KEY `reviewed_albums_id_user_fk` (`id_user`),
   CONSTRAINT `reviewed_albums_id_album_fk` FOREIGN KEY (`id_album`) REFERENCES `album` (`id_album`),
   CONSTRAINT `reviewed_albums_id_user_fk` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -672,6 +677,7 @@ CREATE TABLE `reviewed_albums` (
 
 LOCK TABLES `reviewed_albums` WRITE;
 /*!40000 ALTER TABLE `reviewed_albums` DISABLE KEYS */;
+INSERT INTO `reviewed_albums` VALUES (1,8,8,'Nice Song Bro','2024-11-13'),(2,2,8,'Nice Song Brooooo','2024-11-14');
 /*!40000 ALTER TABLE `reviewed_albums` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -721,7 +727,7 @@ CREATE TABLE `reviewed_songs` (
   KEY `reviewed_songs_id_user_fk` (`id_user`),
   CONSTRAINT `reviewed_songs_id_song_fk` FOREIGN KEY (`id_song`) REFERENCES `songs` (`id_song`),
   CONSTRAINT `reviewed_songs_id_user_fk` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -730,6 +736,7 @@ CREATE TABLE `reviewed_songs` (
 
 LOCK TABLES `reviewed_songs` WRITE;
 /*!40000 ALTER TABLE `reviewed_songs` DISABLE KEYS */;
+INSERT INTO `reviewed_songs` VALUES (1,8,7,'Buenas Rola Chavalo','2024-11-13'),(2,8,8,'Amazing song! I loved it.','2024-11-13'),(3,9,7,'Me guta','2024-11-13'),(4,7,7,'This song makes me travel to the beach thinking about my other half This song makes me travel to the beach thinking about my other half me travel to the beach thinking about my other half other half This song makes me travel to the beach thinking about my other half This song makes me travel to the beach thinking about my other half','2024-11-13'),(5,6,7,'Me guta','2024-11-13'),(6,5,7,'Me guta','2024-11-13'),(7,3,7,'Me guta','2024-11-13'),(8,2,7,'Me guta','2024-11-13'),(9,1,7,'Me guta machin','2024-11-13');
 /*!40000 ALTER TABLE `reviewed_songs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -743,15 +750,15 @@ DROP TABLE IF EXISTS `songs`;
 CREATE TABLE `songs` (
   `id_song` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `photo` blob,
   `id_artist` bigint NOT NULL,
   `released` date NOT NULL,
   `language` varchar(255) NOT NULL,
   `genre` varchar(255) DEFAULT NULL,
+  `photo` varchar(255) NOT NULL,
   PRIMARY KEY (`id_song`),
   KEY `songs_id_artist_fk` (`id_artist`),
   CONSTRAINT `songs_id_artist_fk` FOREIGN KEY (`id_artist`) REFERENCES `artist` (`id_artist`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -760,7 +767,7 @@ CREATE TABLE `songs` (
 
 LOCK TABLES `songs` WRITE;
 /*!40000 ALTER TABLE `songs` DISABLE KEYS */;
-INSERT INTO `songs` VALUES (7,'Despacito',NULL,2,'2017-01-13','Español','Reggaetón'),(8,'Shape of You',NULL,3,'2017-01-06','Inglés','Pop'),(9,'Blinding Lights',NULL,4,'2019-11-29','Inglés','Synthwave'),(12,'Vivir Mi Vida',NULL,3,'2013-04-19','Español','Salsa'),(13,'Échame la Culpa',NULL,2,'2017-11-17','Español','Pop Latino'),(14,'Aquí Estoy Yo',NULL,2,'2008-08-25','Español','Balada'),(15,'No Me Doy Por Vencido',NULL,2,'2008-07-04','Español','Pop Latino'),(16,'Nada Es Para Siempre',NULL,2,'2005-09-26','Español','Balada');
+INSERT INTO `songs` VALUES (7,'Despacito',2,'2017-01-13','Español','Reggaetón','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fdespacito.jpg?alt=media&token=1fe7ae2a-7947-4dd0-be46-4fff282e8da2'),(8,'Shape of You',3,'2017-01-06','Inglés','Pop','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fshapeofyou.jpg?alt=media&token=9c055b0f-d0b7-4fc2-8743-e64d7bd1a7cc'),(9,'Blinding Lights',4,'2019-11-29','Inglés','Synthwave','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fblindinglights.png?alt=media&token=0500c257-fc74-459c-a746-40f0357d4cfa'),(12,'Vivir Mi Vida',3,'2013-04-19','Español','Salsa','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fvivirmivida.jpeg?alt=media&token=3281358e-21df-47d4-bc89-c8f133d3ed4c'),(13,'Échame la Culpa',2,'2017-11-17','Español','Pop Latino','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fechamelaculpa.jpg?alt=media&token=a3bd4e3b-ad7e-4af9-a125-03a661b140a3'),(14,'Aquí Estoy Yo',2,'2008-08-25','Español','Balada','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Faquiestoyyo.jpg?alt=media&token=6224e05a-e655-40d0-bc38-0e9e9de848c9'),(15,'No Me Doy Por Vencido',2,'2008-07-04','Español','Pop Latino','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fnomedoyporvencido.jpeg?alt=media&token=c79e68d3-01d2-4f88-b9ae-d308b793f70a'),(16,'Nada Es Para Siempre',2,'2005-09-26','Español','Balada','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fnadaesparasiempre.jpeg?alt=media&token=0813b07e-b260-4ba2-83a3-70cf4508966b'),(17,'Dive',3,'2017-03-03','Inglés','Pop','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fdive.jpg?alt=media&token=eb1ebb89-f7c8-4bf8-884e-ae324210ca3b');
 /*!40000 ALTER TABLE `songs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -833,7 +840,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -842,7 +849,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Jexbii','jazielheredia123@gmail.com','$2b$12$.MFviGsynF1yix8KWksHUuRuMxkZn/DcrMBigy2vw5RT04.k2qb7.','user'),(2,'Elderdius','elderdius123@gmail.com','$2b$12$.MFviGsynF1yix8KWksHUuRuMxkZn/DcrMBigy2vw5RT04.k2qb7.','admin'),(3,'Aniquilador','aniquilador123@gmail.com','$2b$12$zTCqe/5ayNGuoNYkipR8ze4UWso805GUACTE3czxVi0MIsm1jB4Da','user'),(5,'Aniquiladorsin','aniquilador1234@gmail.com','$2b$12$UiDgFwhxkFMIKq/gS7YnjebxPN3O0LGUCxq.KTOQ806MQ.ZSEd1Jy','user'),(6,'Aniquiladorsito','aniquilador12345@gmail.com','$2b$12$eGgbfdgmO7XszS5Aii1Lheb4o95B.EXtPpUfQQJys9zTTPjASI5Y2','user'),(7,'LecheDePiedra','jazielheredia12345@gmail.com','$2b$12$qZS/.XO5KAPAvheiL8gMqeQdYqOTAxpxOVpa/M6SZOVMWz7zfiyFC','admin');
+INSERT INTO `users` VALUES (1,'Jexbii','jazielheredia123@gmail.com','$2b$12$.MFviGsynF1yix8KWksHUuRuMxkZn/DcrMBigy2vw5RT04.k2qb7.','user'),(2,'Elderdius','elderdius123@gmail.com','$2b$12$.MFviGsynF1yix8KWksHUuRuMxkZn/DcrMBigy2vw5RT04.k2qb7.','admin'),(3,'Aniquilador','aniquilador123@gmail.com','$2b$12$zTCqe/5ayNGuoNYkipR8ze4UWso805GUACTE3czxVi0MIsm1jB4Da','user'),(5,'Aniquiladorsin','aniquilador1234@gmail.com','$2b$12$UiDgFwhxkFMIKq/gS7YnjebxPN3O0LGUCxq.KTOQ806MQ.ZSEd1Jy','user'),(6,'Aniquiladorsito','aniquilador12345@gmail.com','$2b$12$eGgbfdgmO7XszS5Aii1Lheb4o95B.EXtPpUfQQJys9zTTPjASI5Y2','user'),(7,'LecheDePiedra','jazielheredia12345@gmail.com','$2b$12$qZS/.XO5KAPAvheiL8gMqeQdYqOTAxpxOVpa/M6SZOVMWz7zfiyFC','admin'),(8,'testUser','test@gmail.com','$2b$12$TZyPx9jHAllKlr67nbu3XOrU/9uKWyw0aHtfWKgUCDgOn4sOMHtqG','user'),(9,'PepitoGrilloo','pepito123@gmail.com','$2b$12$XoPgbl3EpIuuHKILJUzBn.4tRUa6d6gnPLetfHYLM3hmu97ungqKW','user'),(10,'testUser2','testUser2@gmail.com','$2b$12$rJpJCFAF6f2Uc5/np5y9RO2a6MvryODwO1MU9AhbS2iNS4k505yma','user'),(11,'testUser3','testUser3@gmail.com','$2b$12$wwOHf./YfcMH2UFuBbDex.cz3Tpt5pJFVA1LX2xZZ16OPqSfbbZeS','user'),(22,'testuser4','testuser123123@gmail.com','$2b$12$mfntUOsLLS7BmNoJnc4MAuPknuz3cpaAztx6/.ulez23fl/7lhEU6','user');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -870,6 +877,7 @@ CREATE TABLE `watchlist_albums` (
 
 LOCK TABLES `watchlist_albums` WRITE;
 /*!40000 ALTER TABLE `watchlist_albums` DISABLE KEYS */;
+INSERT INTO `watchlist_albums` VALUES (8,13,'2024-11-19'),(8,5,'2024-11-19'),(8,14,'2024-11-19'),(8,15,'2024-11-19'),(8,16,'2024-11-19'),(1,5,'2024-11-19'),(1,14,'2024-11-19'),(1,15,'2024-11-19'),(8,7,'2024-11-20'),(8,8,'2024-11-20'),(10,14,'2024-11-22');
 /*!40000 ALTER TABLE `watchlist_albums` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -897,7 +905,7 @@ CREATE TABLE `watchlist_songs` (
 
 LOCK TABLES `watchlist_songs` WRITE;
 /*!40000 ALTER TABLE `watchlist_songs` DISABLE KEYS */;
-INSERT INTO `watchlist_songs` VALUES (1,8,'2024-09-27'),(5,12,'2024-10-01'),(5,13,'2024-10-01'),(5,14,'2024-10-01'),(2,16,'2024-10-01'),(2,7,'2024-10-01'),(2,8,'2024-10-01');
+INSERT INTO `watchlist_songs` VALUES (1,8,'2024-09-27'),(5,12,'2024-10-01'),(5,13,'2024-10-01'),(5,14,'2024-10-01'),(2,16,'2024-10-01'),(2,7,'2024-10-01'),(2,8,'2024-10-01'),(8,7,'2024-11-15'),(8,8,'2024-11-15'),(8,13,'2024-11-15'),(8,14,'2024-11-15'),(8,16,'2024-11-15'),(8,17,'2024-11-15'),(10,8,'2024-11-22');
 /*!40000 ALTER TABLE `watchlist_songs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -910,4 +918,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-02 11:23:23
+-- Dump completed on 2024-11-25 13:12:31
