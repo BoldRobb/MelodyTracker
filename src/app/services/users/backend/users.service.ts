@@ -328,6 +328,12 @@ export class UsersService {
   }
 
 
-
+  // Método para obtener las actividades recientes de un usuario
+  getHistoryProfile(id_user: number): Observable<any> {
+    this.spinnerService.show();
+    return this.http.get<any>(`${this.apiUrl}/users/${id_user}/recent_activities`).pipe(
+      finalize(() => this.spinnerService.hide())
+    );
+  }
 
 }

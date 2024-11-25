@@ -11,7 +11,7 @@ class Song(Base):
 
     id_song = Column(BigInteger, primary_key=True, index=True, nullable=False)
     name = Column(String(255), nullable=False)
-    photo = Column(LargeBinary, nullable=True)
+    photo = Column(String(255), nullable=True)
     id_artist = Column(BigInteger, ForeignKey('artist.id_artist'), nullable=False)
     released = Column(Date, nullable=False)
     language = Column(String(255), nullable=False)

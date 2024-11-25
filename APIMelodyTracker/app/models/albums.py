@@ -10,7 +10,7 @@ class Album(Base):
     id_album = Column(BigInteger, primary_key=True, index=True, nullable=False)
     name = Column(String(255), nullable=False)
     id_artist = Column(BigInteger, ForeignKey('artist.id_artist'), nullable=False)
-    photo = Column(LargeBinary, nullable=False)
+    photo = Column(String(255), nullable=False)
     released = Column(Date, nullable=False)
     language = Column(String(255), nullable=False)
 

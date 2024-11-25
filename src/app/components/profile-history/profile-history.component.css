@@ -238,7 +238,10 @@ p{
 
 .imagenx4 {
     position: absolute;
-    width: 8rem; /* Tamaño de la imagen */
+    max-width: 8rem; /* Tamaño de la imagen */
+    min-width: 8rem;
+    min-height: 8rem;
+    max-height: 8rem;
     height: auto;
     border-radius: 1rem;
 }

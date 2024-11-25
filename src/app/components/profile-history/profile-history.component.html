@@ -1,42 +1,39 @@
 <div class="contenedor_history">
     <div class="contenedorx4">
-        <p class="titulox4">Songs Listened To <span class="cantidadx4">674</span></p>
+        <p class="titulox4">Songs Listened To <span class="cantidadx4">{{ recentActivities.recent_songs.length }}</span></p>
         <div class="imagenesx4">
-            <img class="imagenx4" src="images/BeautyBehindtheMadness.jpg" alt="">
-            <img class="imagenx4" src="images/purpose.jpg" alt="">
-            <img class="imagenx4" src="images/changes.jpg" alt="">
-            <img class="imagenx4" src="images/starboy.jpg" alt="">
-            <img class="imagenx4" src="images/purpose.jpg" alt="">
+            @for (song of recentActivities.recent_songs; track $index) {
+                <img class="imagenx4" [src]="song.photo" alt="song.title">
+            }
         </div>
     </div>
+
     <div class="contenedorx4">
-        <p class="titulox4">Albums listened to <span class="cantidadx4">42</span></p>
+        <p class="titulox4">Albums listened to <span class="cantidadx4">{{ recentActivities.recent_albums.length }}</span></p>
         <div class="imagenesx4">
-            <img class="imagenx4" src="images/BeautyBehindtheMadness.jpg" alt="">
-            <img class="imagenx4" src="images/purpose.jpg" alt="">
-            <img class="imagenx4" src="images/changes.jpg" alt="">
-            <img class="imagenx4" src="images/starboy.jpg" alt="">
-            <img class="imagenx4" src="images/purpose.jpg" alt="">
+            @for (album of recentActivities.recent_albums; track $index) {
+                <img class="imagenx4" [src]="album.photo" alt="album.title">
+            }
         </div>
     </div>
+
     <div class="contenedorx4">
-        <p class="titulox4">Created Lists <span class="cantidadx4">21</span></p>
+        <p class="titulox4">Created Lists <span class="cantidadx4">{{ recentActivities.recent_lists.length }}</span></p>
         <div class="imagenesx4">
-            <img class="imagenx4" src="images/BeautyBehindtheMadness.jpg" alt="">
-            <img class="imagenx4" src="images/purpose.jpg" alt="">
-            <img class="imagenx4" src="images/changes.jpg" alt="">
-            <img class="imagenx4" src="images/starboy.jpg" alt="">
-            <img class="imagenx4" src="images/purpose.jpg" alt="">
+            @for (list of recentActivities.recent_lists; track $index) {
+                <img class="imagenx4" [src]="list.photo" alt="list.title">
+            }
+            
         </div>
     </div>
+
     <div class="contenedorx4">
-        <p class="titulox4">Watch List <span class="cantidadx4">390</span></p>
+        <p class="titulox4">Watch List <span class="cantidadx4">{{ recentActivities.recent_watchlist_songs.length }}</span></p>
         <div class="imagenesx4">
-            <img class="imagenx4" src="images/BeautyBehindtheMadness.jpg" alt="">
-            <img class="imagenx4" src="images/purpose.jpg" alt="">
-            <img class="imagenx4" src="images/changes.jpg" alt="">
-            <img class="imagenx4" src="images/starboy.jpg" alt="">
-            <img class="imagenx4" src="images/purpose.jpg" alt="">
+            @for (song of recentActivities.recent_watchlist_songs; track $index) {
+                <img class="imagenx4" [src]="song.photo" alt="song.title">
+            }
+            
         </div>
     </div>
 </div>
