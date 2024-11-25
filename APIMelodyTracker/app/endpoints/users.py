@@ -604,30 +604,26 @@ async def update_user_username(
 
 
 
-
-# Endpoint para obtener las últimas 5 canciones, álbumes, listas y canciones en la watchlist
 @router.get("/{id_user}/recent_activities")
 async def get_recent_activities(id_user: int, db: Session = Depends(get_db)):
-    # Obtener las últimas 5 canciones escuchadas
+    # Obtener las últimas 5 canciones escuchadas, ordenadas por fecha descendente
     listened_songs = db.query(ListenedSongs, Song.id_song, Song.photo) \
         .join(Song, Song.id_song == ListenedSongs.id_song) \
         .filter(ListenedSongs.id_user == id_user) \
-        .order_by(desc(ListenedSongs.date)) \
-        .limit(5) \
+        .order_by(ListenedSongs.date.desc()).limit(5) \
         .all()
 
     # Obtener las últimas 5 álbumes escuchados
     listened_albums = db.query(ListenedAlbums, Album.id_album, Album.photo) \
         .join(Album, Album.id_album == ListenedAlbums.id_album) \
         .filter(ListenedAlbums.id_user == id_user) \
-        .order_by(desc(ListenedAlbums.date)) \
-        .limit(5) \
+        .order_by(ListenedAlbums.date.desc()).limit(5) \
         .all()
 
     # Obtener las últimas 5 listas creadas
     recent_lists = db.query(Lists.id_list, Lists.photo) \
         .filter(Lists.id_user == id_user) \
-        .order_by(desc(Lists.id_list)) \
+        .order_by(Lists.id_list.desc()) \
         .limit(5) \
         .all()
 
@@ -635,16 +631,16 @@ async def get_recent_activities(id_user: int, db: Session = Depends(get_db)):
     watchlist_songs = db.query(WatchlistSongs, Song.id_song, Song.photo) \
         .join(Song, Song.id_song == WatchlistSongs.id_song) \
         .filter(WatchlistSongs.id_user == id_user) \
-        .order_by(desc(WatchlistSongs.date)) \
+        .order_by(WatchlistSongs.date.desc()) \
         .limit(5) \
         .all()
 
     # Formatear los resultados
     result = {
-        "recent_songs": [{"id": song[1], "photo": song[2]} for song in listened_songs],  # Accede a los valores correctos de la tupla
-        "recent_albums": [{"id": album[1], "photo": album[2]} for album in listened_albums],  # Lo mismo aquí
+        "recent_songs": [{"id": song[1], "photo": song[2]} for song in listened_songs],
+        "recent_albums": [{"id": album[1], "photo": album[2]} for album in listened_albums],
         "recent_lists": [{"id": list_id, "photo": photo} for list_id, photo in recent_lists],
-        "recent_watchlist_songs": [{"id": song[1], "photo": song[2]} for song in watchlist_songs],  # Y aquí también
+        "recent_watchlist_songs": [{"id": song[1], "photo": song[2]} for song in watchlist_songs],
     }
 
     return result
