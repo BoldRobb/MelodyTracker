@@ -751,21 +751,34 @@ def review_song(review_data: ReviewSongSchema, db: Session = Depends(get_db), cu
 
 # Obtener comentarios paginados de una canción
 @router.get("/{id_song}/comments_song")
-def get_comments(id_song: int, page: int = 1, limit: int = 4, db: Session = Depends(get_db)):
-    # Validar que el `limit` esté dentro de un rango adecuado
-    if limit <= 0 or page <= 0:
-        raise HTTPException(status_code=400, detail="Page and limit must be greater than 0")
-
-    # Calcular el offset para la paginación
-    offset = (page - 1) * limit
-
-    # Consultar los comentarios de la canción con paginación
-    comments = db.query(ReviewedSongs).filter(ReviewedSongs.id_song == id_song).limit(limit).offset(offset).all()
+def get_comments(id_song: int, db: Session = Depends(get_db)):
+    # Consultar los comentarios, username, photo y calificación de la canción
+    comments = db.query(ReviewedSongs, User.username, Profile.photo, RankedSongs.score).join(
+        User, ReviewedSongs.id_user == User.id_user
+    ).join(
+        Profile, User.id_user == Profile.id_user
+    ).outerjoin(
+        RankedSongs, (ReviewedSongs.id_user == RankedSongs.id_user) & (ReviewedSongs.id_song == RankedSongs.id_song)
+    ).filter(ReviewedSongs.id_song == id_song).order_by(desc(ReviewedSongs.date)).all()  # Ordenar por fecha descendente
 
     if not comments:
         raise HTTPException(status_code=404, detail="No comments found")
 
-    return {"id_song": id_song, "comments": comments}
+    # Formatear los resultados para que cada comentario tenga la estructura adecuada
+    result = []
+    for comment, username, photo, score in comments:
+        result.append({
+            "id_song": id_song,  # Añadir id_song al inicio de cada comentario
+            "id_reviewed_songs": comment.id_reviewed_songs,
+            "id_user": comment.id_user,
+            "comment": comment.comment,
+            "date": comment.date,
+            "username": username,
+            "photo": photo,
+            "score": score if score is not None else 0  # Si no tiene calificación, poner 0
+        })
+
+    return result
 
 
 

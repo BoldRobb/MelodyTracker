@@ -1,21 +1,51 @@
-<div class="contenedor_principal">
-    <div class="contenedor_elementos">
-        <img class="foto_user" src="images/steve.png" alt="">
-        <div class="contenedor_datos">
-            <div class="contenedor_nombre_listened">
-                <p class="nombre_user">Steve</p>
-                <p class="listened">Listened 15 Sep, 2024.</p>
+@if (!isLoading) {
+    <div>
+        @for (comment of comments; track $index) {
+            <div class="contenedor_principal">
+                <div class="contenedor_elementos">
+                  <!-- Imagen de usuario clickeable -->
+                  <a (click)="navigateToProfile(comment.id_user)">
+                    <img class="foto_user" [src]="comment.photo" alt="User photo" />
+                  </a>
+                  
+                  <div class="contenedor_datos">
+                    <div class="contenedor_nombre_listened">
+                      <!-- Nombre del usuario clickeable -->
+                      <a (click)="navigateToProfile(comment.id_user)" class="nombre_user">
+                        {{ comment.username }}
+                      </a>
+                      <!-- Fecha en formato dd MMM, yyyy -->
+                      <p class="listened">Listened {{ comment.date | date: 'dd MMM, yyyy' }}.</p>
+                    </div>
+              
+                    <div class="contenedor_rate">
+                      <!-- Mostrar las estrellas basadas en el score -->
+                       @for (star of getStars(comment.score); track $index) {
+                        <ng-container>
+                            <img class="imagen_estrella" 
+                                 [src]="star === 0.5 ? 'images/star-half.png' : 'images/star.png'" 
+                                 alt="Star" />
+                        </ng-container>
+                       }
+                      
+                    </div>
+              
+                    <!-- Comentario del usuario -->
+                    <p class="comment">{{ comment.comment }}</p>
+                  </div>
+                </div>
             </div>
-            <div class="contenedor_rate">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-            </div>
-
-            <p class="comment">“This song makes me travel to the beach thinking about my other half This song makes me travel to the beach thinking about my other half  me travel to the beach thinking about my other half other half This song makes me travel to the beach thinking about my other half This song makes me travel to the beach thinking about my other half ”
-            </p>
-        </div>
+        }
     </div>
-</div>
+}
+
+
+  
+  <!-- Spinner (se muestra mientras isLoading sea true) -->
+@if (isLoading) {
+    <div>
+        <div class="spinner">Loading...</div> <!-- Aquí puedes incluir tu spinner personalizado -->
+    </div>
+}
+  
+  

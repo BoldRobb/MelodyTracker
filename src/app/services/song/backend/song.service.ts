@@ -252,7 +252,6 @@ export class SongService {
   }
 
 
-
   // Servicio para verificar si un usuario ha rankeado una canción
   hasRankSong(id_user: number, id_song: number): Observable<{ has_rank: boolean, score: number | null, date: string | null }> {
     this.spinnerService.show(); // Mostrar el spinner
@@ -263,6 +262,19 @@ export class SongService {
         { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras si es necesario
       )
       .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner cuando termine
+  }
+
+
+  // Servicio para obtener los comentarios de una canción
+  getComments(id_song: number): Observable<any[]> {
+    this.spinnerService.show(); // Mostrar el spinner
+
+    return this.http
+      .get<any[]>(
+        `${this.apiUrl}/songs/${id_song}/comments_song`,
+        { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras si es necesario
+      )
+      .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
   }
 
 
