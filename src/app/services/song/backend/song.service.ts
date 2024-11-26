@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SpinnerService } from '../../others/spinner.service';
 import { finalize, tap } from 'rxjs/operators';
@@ -202,4 +202,69 @@ export class SongService {
   }
   
   
+   // Función para obtener el token desde localStorage
+  private getAuthToken(): string | null {
+    return localStorage.getItem('access_token'); // Obtener el token del localStorage
+  }
+
+  // Función para agregar el token en los encabezados
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.getAuthToken();
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return headers;
+  }
+
+
+  // Servicio para calificar una canción
+  rankSong(id_user: number, id_song: number, score: number): Observable<{ msg: string, id_user: number, id_song: number }> {
+    this.spinnerService.show(); // Mostrar el spinner
+
+    const rankData = {
+      id_song: id_song,
+      score: score
+    };
+
+    return this.http
+      .post<{ msg: string, id_user: number, id_song: number }>(
+        `${this.apiUrl}/songs/rank_song/${id_user}`,
+        rankData,
+        { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras
+      )
+      .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+  }
+
+
+  // Servicio para eliminar el ranking de una canción
+  deleteRankedSong(id_user: number, id_song: number): Observable<{ msg: string }> {
+    this.spinnerService.show(); // Mostrar el spinner
+
+    return this.http
+      .delete<{ msg: string }>(
+        `${this.apiUrl}/songs/rank_song/${id_user}/${id_song}`,
+        { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras
+      )
+      .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+  }
+
+
+
+  // Servicio para verificar si un usuario ha rankeado una canción
+  hasRankSong(id_user: number, id_song: number): Observable<{ has_rank: boolean, score: number | null, date: string | null }> {
+    this.spinnerService.show(); // Mostrar el spinner
+
+    return this.http
+      .get<{ has_rank: boolean, score: number | null, date: string | null }>(
+        `${this.apiUrl}/songs/has_rank_song/${id_user}/${id_song}`,
+        { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras si es necesario
+      )
+      .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner cuando termine
+  }
+
+
+
 }

@@ -1,9 +1,10 @@
 <div class="contenedor_principal">
     <p class="texto">Your Rating</p>
     <div class="contenedor_rate" (mousemove)="handleMouseMove($event)" (mouseleave)="clearHover()">
-      <div class="contenedor_borrar_rating" (click)="resetRating()">
+      <div class="contenedor_borrar_rating" *ngIf="selectedRating > 0" (click)="resetRating()">
         <p class="borrar_rating">X</p>
       </div>
+      
       <div
         class="estrella"
         *ngFor="let star of stars; let index = index"

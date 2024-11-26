@@ -849,3 +849,48 @@ def rank_song(id_user: int, rank_request: RankSongRequest, db: Session = Depends
 
     return {"msg": "Song ranked successfully", "id_user": id_user, "id_song": rank_request.id_song}
 
+
+
+@router.delete("/rank_song/{id_user}/{id_song}")
+def delete_ranked_song(id_user: int, id_song: int, db: Session = Depends(get_db)):
+    # Verificar si el ranking existe
+    ranked_song = (
+        db.query(RankedSongs)
+        .filter(RankedSongs.id_user == id_user, RankedSongs.id_song == id_song)
+        .first()
+    )
+
+    if not ranked_song:
+        raise HTTPException(status_code=404, detail="Ranked song not found")
+
+    # Eliminar el ranking
+    db.delete(ranked_song)
+    db.commit()
+
+    return {"msg": "Ranked song deleted successfully", "id_user": id_user, "id_song": id_song}
+
+
+
+@router.get("/has_rank_song/{id_user}/{id_song}")
+def has_rank_song(id_user: int, id_song: int, db: Session = Depends(get_db)):
+    # Buscar el ranking
+    existing_rank = (
+        db.query(RankedSongs)
+        .filter(RankedSongs.id_user == id_user, RankedSongs.id_song == id_song)
+        .first()
+    )
+
+    if existing_rank:
+        return {
+            "has_rank": True,
+            "score": existing_rank.score,
+            "date": existing_rank.date
+        }
+    else:
+        return {
+            "has_rank": False,
+            "score": None,
+            "date": None
+        }
+
+

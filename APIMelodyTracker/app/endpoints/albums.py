@@ -150,13 +150,9 @@ def has_liked_album(id_album: int, id_user: int, db: Session = Depends(get_db)):
         return {"has_liked": False}
 
 
-
-# Rankear Album
 @router.post("/rankAlbum")
 def rank_album(rank_data: RankedAlbum, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
-
     user, role = current_user
-
 
     # Verificar si el álbum ya ha sido rankeado por el usuario
     existing_rank = db.query(RankedAlbums).filter(
@@ -165,22 +161,23 @@ def rank_album(rank_data: RankedAlbum, db: Session = Depends(get_db), current_us
     ).first()
 
     if existing_rank:
-        raise HTTPException(status_code=400, detail="User has already ranked this album.")
+        # Si ya existe, actualizamos el puntaje y la fecha
+        existing_rank.score = rank_data.score
+        existing_rank.date = date.today()
+    else:
+        # Crear un nuevo ranking para el álbum
+        new_rank = RankedAlbums(
+            id_user=rank_data.id_user,
+            id_album=rank_data.id_album,
+            score=rank_data.score,
+            date=date.today()  # Insertar la fecha actual
+        )
+        db.add(new_rank)
 
-    # Crear un nuevo ranking para el álbum
-    new_rank = RankedAlbums(
-        id_user=rank_data.id_user,
-        id_album=rank_data.id_album,
-        score=rank_data.score,
-        date=date.today()  # Insertar la fecha actual
-    )
-    
-    db.add(new_rank)
+    # Guardamos los cambios (ya sea actualizando o creando)
     db.commit()
-    db.refresh(new_rank)
 
-    return {"msg": "Album ranked successfully", "rank_data": new_rank}
-
+    return {"msg": "Album ranked successfully", "rank_data": rank_data}
 
 
 @router.delete("/rankAlbum/{id_user}/{id_album}")
