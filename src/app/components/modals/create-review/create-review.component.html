@@ -10,14 +10,8 @@
               <div class="lado_izquierdo">
                 <!-- Cambiar dinámicamente la foto -->
                 <img class="foto_cancion" [src]="albumCover" alt="Album cover">
-                <p class="texto">Rating</p>
-                <div class="contenedor_rate">
-                  <img class="imagen_estrella" src="images/star.png" alt="">
-                  <img class="imagen_estrella" src="images/star.png" alt="">
-                  <img class="imagen_estrella" src="images/star.png" alt="">
-                  <img class="imagen_estrella" src="images/star.png" alt="">
-                  <img class="imagen_estrella" src="images/star.png" alt="">
-                </div>
+                <!-- Añadir una clase personalizada aquí -->
+                <app-your-rating class="rating_contenedor_modal"></app-your-rating>
                 <p class="texto">Like</p>
                 <img class="imagen_corazon" src="images/heart.png" alt="">
               </div>

@@ -17,6 +17,9 @@
     height: 4rem;
 }
 
+
+
+
 .modal {
     position: fixed;
     top: 0;
@@ -76,8 +79,7 @@
 }
 
 .lado_izquierdo{
-    display: flex;
-    flex-direction: column;
+    display: flex;flex-direction: column;
     align-items: center;
 }
 
@@ -106,6 +108,8 @@
 .texto{
     font-size: 2.4rem;
     font-weight: bold;
+    margin: 0;
+    margin-bottom: 1rem;
 }
 
 
@@ -176,4 +180,11 @@
     resize: none;
 }   
 
+/* Solo aplicar estos estilos cuando 'app-your-rating' esté dentro del contexto específico */
+.rating_contenedor_modal .contenedor_rate {
+    background-color: #f0f0f0;
+}
 
+.rating_contenedor_modal .imagen_estrella {
+    width: 8rem; /* Modificar el tamaño solo dentro de este contexto */
+}

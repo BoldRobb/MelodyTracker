@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { SongService } from '../../../services/song/backend/song.service';
+import { YourRatingComponent } from "../../your-rating/your-rating.component";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-create-review',
   standalone: true,
   templateUrl: './create-review.component.html',
-  styleUrls: ['./create-review.component.css']
+  styleUrls: ['./create-review.component.css'],
+  imports: [YourRatingComponent, CommonModule],
+  
 })
 export class CreateReviewComponent implements OnInit {
   title: string = '';

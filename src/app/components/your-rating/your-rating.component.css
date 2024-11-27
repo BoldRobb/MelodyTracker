@@ -76,3 +76,40 @@
     margin-top: 2rem;
     margin-right: 1rem;
   }
+
+  ::ng-deep .rating_contenedor_modal .contenedor_rate  {
+    background-color: #021333;
+    gap: 0;
+  }
+
+  ::ng-deep .rating_contenedor_modal .contenedor_principal  {
+    background-color: #021333;
+    width: 30rem;
+    height: 13rem;
+    margin: 0;
+    margin-top: 1rem;
+    padding: 0;
+  }
+
+  ::ng-deep .rating_contenedor_modal .imagen_estrella  {
+    width: 4rem;
+    height: 4rem;
+    gap: 0;
+  }
+
+  ::ng-deep .rating_contenedor_modal .estrella  {
+    width: 4.5rem;
+  }
+
+  ::ng-deep .rating_contenedor_modal .texto  {
+    font-size: 4rem;
+    
+  }
+
+
+  ::ng-deep .rating_contenedor_modal .borrar_rating {
+    margin: 0;
+    margin-bottom: 2.2rem;
+    margin-right: 2rem;
+    font-size: 4rem;
+  }
