@@ -132,13 +132,6 @@ export class ListenLikeWatchComponent implements OnInit {
       });
     }
   }
-  
-  
-  
-  
-  
-  
-  
 
 
   // Método para verificar si el usuario le dio like
