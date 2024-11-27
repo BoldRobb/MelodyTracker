@@ -712,8 +712,6 @@ def has_listened_song(id_song: int, id_user: int, db: Session = Depends(get_db))
 @router.post("/review_song")
 def review_song(review_data: ReviewSongSchema, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     user, role = current_user
-    if role != "admin":
-        raise HTTPException(status_code=403, detail="Not authorized")
 
     # Verificar si la canción ya ha sido escuchada por el usuario
     existing_listened_entry = db.query(ListenedSongs).filter(

@@ -305,7 +305,7 @@ hasRankAlbum(id_user: number, id_album: number): Observable<{ has_rank: boolean,
 }
 
 
-
+// Servicio para obtener los comentarios de un álbum
 getAlbumComments(id_album: number): Observable<any[]> {
   this.spinnerService.show(); // Mostrar el spinner
 
@@ -313,6 +313,21 @@ getAlbumComments(id_album: number): Observable<any[]> {
     .get<any[]>(`${this.apiUrl}/albums/${id_album}/comments_album`, {
       headers: this.getAuthHeaders() // Incluir el token en las cabeceras si es necesario
     })
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+// Servicio para agregar un comentario a un álbum
+reviewAlbum(id_user: number, id_album: number, comment: string): Observable<{ msg: string, review: any }> {
+  this.spinnerService.show(); // Mostrar el spinner
+
+  const reviewData = { id_user, id_album, comment };
+
+  return this.http
+    .post<{ msg: string, review: any }>(
+      `${this.apiUrl}/albums/review_album`, reviewData,
+      { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras si es necesario
+    )
     .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
 }
 

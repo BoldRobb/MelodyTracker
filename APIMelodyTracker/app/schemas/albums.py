@@ -39,3 +39,11 @@ class LikeAlbumRequest(BaseModel):
 class WatchlistAlbumRequest(BaseModel):
     id_user: int
     id_album: int
+
+class ReviewAlbumSchema(BaseModel):
+    id_user: int
+    id_album: int
+    comment: str
+
+    class Config:
+        orm_mode = True

@@ -292,4 +292,21 @@ export class SongService {
   }
 
 
+
+// Servicio para obtener las reviews de una canción
+reviewSong(id_user: number, id_song: number, comment: string): Observable<{ msg: string, review: any }> {
+  this.spinnerService.show(); // Mostrar el spinner
+
+  const reviewData = { id_user, id_song, comment };
+
+  return this.http
+    .post<{ msg: string, review: any }>(
+      `${this.apiUrl}/songs/review_song`, reviewData,
+      { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+
 }

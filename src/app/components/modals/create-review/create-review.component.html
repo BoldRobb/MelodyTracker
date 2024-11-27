@@ -11,7 +11,7 @@
               <img class="foto_cancion" [src]="albumCover" alt="Album cover">
               <app-your-rating class="rating_contenedor_modal"></app-your-rating>
               <p class="texto">Like</p>
-              
+  
               <!-- Cambiar el filtro según el estado de Like -->
               <div class="contenedor_stat" [style.filter]="isLiked ? 'grayscale(0%)' : 'grayscale(100%)'" (click)="toggleLike()">
                 <img class="imagen_corazon" src="images/heart.png" alt="Like">
@@ -27,13 +27,13 @@
               <p class="date_listened">Listened {{ currentDate }}</p>
   
               <p class="texto_comment">Comment</p>
-              <textarea class="input_design input_descripcion"></textarea>
+              <textarea #commentInput class="input_design input_descripcion"></textarea>
             </div>
           </div>
         </div>
   
         <div class="contenedor_boton_cerrar">
-          <button class="boton_review">Create</button>
+          <button class="boton_review" (click)="createReview(commentInput)">Create</button>
         </div>
       </div>
     </div>

@@ -14,7 +14,7 @@ from sqlalchemy.orm import aliased
 
 
 from app.schemas.users import UserCreate
-from app.schemas.albums import RankedAlbum, WatchlistAlbumRequest, BestAlbumsResponse, AlbumResponse, AlbumListened, FavoriteAlbumCreate, LikeAlbumRequest
+from app.schemas.albums import RankedAlbum, ReviewAlbumSchema, WatchlistAlbumRequest, BestAlbumsResponse, AlbumResponse, AlbumListened, FavoriteAlbumCreate, LikeAlbumRequest
 
 from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_current_user  # Asegúrate de importar hash_password
 import traceback
@@ -661,3 +661,41 @@ def get_album_comments(id_album: int, db: Session = Depends(get_db)):
         })
 
     return result
+
+
+
+@router.post("/review_album")
+def review_album(review_data: ReviewAlbumSchema, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    user, role = current_user
+    
+
+    
+    # Verificar si el álbum ya ha sido escuchado por el usuario
+    existing_listened_entry = db.query(ListenedAlbums).filter(
+        ListenedAlbums.id_user == review_data.id_user,
+        ListenedAlbums.id_album == review_data.id_album
+    ).first()
+
+    # Si el álbum no ha sido escuchado, registrarlo como escuchado
+    if not existing_listened_entry:
+        new_listened_album = ListenedAlbums(
+            id_user=review_data.id_user,
+            id_album=review_data.id_album,
+            date=date.today()
+        )
+        db.add(new_listened_album)
+        db.commit()
+        db.refresh(new_listened_album)
+    
+    # Crear una nueva reseña en reviewed_albums
+    new_review = ReviewedAlbums(
+        id_user=review_data.id_user,
+        id_album=review_data.id_album,
+        comment=review_data.comment,
+        date=date.today()
+    )
+    db.add(new_review)
+    db.commit()
+    db.refresh(new_review)
+
+    return {"msg": "Review created successfully", "review": new_review}

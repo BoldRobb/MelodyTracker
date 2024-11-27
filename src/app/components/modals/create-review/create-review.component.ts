@@ -5,7 +5,6 @@ import { YourRatingComponent } from "../../your-rating/your-rating.component";
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users/backend/users.service'; // Servicio para manejar al usuario
 import { ActivatedRoute } from '@angular/router'; // Importar ActivatedRoute
-import { Console } from 'console';
 
 @Component({
   selector: 'app-create-review',
@@ -29,6 +28,8 @@ export class CreateReviewComponent implements OnInit {
   albumId: number | undefined;
   isAlbum: boolean = false;
 
+  comment: string = ''; // Para almacenar el comentario que se introduce
+
   constructor(
     private songService: SongService,
     private usersService: UsersService,
@@ -44,17 +45,13 @@ export class CreateReviewComponent implements OnInit {
       month: 'short',
       year: 'numeric'
     });
-  
-
-    
 
     // Obtener los parámetros de la URL
     this.route.params.subscribe(params => {
       this.songId = +params['id']; // id de la canción
       this.albumId = +params['id']; // id del álbum, si existe en la URL
-  
+
       console.log('albumId:', this.albumId);
-      
 
       // Obtener los parámetros de la URL
       this.route.url.subscribe(segments => {
@@ -78,12 +75,11 @@ export class CreateReviewComponent implements OnInit {
         // Cargar los datos de la canción o álbum
         this.loadSongData();
       });
-    
-  
+
       // Cargar los datos de la canción
       this.loadSongData();
     });
-  
+
     // Obtener el userId desde el token
     this.getUserDataFromToken();
   }
@@ -171,7 +167,6 @@ export class CreateReviewComponent implements OnInit {
       console.error('userId o albumId no definidos');
     }
   }
-  
 
   openModal() {
     this.isVisible = true; // Muestra el modal
@@ -179,5 +174,27 @@ export class CreateReviewComponent implements OnInit {
 
   closeModal() {
     this.isVisible = false; // Oculta el modal
+  }
+
+  createReview(commentInput: HTMLTextAreaElement) {
+    const commentValue = commentInput.value.trim(); // Obtener el valor del textarea
+
+    if (commentValue.length > 4) { // Solo si el comentario tiene más de 4 caracteres
+      const review$ = this.isAlbum
+        ? this.albumService.reviewAlbum(this.userId!, this.albumId!, commentValue)
+        : this.songService.reviewSong(this.userId!, this.songId!, commentValue);
+
+      review$.subscribe({
+        next: (response) => {
+          console.log('Reseña creada:', response);
+          this.closeModal(); // Cerrar el modal después de crear la reseña
+        },
+        error: (error) => {
+          console.error('Error al crear la reseña:', error);
+        }
+      });
+    } else {
+      console.error('El comentario debe tener más de 4 caracteres');
+    }
   }
 }
