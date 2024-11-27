@@ -50,6 +50,8 @@ body.modal-open {
 }
 
 
+
+
 /* Estilo general de la scrollbar */
 .contenedor_options::-webkit-scrollbar {
     width: 12px; /* Ancho de la scrollbar */
@@ -100,9 +102,19 @@ body.modal-open {
 }
 
 .option_list{
+    text-align: center;
     font-size: 2.4rem;
     font-weight: bold;
     margin: 1.8rem 0;
+    width: 100%;
+    padding: 1.5rem 0;
+    margin: 0;
+}
+
+.option_list:hover{
+    background-color: #03011b;
+    color: #96FD47;
+    cursor: pointer;
 }
 
 

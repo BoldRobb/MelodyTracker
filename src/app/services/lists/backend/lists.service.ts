@@ -53,4 +53,15 @@ export class ListsService {
 
     return throwError('No token encontrado'); // Retorna un error si no hay token
   }
+
+
+  // Servicio para obtener las listas de un usuario
+  getNameListsOfUser(id_user: number): Observable<any[]> {
+    this.spinnerService.show(); // Mostrar el spinner
+
+    return this.http
+      .get<any[]>(`${this.apiUrl}/lists/nameLists/${id_user}`)
+      .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+  }
+
 }

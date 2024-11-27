@@ -1,33 +1,62 @@
 <!-- Mostrar el modal principal solo cuando isOpen sea true -->
- @if (isOpen) {
+@if (isOpen) {
   <div class="modal-overlay">
     <div class="contenedor_principal">
       <div class="contenedor_boton_cerrar">
-        <button class="boton_cerrar" (click)="closeAddToListModal()">x</button> <!-- Cerrar el modal principal -->
+        <button class="boton_cerrar" (click)="closeAddToListModal()">x</button>
       </div>
       <div class="contenedor_cuerpo">
         <h1 class="titulo">Choose your list</h1>
 
+        <!-- Input de búsqueda -->
         <div class="contenedor_input">
           <i class="fa-solid fa-magnifying-glass logo_lupa" (click)="inputSearch.focus()"></i>
-          <input type="text" class="input_search" #inputSearch spellcheck="false" placeholder="Search List">
+          <input
+            type="text"
+            class="input_search"
+            #inputSearch
+            spellcheck="false"
+            placeholder="Search List"
+          />
         </div>
 
-        <button class="create_List option_list" (click)="openModal($event)">+ Create List</button>
-        
+        <!-- Botón para crear lista -->
+        <button class="create_List option_list" (click)="openModal($event)">
+          + Create List
+        </button>
+
+        <!-- Listas cargadas dinámicamente -->
         <div class="contenedor_options">
-          <p class="option_list">Las mejores bachatas</p>
-          <p class="option_list">Best Banda Music</p>
-          <!-- Opciones de listas -->
+          @if (isLoading) {
+            <ng-container>
+              <p class="loading-text">Loading...</p>
+            </ng-container>
+          }
+          
+          @if (!isLoading && userLists.length > 0) {
+            <ng-container>
+              @for (list of userLists; track $index) {
+                <p class="option_list">
+                  {{ list.name }}
+                </p>
+              }
+              
+            </ng-container>
+          }
+          
+          @if (!isLoading && userLists.length === 0) {
+            <ng-container>
+              <p class="no-lists-text">No lists available</p>
+            </ng-container>
+          }
+          
         </div>
       </div>
     </div>
-</div>
-}
-
-@if (isOpenModalAdd) {
-  <app-create-list (close)="closeModal()"></app-create-list>
+  </div>
 }
 
 <!-- Mostrar el modal de Crear Lista solo cuando isOpenModalAdd sea true -->
-
+@if (isOpenModalAdd) {
+  <app-create-list (close)="closeModal()"></app-create-list>
+}

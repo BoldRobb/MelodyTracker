@@ -34,3 +34,22 @@ def create_list(list_data: ListCreate, db: Session = Depends(get_db), current_us
     db.refresh(new_list)  # Para obtener el objeto actualizado con el ID generado
 
     return {"detail": "List created", "list_id": new_list.id_list}
+
+
+@router.get("/nameLists/{id_user}")
+def get_user_lists(id_user: int, db: Session = Depends(get_db)):
+
+    # Consulta para obtener las listas del usuario
+    user_lists = db.query(Lists.id_list, Lists.name).filter(Lists.id_user == id_user).all()
+
+    # Verificar si el usuario tiene listas
+    if not user_lists:
+        raise HTTPException(
+            status_code=404,
+            detail="El usuario no tiene listas asociadas"
+        )
+
+    # Formatear el resultado
+    result = [{"id_list": list_id, "name": name} for list_id, name in user_lists]
+
+    return result
