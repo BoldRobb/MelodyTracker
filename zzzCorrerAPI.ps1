@@ -1,9 +1,8 @@
-﻿# Cambiar al directorio del proyecto
-cd "C:\Users\jazie\OneDrive\Documents\MelodyTracker\APIMelodyTracker"
+﻿#INCIAR EL VENV
+#   APIMelodyTracker\.venv\Scripts\activate
 
-# Activar el entorno virtual
-.\.venv\Scripts\activate
+#ENCENDER EL SERVIDOR
+#   python -m uvicorn app.main:app --reload
 
-# Entrar a la carpeta y ejecutar Uvicorn
-cd .\APIMelodyTracker
-python -m uvicorn app.main:app --reload
+#INSTALAR VENV
+#   python -m venv .venv

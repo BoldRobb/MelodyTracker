@@ -1,40 +1,44 @@
-<div class="contenedor_principal">
-    <div class="contenedor_boton_cerrar">
-        <button class="boton_cerrar">x</button>
-    </div>
-    
-    <div class="contenedor_cuerpo">
-        <div class="cuerpo">
-            <div class="lado_izquierdo">
+@if (isVisible) {
+    <div class="modal">
+        <div class="contenedor_principal">
+          <div class="contenedor_boton_cerrar">
+            <button class="boton_cerrar" (click)="closeModal()">x</button>
+          </div>
+          
+          <div class="contenedor_cuerpo">
+            <div class="cuerpo">
+              <div class="lado_izquierdo">
                 <img class="foto_cancion" src="images/purpose.jpg" alt="">
                 <p class="texto">Rating</p>
                 <div class="contenedor_rate">
-                    <img class="imagen_estrella" src="images/star.png" alt="">
-                    <img class="imagen_estrella" src="images/star.png" alt="">
-                    <img class="imagen_estrella" src="images/star.png" alt="">
-                    <img class="imagen_estrella" src="images/star.png" alt="">
-                    <img class="imagen_estrella" src="images/star.png" alt="">
+                  <img class="imagen_estrella" src="images/star.png" alt="">
+                  <img class="imagen_estrella" src="images/star.png" alt="">
+                  <img class="imagen_estrella" src="images/star.png" alt="">
+                  <img class="imagen_estrella" src="images/star.png" alt="">
+                  <img class="imagen_estrella" src="images/star.png" alt="">
                 </div>
                 <p class="texto">Like</p>
                 <img class="imagen_corazon" src="images/heart.png" alt="">
-            </div>
-            
-            <div class="lado_derecho">
+              </div>
+              
+              <div class="lado_derecho">
                 <div class="contenedor_titulo_released">
-                    <p class="titulo">Hablando de love</p>
-                    <p class="released">2004</p>
+                  <p class="titulo">Hablando de love</p>
+                  <p class="released">2004</p>
                 </div>
                 <p class="artist">Tiago PZK</p>
                 <p class="date_listened">Listened 07/oct/2024</p>
-
+      
                 <p class="texto_comment">Comment</p>
                 <textarea class="input_design input_descripcion"></textarea>
+              </div>
             </div>
+          </div>
+      
+          <div class="contenedor_boton_cerrar">
+            <button class="boton_review">Create</button>
+          </div>
         </div>
-        
-    </div>
-
-    <div class="contenedor_boton_cerrar">
-        <button class="boton_review">Create</button>
-    </div>
-</div>
+      </div>
+      
+}
