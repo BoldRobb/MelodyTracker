@@ -304,4 +304,16 @@ hasRankAlbum(id_user: number, id_album: number): Observable<{ has_rank: boolean,
     .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner cuando termine
 }
 
+
+
+getAlbumComments(id_album: number): Observable<any[]> {
+  this.spinnerService.show(); // Mostrar el spinner
+
+  return this.http
+    .get<any[]>(`${this.apiUrl}/albums/${id_album}/comments_album`, {
+      headers: this.getAuthHeaders() // Incluir el token en las cabeceras si es necesario
+    })
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
 }

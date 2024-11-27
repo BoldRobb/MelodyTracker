@@ -627,3 +627,37 @@ def favorite_albums_user(
 
     return {"favorite_albums": albums_info}
 
+
+
+@router.get("/{id_album}/comments_album")
+def get_album_comments(id_album: int, db: Session = Depends(get_db)):
+
+    # Consulta los comentarios del álbum junto con información del usuario y calificaciones
+    comments = db.query(ReviewedAlbums, User.username, Profile.photo, RankedAlbums.score).join(
+    User, ReviewedAlbums.id_user == User.id_user
+    ).outerjoin(
+        Profile, User.id_user == Profile.id_user  # Cambiar a outerjoin
+    ).outerjoin(
+        RankedAlbums, (ReviewedAlbums.id_user == RankedAlbums.id_user) & (ReviewedAlbums.id_album == RankedAlbums.id_album)
+    ).filter(ReviewedAlbums.id_album == id_album).order_by(desc(ReviewedAlbums.date)).all()
+
+
+    # Verifica si existen comentarios
+    if not comments:
+        raise HTTPException(status_code=404, detail="No comments found for this album")
+
+    # Formatea los resultados
+    result = []
+    for comment, username, photo, score in comments:
+        result.append({
+            "id_album": id_album,
+            "id_reviewed_albums": comment.id_reviewed_albums,
+            "id_user": comment.id_user,
+            "comment": comment.comment,
+            "date": comment.date,
+            "username": username,
+            "photo": photo,
+            "score": score if score is not None else 0  # Si no hay calificación, se asigna 0
+        })
+
+    return result
