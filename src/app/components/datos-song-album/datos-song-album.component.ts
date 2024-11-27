@@ -3,13 +3,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlbumService } from '../../services/album/backend/album-service.service';
 import { SongService } from '../../services/song/backend/song.service';
 import { SpinnerService } from '../../services/others/spinner.service';
+import { CreateReviewComponent } from "../modals/create-review/create-review.component";
 
 @Component({
   selector: 'app-datos-song-album',
   templateUrl: './datos-song-album.component.html',
   styleUrls: ['./datos-song-album.component.css'],
   standalone: true,
-  imports: [] // Aquí podrías agregar otros módulos si es necesario, por ejemplo, `CommonModule`
+  imports: [CreateReviewComponent] // Aquí podrías agregar otros módulos si es necesario, por ejemplo, `CommonModule`
+ // Aquí podrías agregar otros módulos si es necesario, por ejemplo, `CommonModule`
 })
 export class DatosSongAlbumComponent implements OnInit {
   albumId: number | null = null;
@@ -169,6 +171,13 @@ export class DatosSongAlbumComponent implements OnInit {
     this.listsCreated = response.listsCreated;
     this.likes = response.likes;
     this.ratingCount = response.ratingCount;
+
+    this.songService.updateData({
+      title: this.title,
+      artist: this.artist,
+      releaseYear: this.releaseYear,
+      albumCover: this.albumCover
+    });
   }
 
   assignSongData(response: any): void {
@@ -183,5 +192,12 @@ export class DatosSongAlbumComponent implements OnInit {
     this.likes = response.likes;
     this.ratingCount = response.ratingCount;
     this.reviewCount = response.reviews_count;
+    
+    this.songService.updateData({
+      title: this.title,
+      artist: this.artist,
+      releaseYear: this.releaseYear,
+      albumCover: this.albumCover
+    });
   }
 }

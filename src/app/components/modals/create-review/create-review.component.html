@@ -8,7 +8,8 @@
           <div class="contenedor_cuerpo">
             <div class="cuerpo">
               <div class="lado_izquierdo">
-                <img class="foto_cancion" src="images/purpose.jpg" alt="">
+                <!-- Cambiar dinámicamente la foto -->
+                <img class="foto_cancion" [src]="albumCover" alt="Album cover">
                 <p class="texto">Rating</p>
                 <div class="contenedor_rate">
                   <img class="imagen_estrella" src="images/star.png" alt="">
@@ -23,11 +24,13 @@
               
               <div class="lado_derecho">
                 <div class="contenedor_titulo_released">
-                  <p class="titulo">Hablando de love</p>
-                  <p class="released">2004</p>
+                  <!-- Cambiar dinámicamente el título y el año -->
+                  <p class="titulo">{{ title }}</p>
+                  <p class="released">{{ releaseYear }}</p>
                 </div>
-                <p class="artist">Tiago PZK</p>
-                <p class="date_listened">Listened 07/oct/2024</p>
+                <!-- Cambiar dinámicamente el artista -->
+                <p class="artist">{{ artist }}</p>
+                <p class="date_listened">Listened {{ currentDate }}</p>
       
                 <p class="texto_comment">Comment</p>
                 <textarea class="input_design input_descripcion"></textarea>
@@ -39,6 +42,5 @@
             <button class="boton_review">Create</button>
           </div>
         </div>
-      </div>
-      
+    </div>
 }

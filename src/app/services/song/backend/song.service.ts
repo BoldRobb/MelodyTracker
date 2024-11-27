@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { SpinnerService } from '../../others/spinner.service';
 import { finalize, tap } from 'rxjs/operators';
 import { SongDetailsResponse } from '../../../interfaces/song';
@@ -277,6 +277,19 @@ export class SongService {
       .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
   }
 
+
+  private songAlbumDataSource = new BehaviorSubject<any>({
+    title: '',
+    artist: '',
+    releaseYear: 0,
+    albumCover: ''
+  });
+
+  currentData = this.songAlbumDataSource.asObservable();
+
+  updateData(data: any) {
+    this.songAlbumDataSource.next(data);
+  }
 
 
 }
