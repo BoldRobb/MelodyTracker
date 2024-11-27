@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { CreateListComponent } from "../../modals/create-list/create-list.component";
 import { ListsService } from '../../../services/lists/backend/lists.service'; // Importar el servicio
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-to-list',
@@ -18,8 +19,12 @@ export class AddToListComponent implements OnInit {
   userLists: any[] = []; // Almacena las listas del usuario
   isLoading = true; // Controla el estado de carga
   userId: number | null = null; // ID del usuario extraído del token
+  songId: number | null = null; // ID de la canción extraído de la URL
 
-  constructor(private listService: ListsService) {}
+  constructor(
+    private listService: ListsService,
+    private route: ActivatedRoute // Inyectar ActivatedRoute para obtener los parámetros de la URL
+  ) {}
 
   ngOnInit(): void {
     this.extractUserIdFromToken();
@@ -28,6 +33,7 @@ export class AddToListComponent implements OnInit {
     } else {
       console.error('No se pudo obtener el ID del usuario desde el token');
     }
+    this.extractSongIdFromUrl(); // Extraer el ID de la canción desde la URL
   }
 
   // Método para extraer el id_user desde el access_token almacenado en localStorage
@@ -43,6 +49,14 @@ export class AddToListComponent implements OnInit {
     } else {
       console.error('No se encontró el token en el localStorage');
     }
+  }
+
+  // Método para extraer el id_song desde la URL
+  extractSongIdFromUrl(): void {
+    this.route.paramMap.subscribe(params => {
+      this.songId = Number(params.get('id')); // Obtén el ID de la canción de la URL
+      console.log('ID de la canción:', this.songId);
+    });
   }
 
   // Método para cargar las listas del usuario
@@ -76,5 +90,22 @@ export class AddToListComponent implements OnInit {
   // Método para cerrar el modal de creación de lista
   closeModal(): void {
     this.isOpenModalAdd = false; // Cambia el estado a no visible para cerrar el modal de creación de lista
+  }
+
+  // Método para agregar la canción seleccionada a una lista
+  addSongToSelectedList(id_list: number): void {
+    if (this.songId !== null) {
+      this.listService.addSongToList(id_list, this.songId).subscribe(
+        (response) => {
+          console.log('Canción agregada a la lista:', response);
+          this.closeAddToListModal(); // Cerrar el modal solo si la canción fue agregada correctamente
+        },
+        (error) => {
+          console.error('Error al agregar la canción a la lista:', error);
+        }
+      );
+    } else {
+      console.error('No se pudo obtener el ID de la canción');
+    }
   }
 }

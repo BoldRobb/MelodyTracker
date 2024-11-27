@@ -7,3 +7,8 @@ class ListCreate(BaseModel):
     name: str
     comment: str
     photo: str
+
+
+class SongToAdd(BaseModel):
+    id_list: int
+    id_song: int

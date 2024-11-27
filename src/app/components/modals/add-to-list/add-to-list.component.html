@@ -36,7 +36,7 @@
           @if (!isLoading && userLists.length > 0) {
             <ng-container>
               @for (list of userLists; track $index) {
-                <p class="option_list">
+                <p class="option_list" (click)="addSongToSelectedList(list.id_list)">
                   {{ list.name }}
                 </p>
               }

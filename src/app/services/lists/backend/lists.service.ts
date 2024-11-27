@@ -64,4 +64,22 @@ export class ListsService {
       .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
   }
 
+
+
+
+  // Método para agregar una canción a una lista
+  addSongToList(id_list: number, id_song: number): Observable<any> {
+    this.spinnerService.show(); // Mostrar el spinner mientras se hace la petición
+
+    const songData = {
+      id_list: id_list,
+      id_song: id_song
+    };
+
+    return this.http
+      .post<any>(`${this.apiUrl}/lists/addSongToList`, songData)
+      .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+  }
+
+
 }
