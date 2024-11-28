@@ -8,8 +8,9 @@ from app.database.database import get_db
 from datetime import datetime
 
 from app.models.users import User, Profile
-from app.models.albums import Album, RankedAlbums, ListenedAlbums, FavoriteAlbumsOfUser, LikedAlbums, ReviewedAlbums, WatchlistAlbums
+from app.models.albums import Album, RankedAlbums, ListenedAlbums, FavoriteAlbumsOfUser, LikedAlbums, ReviewedAlbums, SongsOnAlbum, WatchlistAlbums
 from app.models.artists import Artist
+from app.models.songs import Song
 from sqlalchemy.orm import aliased
 
 
@@ -699,3 +700,38 @@ def review_album(review_data: ReviewAlbumSchema, db: Session = Depends(get_db), 
     db.refresh(new_review)
 
     return {"msg": "Review created successfully", "review": new_review}
+
+
+
+@router.get("/songsOnAlbum/{id_album}")
+def get_songs_by_album(id_album: int, db: Session = Depends(get_db)):
+    # Consultar las canciones del álbum
+    album = db.query(Album).filter(Album.id_album == id_album).first()
+    
+    if not album:
+        raise HTTPException(status_code=404, detail="Album not found")
+    
+    # Obtener las canciones que pertenecen a este álbum
+    songs_on_album = (
+        db.query(SongsOnAlbum)
+        .join(Song, SongsOnAlbum.id_song == Song.id_song)
+        .filter(SongsOnAlbum.id_album == id_album)
+        .all()
+    )
+
+    if not songs_on_album:
+        raise HTTPException(status_code=404, detail="No songs found for this album")
+
+    # Construir la respuesta con id_album, id_song, nombre y foto de la canción
+    result = [
+        {
+            "id_album": song_on_album.id_album,
+            "id_song": song_on_album.id_song,
+            "name": song_on_album.song.name,
+            "photo": song_on_album.song.photo
+        }
+        for song_on_album in songs_on_album
+    ]
+    
+    return result
+

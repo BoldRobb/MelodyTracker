@@ -1,12 +1,53 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AlbumService } from '../../services/album/backend/album-service.service';  // Asegúrate de que el servicio está bien importado
+import { SpinnerService } from '../../services/others/spinner.service';  // Servicio de spinner para mostrar/ocultar el cargador
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-songs-on-album',
   standalone: true,
-  imports: [],
+  imports: [ RouterModule ],
   templateUrl: './songs-on-album.component.html',
-  styleUrl: './songs-on-album.component.css'
+  styleUrls: ['./songs-on-album.component.css']
 })
-export class SongsOnAlbumComponent {
+export class SongsOnAlbumComponent implements OnInit {
+  id_album!: number;  // Variable para almacenar el id_album
+  songs: any[] = []; // Variable para almacenar las canciones del álbum
 
+  constructor(
+    private route: ActivatedRoute,  // Para acceder a los parámetros de la URL
+    private albumService: AlbumService,  // Servicio para obtener las canciones del álbum
+    private spinnerService: SpinnerService  // Para controlar el spinner
+  ) {}
+
+  ngOnInit(): void {
+    // Obtener el id_album de la URL
+    this.id_album = +this.route.snapshot.paramMap.get('id')!;  // Asegúrate de que el 'id' esté en la URL
+    // Llamar al servicio para obtener las canciones del álbum
+    this.loadSongs();
+  }
+
+  loadSongs(): void {
+    // Mostrar el spinner mientras se hace la solicitud
+    this.spinnerService.show();
+  
+    // Obtener las canciones del álbum
+    this.albumService.getSongsOnAlbum(this.id_album).subscribe({
+      next: (response) => {
+        if (Array.isArray(response)) {
+          this.songs = response;  // Asignar el arreglo directamente a `songs`
+        } else {
+          console.error('La respuesta no es un arreglo de canciones');
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar las canciones:', err);
+      },
+      complete: () => {
+        this.spinnerService.hide();  // Ocultar el spinner cuando termine la solicitud
+      }
+    });
+  }
+  
 }

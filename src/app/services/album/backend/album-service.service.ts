@@ -331,4 +331,10 @@ reviewAlbum(id_user: number, id_album: number, comment: string): Observable<{ ms
     .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
 }
 
+
+// Servicio para obtener las canciones de un álbum
+getSongsOnAlbum(id_album: number): Observable<{ songs: any[] }> {
+  return this.http.get<{ songs: any[] }>(`${this.apiUrl}/albums/songsOnAlbum/${id_album}`);
+}
+
 }

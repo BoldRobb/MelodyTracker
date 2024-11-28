@@ -1,14 +1,62 @@
-.contenedor_principal{
+.contenedor_principal {
     margin: 2rem 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     column-gap: 2rem;
     row-gap: 1.5rem;
     width: 86rem;
-}
-
-.imagen_song{
+  }
+  
+  .song-card {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .imagen_song {
     width: 20rem;
     height: 20rem;
     border-radius: 1.2rem;
-}
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .song-name {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    bottom: 10px;  /* Espaciado de 10px desde la parte inferior */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro para el texto */
+    color: white;
+    font-size: 3rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    opacity: 0; /* El nombre está oculto por defecto */
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .song-name p {
+    margin: 0;
+  }
+  
+  .song-card:hover .imagen_song {
+    transform: scale(1.05);  /* Efecto de zoom cuando el mouse pasa por encima */
+  }
+  
+  .song-card:hover .song-name {
+    opacity: 1;  /* El nombre de la canción se muestra al hacer hover */
+  }
+  
+  .image-container {
+    cursor: pointer;
+  }
+  
+  a {
+    text-decoration: none;  /* Eliminar subrayado de los enlaces */
+    display: block;  /* Asegura que el enlace ocupe todo el área del contenedor */
+  }
+  
+  .image-wrapper {
+    position: relative; /* Para que el texto se posicione sobre la imagen */
+  }
+  

@@ -1,14 +1,27 @@
 <div class="contenedor_principal">
-    <img class="imagen_song" src="images/dawnfm.jpg" alt="">
-    <img class="imagen_song" src="images/dawnfm.jpg" alt="">
-    <img class="imagen_song" src="images/dawnfm.jpg" alt="">
-    <img class="imagen_song" src="images/dawnfm.jpg" alt="">
-    <img class="imagen_song" src="images/dawnfm.jpg" alt="">
-    <img class="imagen_song" src="images/dawnfm.jpg" alt="">
-    <img class="imagen_song" src="images/dawnfm.jpg" alt="">
-    <img class="imagen_song" src="images/dawnfm.jpg" alt="">
-    <img class="imagen_song" src="images/dawnfm.jpg" alt="">
-    <img class="imagen_song" src="images/dawnfm.jpg" alt="">
-    <img class="imagen_song" src="images/dawnfm.jpg" alt="">
-    <img class="imagen_song" src="images/dawnfm.jpg" alt="">
-</div>
+    @for (song of songs; track $index) {
+      <div class="song-card">
+        <div class="image-container">
+          <!-- Envolver la imagen y el nombre con un enlace para navegación -->
+          <a [routerLink]="['/song', song.id_song]">  <!-- Usa 'song.id' para redirigir al ID de la canción -->
+            <div class="image-wrapper">
+              <!-- Aquí usamos la propiedad photo para mostrar la imagen -->
+              @if (song.photo) {
+                <img class="imagen_song" [src]="song.photo" alt="{{ song.name }}">
+              }
+              <div class="song-name">
+                <p>{{ song.name }}</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    }
+  </div>
+  
+  @if (songs.length === 0) {
+    <div>
+      <p>No hay canciones en este álbum</p>
+    </div>
+  }
+  
