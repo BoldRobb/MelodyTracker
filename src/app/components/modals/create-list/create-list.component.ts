@@ -56,6 +56,7 @@ export class CreateListComponent {
           },
           error: (err) => {
             console.error('Error al crear la lista:', err);
+            console.log('info:', this.listData);
           }
         });
       } catch (error) {

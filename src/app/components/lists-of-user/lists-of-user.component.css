@@ -97,3 +97,22 @@
     margin: 0;
     margin-left: 0.3rem;
 }
+
+
+.description_list {
+    font-family: 'josefin sans';
+    font-size: 2.2rem;
+    opacity: 70%;
+    margin: 0 0 0.5rem 0;
+    word-wrap: break-word; /* Permitir que las palabras largas se dividan */
+    overflow-wrap: break-word; /* Compatibilidad adicional para navegadores */
+    max-width: 100%; /* Ajustar al contenedor */
+}
+
+
+.contenedor_datos {
+    display: flex;
+    flex-direction: column;
+    max-width: 80rem; /* Ajusta este valor según tus necesidades */
+    word-wrap: break-word;
+}

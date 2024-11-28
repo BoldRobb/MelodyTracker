@@ -16,6 +16,7 @@ class User(Base):
     # Especificamos las claves foráneas en la relación con los seguidores
     followers = relationship("Followers", foreign_keys="[Followers.id_user]", back_populates="user")
     following = relationship("Followers", foreign_keys="[Followers.id_follower]", back_populates="follower")
+    lists = relationship("Lists", back_populates="user")
 
 
 class Profile(Base):

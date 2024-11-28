@@ -64,8 +64,7 @@ export const routes: Routes = [
     { path: 'song/:id', component: SongComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'following/:id', component: FollowingComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'followers/:id', component: FollowersComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
-    { path: 'myLists', component: MyListsComponent},
-
+    { path: 'myLists/:id', component: MyListsComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
 
     /* COMPONENTES */
     { path: 'navbarlogin', component: NavbarLoginComponent},

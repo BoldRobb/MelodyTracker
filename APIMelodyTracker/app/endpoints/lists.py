@@ -1,7 +1,9 @@
+
 from app.jwt.auth import get_current_user
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from app.database.database import get_db
 from typing import List
 from datetime import date
@@ -18,12 +20,16 @@ router = APIRouter()
 
 
 @router.post("/create_list/")
-def create_list(list_data: ListCreate, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    user, role = current_user  # Supongamos que `get_current_user` devuelve el usuario actual y su rol
+def create_list(
+    list_data: ListCreate, 
+    db: Session = Depends(get_db), 
+    current_user: dict = Depends(get_current_user)
+):
+    user, role = current_user  # Obtenemos el usuario autenticado
 
     # Crear la nueva lista
-    new_list = List(
-        id_user=user.id_user,  # El usuario autenticado se asocia automáticamente
+    new_list = Lists(
+        id_user=user.id_user,
         name=list_data.name,
         comment=list_data.comment,
         photo=list_data.photo
@@ -32,10 +38,9 @@ def create_list(list_data: ListCreate, db: Session = Depends(get_db), current_us
     # Agregar y confirmar en la base de datos
     db.add(new_list)
     db.commit()
-    db.refresh(new_list)  # Para obtener el objeto actualizado con el ID generado
+    db.refresh(new_list)
 
     return {"detail": "List created", "list_id": new_list.id_list}
-
 
 @router.get("/nameLists/{id_user}")
 def get_user_lists(id_user: int, db: Session = Depends(get_db)):
@@ -87,3 +92,155 @@ def add_song_to_list(song_data: SongToAdd, db: Session = Depends(get_db)):
     db.commit()
     
     return {"message": "Canción agregada correctamente a la lista"}
+
+
+
+from sqlalchemy import func
+
+@router.get("/list_info/{id_list}")
+def get_list_info(id_list: int, db: Session = Depends(get_db)):
+    # Consultar la información de la lista y las métricas asociadas
+    list_info = db.query(
+        User.id_user,
+        User.username,
+        Profile.photo.label("user_photo"),
+        Lists.id_list,
+        Lists.photo.label("list_photo"),
+        Lists.name,
+        Lists.comment.label("description"),
+        func.count(SongsOnList.id_song).label("total_songs"),
+        func.count(ReviewedLists.id_list).label("total_reviews"),
+        func.count(LikedLists.id_list).label("total_likes"),
+        func.avg(RankedLists.score).label("average_score")  # Calcular el promedio de los puntajes
+    ).filter(Lists.id_list == id_list) \
+     .join(User, User.id_user == Lists.id_user) \
+     .join(Profile, Profile.id_user == User.id_user) \
+     .outerjoin(SongsOnList, SongsOnList.id_list == Lists.id_list) \
+     .outerjoin(ReviewedLists, ReviewedLists.id_list == Lists.id_list) \
+     .outerjoin(LikedLists, LikedLists.id_list == Lists.id_list) \
+     .outerjoin(RankedLists, RankedLists.id_list == Lists.id_list).group_by(Lists.id_list, User.id_user, Profile.photo) \
+     .first()
+
+    if not list_info:
+        raise HTTPException(status_code=404, detail="List not found")
+
+    # Redondear el promedio de puntajes a dos decimales
+    average_score = round(list_info.average_score, 2) if list_info.average_score is not None else None
+
+    # Formatear la respuesta
+    result = {
+        "id_user": list_info.id_user,
+        "username": list_info.username,
+        "user_photo": list_info.user_photo,
+        "id_list": list_info.id_list,
+        "list_photo": list_info.list_photo,
+        "name": list_info.name,
+        "description": list_info.description,
+        "total_songs": list_info.total_songs,
+        "total_reviews": list_info.total_reviews,
+        "total_likes": list_info.total_likes,
+        "average_score": average_score  # El promedio redondeado a dos decimales
+    }
+
+    return result
+
+
+@router.get("/list_info/{id_list}")
+def get_list_info(id_list: int, db: Session = Depends(get_db)):
+    # Consultar la información de la lista y las métricas asociadas
+    list_info = db.query(
+        User.id_user,
+        User.username,
+        Profile.photo.label("user_photo"),
+        Lists.id_list,
+        Lists.photo.label("list_photo"),
+        Lists.name,
+        Lists.comment.label("description"),
+        func.count(SongsOnList.id_song).label("total_songs"),
+        func.count(ReviewedLists.id_list).label("total_reviews"),
+        func.count(LikedLists.id_list).label("total_likes"),
+        func.avg(RankedLists.score).label("average_score")  # Calcular el promedio de los puntajes
+    ).filter(Lists.id_list == id_list) \
+     .join(User, User.id_user == Lists.id_user) \
+     .join(Profile, Profile.id_user == User.id_user) \
+     .outerjoin(SongsOnList, SongsOnList.id_list == Lists.id_list) \
+     .outerjoin(ReviewedLists, ReviewedLists.id_list == Lists.id_list) \
+     .outerjoin(LikedLists, LikedLists.id_list == Lists.id_list) \
+     .outerjoin(RankedLists, RankedLists.id_list == Lists.id_list).group_by(Lists.id_list, User.id_user, Profile.photo) \
+     .first()
+
+    if not list_info:
+        raise HTTPException(status_code=404, detail="List not found")
+
+    # Redondear el promedio de puntajes a dos decimales
+    average_score = round(list_info.average_score, 2) if list_info.average_score is not None else None
+
+    # Formatear la respuesta
+    result = {
+        "id_user": list_info.id_user,
+        "username": list_info.username,
+        "user_photo": list_info.user_photo,
+        "id_list": list_info.id_list,
+        "list_photo": list_info.list_photo,
+        "name": list_info.name,
+        "description": list_info.description,
+        "total_songs": list_info.total_songs,
+        "total_reviews": list_info.total_reviews,
+        "total_likes": list_info.total_likes,
+        "average_score": average_score  # El promedio redondeado a dos decimales
+    }
+
+    return result
+
+
+@router.get("/user_lists/{id_user}")
+def get_user_lists(id_user: int, db: Session = Depends(get_db)):
+    # Consultar la información de las listas del usuario y las métricas asociadas, incluyendo el creador de la lista
+    user_lists = db.query(
+    Lists.id_list,
+    Lists.photo.label("list_photo"),
+    Lists.name,
+    Lists.comment.label("description"),
+    func.coalesce(func.count(SongsOnList.id_song.distinct()), 0).label("total_songs"),
+    func.coalesce(func.count(ReviewedLists.id_list), 0).label("total_reviews"),
+    func.coalesce(func.count(LikedLists.id_list), 0).label("total_likes"),
+    func.coalesce(func.avg(RankedLists.score), 0).label("average_score"),
+    func.coalesce(func.count(RankedLists.id_list), 0).label("total_ranks"),
+    User.username.label("creator_name"),
+    Profile.photo.label("creator_photo")
+    ).filter(Lists.id_user == id_user) \
+    .outerjoin(SongsOnList, SongsOnList.id_list == Lists.id_list) \
+    .outerjoin(ReviewedLists, ReviewedLists.id_list == Lists.id_list) \
+    .outerjoin(LikedLists, LikedLists.id_list == Lists.id_list) \
+    .outerjoin(RankedLists, RankedLists.id_list == Lists.id_list) \
+    .join(User, User.id_user == Lists.id_user) \
+    .outerjoin(Profile, Profile.id_user == User.id_user) \
+    .group_by(
+        Lists.id_list, Lists.photo, Lists.name, Lists.comment,
+        User.id_user, User.username,
+        Profile.id_user, Profile.photo
+    ) \
+    .all()
+
+    if not user_lists:
+        raise HTTPException(status_code=404, detail="No lists found for this user")
+
+    # Formatear la respuesta
+    result = [
+        {
+            "id_list": list_info.id_list,
+            "list_photo": list_info.list_photo,
+            "name": list_info.name,
+            "description": list_info.description,
+            "total_songs": list_info.total_songs,
+            "total_reviews": list_info.total_reviews,
+            "total_likes": list_info.total_likes,
+            "average_score": round(list_info.average_score, 2) if list_info.average_score is not None else None,  # El promedio redondeado a dos decimales
+            "total_ranks": list_info.total_ranks/3,  # Cantidad de rankings
+            "creator_name": list_info.creator_name,  # Nombre del creador
+            "creator_photo": list_info.creator_photo  # Foto del creador
+        }
+        for list_info in user_lists
+    ]
+
+    return result

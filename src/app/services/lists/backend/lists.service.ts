@@ -82,4 +82,25 @@ export class ListsService {
   }
 
 
+
+// Servicio para obtener la información de una lista
+getListInfo(id_list: number): Observable<any> {
+  this.spinnerService.show(); // Mostrar el spinner mientras se hace la petición
+
+  return this.http
+    .get<any>(`${this.apiUrl}/lists/list_info/${id_list}`)
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+// Servicio para obtener las listas de un usuario
+getInfoUserLists(id_user: number): Observable<any[]> {
+  this.spinnerService.show(); // Mostrar el spinner mientras se hace la petición
+
+  return this.http
+    .get<any[]>(`${this.apiUrl}/lists/user_lists/${id_user}`)
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
 }

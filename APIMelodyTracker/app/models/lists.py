@@ -12,6 +12,8 @@ class Lists(Base):
     comment = Column(Text, nullable=False)
     photo = Column(String(255), nullable=False)
 
+    user = relationship("User", back_populates="lists")
+
 
 class LikedLists(Base):
     __tablename__ = "liked_lists"
