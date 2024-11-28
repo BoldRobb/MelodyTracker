@@ -101,6 +101,7 @@
 }
 
 .imagen_corazon{
+    cursor: pointer;
     width: 8rem;
     height: 8rem;
 }

@@ -65,6 +65,7 @@
   
 
   .contenedor_borrar_rating{
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;

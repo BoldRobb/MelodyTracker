@@ -1,4 +1,5 @@
 .contenedor_principal{
+    font-family: 'jockey one', sans-serif;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-content: center;
