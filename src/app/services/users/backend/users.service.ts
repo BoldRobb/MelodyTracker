@@ -336,4 +336,62 @@ export class UsersService {
     );
   }
 
+
+
+
+
+
+  //REVIEWS
+  getReviewsHistory(id_user: number): Observable<any> {
+    this.spinnerService.show(); // Mostrar el spinner mientras se realiza la solicitud
+    return this.http.get<any>(`${this.apiUrl}/users/reviews_history/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide()) // Esconder el spinner cuando la solicitud termine
+    );
+  }
+
+  
+  getReviewsHistoryAlbums(id_user: number): Observable<any> {
+    this.spinnerService.show(); // Mostrar el spinner mientras se realiza la solicitud
+    return this.http.get<any>(`${this.apiUrl}/users/reviews_history_albums/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide()) // Esconder el spinner cuando la solicitud termine
+    );
+  }
+
+
+  getReviewsHistoryLists(id_user: number): Observable<any> {
+    this.spinnerService.show(); // Mostrar el spinner mientras se realiza la solicitud
+    return this.http.get<any>(`${this.apiUrl}/users/reviews_history_lists/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide()) // Esconder el spinner cuando la solicitud termine
+    );
+  }
+
+  
+  getRankedAlbums(id_user: number): Observable<any> {
+    this.spinnerService.show(); // Mostrar el spinner mientras se realiza la solicitud
+    return this.http.get<any>(`${this.apiUrl}/users/ranked_albums/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide()) // Esconder el spinner cuando la solicitud termine
+    );
+  }
+
+  
+  getRankedSongs(id_user: number): Observable<any> {
+    this.spinnerService.show(); // Mostrar el spinner mientras se realiza la solicitud
+    return this.http.get<any>(`${this.apiUrl}/users/ranked_songs/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide()) // Esconder el spinner cuando la solicitud termine
+    );
+  }
+
+  
+  getRankedLists(id_user: number): Observable<any> {
+    this.spinnerService.show(); // Mostrar el spinner mientras se realiza la solicitud
+    return this.http.get<any>(`${this.apiUrl}/users/ranked_lists/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide()) // Esconder el spinner cuando la solicitud termine
+    );
+  }
+
+  
+
+
+
+
 }

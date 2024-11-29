@@ -1,22 +1,32 @@
-
 <div class="contenedor_principal">
-    <div class="contenedor_foto_review">
-        <img class="foto_review" src="images/purpose.jpg" alt="">
-    </div>
-    <div class="datos_review">
+    <div *ngFor="let review of combinedReviews" class="contenedor_foto_review">
+      <img class="foto_review" [src]="review.photo" alt="">
+  
+      <div class="datos_review">
         <div class="contenedor_nombre_released">
-            <p class="nombre_song">Purpose</p>
-            <p class="released_song">2004</p>
+          <p class="nombre_song">{{ review.name }}</p>
+          <p class="released_song">{{ review.released | date: 'yyyy' }}</p> <!-- Solo el año -->
         </div>
-        <p class="nombre_artist">Justin Bieber</p>
+
+        <!-- Mostrar 'user_creator' si es una lista en lugar de 'artist' -->
+        <p class="nombre_artist" *ngIf="review.user_creator; else artist">
+          {{ review.user_creator }} <!-- Mostrar el creador de la lista -->
+        </p>
+
+        <!-- En caso contrario, mostrar el nombre del artista -->
+        <ng-template #artist>
+          <p class="nombre_artist">{{ review.artist }}</p>
+        </ng-template>
+
         <p class="titulo_rate">Rate</p>
         <div class="contenedor_rate">
-            <img class="imagen_estrella" src="images/star.png" alt="">
-            <img class="imagen_estrella" src="images/star.png" alt="">
-            <img class="imagen_estrella" src="images/star.png" alt="">
-            <img class="imagen_estrella" src="images/star.png" alt="">
-            <img class="imagen_estrella" src="images/star.png" alt="">
+          <img *ngFor="let star of [].constructor(5); let i = index"
+               class="imagen_estrella"
+               [src]="i < review.score ? 'images/star.png' : 'images/empty_star.png'"
+               alt="">
         </div>
-        <p class="review_user">“At first I didn't like the song so much but then I started to feel like my butt started to dance by itself, I got scared but I let myself go, DURO.”</p>
+        <p class="review_user"> {{ review.comment }} </p>
+        <p class="fecha">{{ review.date_review | date: 'shortDate' }}</p> <!-- Solo la fecha -->
+      </div>
     </div>
 </div>

@@ -1,70 +1,105 @@
-.contenedor_principal{
+.contenedor_principal {
+    font-family: 'jockey one', sans-serif;
     display: flex;
+    justify-content: center;
     align-items: center;
-    padding: 2rem;
-    gap: 2rem;
-    width: 70rem;
-    height: 25rem;
-    background-color: #0D0B29;
-    border-radius: 2rem;
+    flex-wrap: wrap; /* Asegura que los elementos se acomoden en varias filas si es necesario */
+    gap: 2rem; /* Espacio entre los elementos */
+    width: 150rem; /* Ajusta el tamaño total */
+    margin: 0 auto; /* Centra el contenedor */
+    row-gap: 3rem; /* Espacio vertical entre filas */
+    border-radius: 2rem; /* Bordes redondeados */
 }
 
+.contenedor_foto_review {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+    max-width: 70rem; /* El ancho máximo del contenedor */
+    background-color: #0D0B29;
+    border-radius: 2rem;
+    padding: 2rem;
+}
 
-.foto_review{
+.foto_review {
     width: 20rem;
+    height: 20rem;
     border-radius: 1.3rem;
 }
 
-.datos_review{
+.datos_review {
     display: flex;
     flex-direction: column;
     row-gap: 0rem;
     line-height: 1.1;
 }
 
-.contenedor_nombre_released{
+.contenedor_nombre_released {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.nombre_song{
+.nombre_song {
     font-size: 4rem;
     margin: 0;
 }
 
-.released_song{
+.released_song {
     font-size: 2.5rem;
     margin: 0;
     margin-top: 1rem;
     opacity: 65%;
 }
 
-.nombre_artist{
+.nombre_artist {
     margin: 0;
     font-size: 2rem;
     color: #C6FF41;
 }
 
-.titulo_rate{
+.titulo_rate {
     margin: 0;
     font-size: 1.5rem;
     margin: 0.3rem 0 0.2rem 0;
 }
 
-.contenedor_rate{
+.contenedor_rate {
     display: flex;
     gap: 0.1rem;
 }
 
-.imagen_estrella{
+.imagen_estrella {
     width: 1.5rem;
     height: 1.5rem;
 }
 
-.review_user{
+.review_user {
     font-size: 1.9rem;
     opacity: 70%;
     line-height: 1.3;
     margin: 1rem 0;
 }
+
+.fecha {
+    font-size: 1.5rem;
+    opacity: 60%;
+}
+
+
+.list-description {
+    display: block;
+    font-size: 0.9em;
+    color: rgba(0, 0, 0, 0.6); /* Color opaco para 'list made by' */
+    margin-top: 5px;
+  }
+  
+  .list-made-by {
+    font-size: 0.9em;
+    color: rgba(0, 0, 0, 0.6); /* Color opaco */
+  }
+  
+  .user-creator {
+    color: #28a745; /* Verde similar al color de los artistas */
+    font-weight: bold;
+  }

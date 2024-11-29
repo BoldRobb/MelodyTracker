@@ -57,8 +57,8 @@ export const routes: Routes = [
     { path: 'songsListened/:id_user', component: SongsListenedComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'albumsListened/:id_user', component: AlbumsListenedComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'bestUsers', component: BestUsersComponent},
-    { path: 'rankedHistory', component: RankedHistoryComponent},
-    { path: 'reviewHistory', component: ReviewHistoryComponent},
+    { path: 'rankedHistory/:id', component: RankedHistoryComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
+    { path: 'reviewHistory/:id', component: ReviewHistoryComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: '404', component: Error404Component},
     { path: 'album/:id', component: AlbumComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'song/:id', component: SongComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id

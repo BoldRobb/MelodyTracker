@@ -1,6 +1,7 @@
 
 from typing import List
 
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -11,11 +12,13 @@ from app.database.database import get_db
 
 from app.models.users import User, Profile, Followers
 
-from app.models.lists import Lists
+from app.models.lists import Lists, RankedLists, ReviewedLists
 
 from app.models.songs import LikedSongs, ListenedSongs, RankedSongs, ReviewedSongs, Song, WatchlistSongs
 
-from app.models.albums import Album, LikedAlbums, ListenedAlbums, RankedAlbums, ReviewedAlbums, WatchlistAlbums
+from app.models.albums import Album, LikedAlbums, ListenedAlbums, RankedAlbums, ReviewedAlbums, SongsOnAlbum, WatchlistAlbums
+
+from app.models.artists import Artist
 
 from app.schemas.users import BioUpdateRequest, UserCreate, UserIdsRequest, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse, UsernameUpdateRequest 
 
@@ -644,3 +647,250 @@ async def get_recent_activities(id_user: int, db: Session = Depends(get_db)):
     }
 
     return result
+
+
+
+# 
+@router.get("/reviews_history/{id_user}")
+async def get_reviews_history(id_user: int, db: Session = Depends(get_db)):
+    try:
+        # Obtener datos de canciones revisadas
+        reviewed_songs = (
+            db.query(
+                Song.id_song.label("id_song"),
+                Artist.id_artist.label("id_artist"),
+                Song.photo.label("photo"),
+                Song.name.label("name"),
+                Song.released.label("released"),
+                Artist.name.label("artist"),
+                ReviewedSongs.comment.label("comment"),
+                ReviewedSongs.date.label("date_review"),
+            )
+            .join(Artist, Song.id_artist == Artist.id_artist)
+            .join(ReviewedSongs, ReviewedSongs.id_song == Song.id_song)
+            .filter(ReviewedSongs.id_user == id_user)
+            .order_by(ReviewedSongs.date.desc())  # Ordenar por fecha (más reciente primero)
+            .all()
+        )
+
+        # Formatear los resultados
+        result = [
+            {
+                "id_song": review.id_song,
+                "id_artist": review.id_artist,
+                "photo": review.photo,
+                "name": review.name,
+                "released": review.released,
+                "artist": review.artist,
+                "comment": review.comment,
+                "date_review": review.date_review,
+                "type": "song",  # Tipo específico: "song"
+            }
+            for review in reviewed_songs
+        ]
+
+        if not result:
+            raise HTTPException(status_code=404, detail="No reviews found for the user")
+
+        return {"reviews_history": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/reviews_history_albums/{id_user}")
+async def get_reviews_history_albums(id_user: int, db: Session = Depends(get_db)):
+    try:
+        # Obtener datos de álbumes revisados
+        reviewed_albums = (
+            db.query(
+                Album.id_album.label("id_album"),
+                Artist.id_artist.label("id_artist"),
+                Album.photo.label("photo"),
+                Album.name.label("name"),
+                Album.released.label("released"),
+                Artist.name.label("artist"),
+                ReviewedAlbums.comment.label("comment"),
+                ReviewedAlbums.date.label("date_review"),
+            )
+            .join(Artist, Album.id_artist == Artist.id_artist)
+            .join(ReviewedAlbums, ReviewedAlbums.id_album == Album.id_album)
+            .filter(ReviewedAlbums.id_user == id_user)
+            .order_by(ReviewedAlbums.date.desc())  # Ordenar por fecha (más reciente primero)
+            .all()
+        )
+
+        # Formatear los resultados
+        result = [
+            {
+                "id_album": review.id_album,
+                "id_artist": review.id_artist,
+                "photo": review.photo,
+                "name": review.name,
+                "released": review.released,
+                "artist": review.artist,
+                "comment": review.comment,
+                "date_review": review.date_review,
+                "type": "album",  # Tipo específico: "album"
+            }
+            for review in reviewed_albums
+        ]
+
+        if not result:
+            raise HTTPException(status_code=404, detail="No album reviews found for the user")
+
+        return {"reviews_history_albums": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/reviews_history_lists/{id_user}")
+async def get_reviews_history_lists(id_user: int, db: Session = Depends(get_db)):
+    try:
+        # Obtener datos de listas revisadas
+        reviewed_lists = (
+            db.query(
+                Lists.id_list.label("id_list"),
+                User.id_user.label("id_user_creator"),
+                User.username.label("user_creator"),
+                Lists.photo.label("photo"),
+                Lists.name.label("name"),
+                Lists.comment.label("list_comment"),
+                ReviewedLists.comment.label("review_comment"),
+                ReviewedLists.date.label("date_review"),
+            )
+            .join(User, Lists.id_user == User.id_user)  # Relación con el creador de la lista
+            .join(ReviewedLists, ReviewedLists.id_list == Lists.id_list)
+            .filter(ReviewedLists.id_user == id_user)
+            .order_by(ReviewedLists.date.desc())  # Ordenar por fecha (más reciente primero)
+            .all()
+        )
+
+        # Formatear los resultados
+        result = [
+            {
+                "id_list": review.id_list,
+                "id_user_creator": review.id_user_creator,
+                "user_creator": review.user_creator,
+                "photo": review.photo,
+                "name": review.name,
+                "list_comment": review.list_comment,
+                "comment": review.review_comment,
+                "date_review": review.date_review,
+                "type": "list",  # Tipo específico: "list"
+            }
+            for review in reviewed_lists
+        ]
+
+        if not result:
+            raise HTTPException(status_code=404, detail="No list reviews found for the user")
+
+        return {"reviews_history_lists": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/ranked_albums/{id_user}")
+async def get_ranked_albums(id_user: int, db: Session = Depends(get_db)):
+    try:
+        # Obtener las listas rankeadas por el usuario
+        ranked_albums = (
+            db.query(
+                RankedAlbums.id_user.label("id_user"),
+                RankedAlbums.id_album.label("id_album"),
+                RankedAlbums.score.label("score"),
+                RankedAlbums.date.label("date")  # Añadir la fecha de ranking
+            )
+            .filter(RankedAlbums.id_user == id_user)
+            .order_by(RankedAlbums.date.desc())  # Ordenar por la fecha de ranking
+            .all()
+        )
+
+        # Formatear los resultados
+        result = [
+            {
+                "id_user": ranked_album.id_user,
+                "id_album": ranked_album.id_album,
+                "score": ranked_album.score,
+                "date": ranked_album.date,  # Añadir la fecha al resultado
+            }
+            for ranked_album in ranked_albums
+        ]
+
+        if not result:
+            raise HTTPException(status_code=404, detail="No ranked albums found for the user")
+
+        return {"ranked_albums": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/ranked_songs/{id_user}")
+async def get_ranked_songs(id_user: int, db: Session = Depends(get_db)):
+    try:
+        # Obtener los rankeos de canciones del usuario
+        ranked_songs = (
+            db.query(
+                RankedSongs.id_user.label("id_user"),
+                RankedSongs.id_song.label("id_song"),
+                RankedSongs.score.label("score"),
+                RankedSongs.date.label("date")  # Añadir la fecha de ranking
+            )
+            .filter(RankedSongs.id_user == id_user)
+            .order_by(RankedSongs.date.desc())  # Ordenar por la fecha de ranking
+            .all()
+        )
+
+        # Formatear los resultados
+        result = [
+            {
+                "id_user": ranked_song.id_user,
+                "id_song": ranked_song.id_song,
+                "score": ranked_song.score,
+                "date": ranked_song.date,  # Añadir la fecha al resultado
+            }
+            for ranked_song in ranked_songs
+        ]
+
+        if not result:
+            raise HTTPException(status_code=404, detail="No ranked songs found for the user")
+
+        return {"ranked_songs": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/ranked_lists/{id_user}")
+async def get_ranked_lists(id_user: int, db: Session = Depends(get_db)):
+    try:
+        # Asegúrate de que el modelo RankedLists tenga un campo de fecha, como 'date'
+        ranked_lists = (
+            db.query(
+                RankedLists.id_user.label("id_user"),
+                RankedLists.id_list.label("id_list"),
+                RankedLists.score.label("score"),
+                RankedLists.date.label("date")  # Asegúrate de incluir el campo de fecha
+            )
+            .filter(RankedLists.id_user == id_user)
+            .order_by(RankedLists.date.desc())  # Ordenar por la fecha de ranking
+            .all()
+        )
+
+        # Si no hay registros, responder con un 404
+        if not ranked_lists:
+            raise HTTPException(status_code=404, detail="No ranked lists found for the user")
+
+        # Formatear los resultados
+        result = [
+            {
+                "id_user": ranked_list.id_user,
+                "id_list": ranked_list.id_list,
+                "score": ranked_list.score,
+                "date": ranked_list.date,  # Asegúrate de que la fecha esté en la respuesta
+            }
+            for ranked_list in ranked_lists
+        ]
+
+        return {"ranked_lists": result}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
