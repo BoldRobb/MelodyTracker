@@ -1,32 +1,39 @@
 <div class="contenedor_principal">
-    <div *ngFor="let review of combinedReviews" class="contenedor_foto_review">
-      <img class="foto_review" [src]="review.photo" alt="">
-  
-      <div class="datos_review">
-        <div class="contenedor_nombre_released">
-          <p class="nombre_song">{{ review.name }}</p>
-          <p class="released_song">{{ review.released | date: 'yyyy' }}</p> <!-- Solo el año -->
-        </div>
+  <div *ngFor="let review of combinedReviews" class="contenedor_foto_review">
+    <img class="foto_review" [src]="review.photo" alt="Imagen de la reseña">
 
-        <!-- Mostrar 'user_creator' si es una lista en lugar de 'artist' -->
-        <p class="nombre_artist" *ngIf="review.user_creator; else artist">
-          {{ review.user_creator }} <!-- Mostrar el creador de la lista -->
-        </p>
-
-        <!-- En caso contrario, mostrar el nombre del artista -->
-        <ng-template #artist>
-          <p class="nombre_artist">{{ review.artist }}</p>
-        </ng-template>
-
-        <p class="titulo_rate">Rate</p>
-        <div class="contenedor_rate">
-          <img *ngFor="let star of [].constructor(5); let i = index"
-               class="imagen_estrella"
-               [src]="i < review.score ? 'images/star.png' : 'images/empty_star.png'"
-               alt="">
-        </div>
-        <p class="review_user"> {{ review.comment }} </p>
-        <p class="fecha">{{ review.date_review | date: 'shortDate' }}</p> <!-- Solo la fecha -->
+    <div class="datos_review">
+      <div class="contenedor_nombre_released">
+        <p class="nombre_song">{{ review.name }}</p>
+        <p class="released_song">{{ review.released | date: 'yyyy' }}</p> <!-- Solo el año -->
       </div>
+
+      <!-- Mostrar 'Creator:' si es una lista, caso contrario mostrar 'Artist:' -->
+      <p class="nombre_artist" *ngIf="review.user_creator; else artist">
+        <span class="text_creator">List Creator: </span> {{ review.user_creator }} <!-- Mostrar el creador de la lista -->
+      </p>
+
+      <!-- En caso contrario, mostrar el nombre del artista -->
+      <ng-template #artist>
+        <p class="nombre_artist">{{ review.artist }}</p>
+      </ng-template>
+
+      <!-- Verificar si hay puntuación -->
+      <p class="titulo_rate">
+        {{ review.score === null || review.score === 0 ? 'No rating' : 'Rate' }}
+      </p>
+
+      <!-- Mostrar estrellas solo si hay puntuación -->
+      <div class="contenedor_rate" *ngIf="review.score !== null && review.score !== 0">
+        <img *ngFor="let star of calculateStars(review.score); let i = index"
+             class="imagen_estrella"
+             [src]="star"
+             alt="Estrella">
+      </div>
+
+      <p class="review_user"> {{ review.comment }} </p>
+      <!-- Agregar texto corto en inglés para la fecha -->
+      <p class="fecha">Reviewed on: {{ review.date_review | date: 'shortDate' }}</p>
     </div>
+  </div>
 </div>

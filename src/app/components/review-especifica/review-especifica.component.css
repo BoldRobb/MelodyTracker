@@ -103,3 +103,10 @@
     color: #28a745; /* Verde similar al color de los artistas */
     font-weight: bold;
   }
+
+
+  .text_creator{
+    color: white;
+    font-size: 1.9rem;
+    opacity: 70%;
+  }

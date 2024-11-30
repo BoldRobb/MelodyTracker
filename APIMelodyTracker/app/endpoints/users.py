@@ -654,7 +654,7 @@ async def get_recent_activities(id_user: int, db: Session = Depends(get_db)):
 @router.get("/reviews_history/{id_user}")
 async def get_reviews_history(id_user: int, db: Session = Depends(get_db)):
     try:
-        # Obtener datos de canciones revisadas
+        # Obtener datos de canciones revisadas junto con los datos de ranking (score y date)
         reviewed_songs = (
             db.query(
                 Song.id_song.label("id_song"),
@@ -665,11 +665,17 @@ async def get_reviews_history(id_user: int, db: Session = Depends(get_db)):
                 Artist.name.label("artist"),
                 ReviewedSongs.comment.label("comment"),
                 ReviewedSongs.date.label("date_review"),
+                RankedSongs.score.label("score"),  # Agregar el score
+                RankedSongs.date.label("date_score"),  # Agregar la fecha del score
             )
             .join(Artist, Song.id_artist == Artist.id_artist)
             .join(ReviewedSongs, ReviewedSongs.id_song == Song.id_song)
+            .outerjoin(
+                RankedSongs,
+                (RankedSongs.id_song == Song.id_song) & (RankedSongs.id_user == id_user),
+            )  # Outer join para incluir datos de ranking si existen
             .filter(ReviewedSongs.id_user == id_user)
-            .order_by(ReviewedSongs.date.desc())  # Ordenar por fecha (más reciente primero)
+            .order_by(ReviewedSongs.date.desc())  # Ordenar por fecha de review (más reciente primero)
             .all()
         )
 
@@ -684,6 +690,8 @@ async def get_reviews_history(id_user: int, db: Session = Depends(get_db)):
                 "artist": review.artist,
                 "comment": review.comment,
                 "date_review": review.date_review,
+                "score": review.score,  # Puede ser null si no hay ranking
+                "date_score": review.date_score,  # Puede ser null si no hay ranking
                 "type": "song",  # Tipo específico: "song"
             }
             for review in reviewed_songs
@@ -697,10 +705,13 @@ async def get_reviews_history(id_user: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+
+
+
 @router.get("/reviews_history_albums/{id_user}")
 async def get_reviews_history_albums(id_user: int, db: Session = Depends(get_db)):
     try:
-        # Obtener datos de álbumes revisados
+        # Obtener datos de álbumes revisados junto con datos de ranking (score y date)
         reviewed_albums = (
             db.query(
                 Album.id_album.label("id_album"),
@@ -711,11 +722,17 @@ async def get_reviews_history_albums(id_user: int, db: Session = Depends(get_db)
                 Artist.name.label("artist"),
                 ReviewedAlbums.comment.label("comment"),
                 ReviewedAlbums.date.label("date_review"),
+                RankedAlbums.score.label("score"),  # Agregar el score
+                RankedAlbums.date.label("date_score"),  # Agregar la fecha del score
             )
             .join(Artist, Album.id_artist == Artist.id_artist)
             .join(ReviewedAlbums, ReviewedAlbums.id_album == Album.id_album)
+            .outerjoin(
+                RankedAlbums,
+                (RankedAlbums.id_album == Album.id_album) & (RankedAlbums.id_user == id_user),
+            )  # Outer join para incluir datos de ranking si existen
             .filter(ReviewedAlbums.id_user == id_user)
-            .order_by(ReviewedAlbums.date.desc())  # Ordenar por fecha (más reciente primero)
+            .order_by(ReviewedAlbums.date.desc())  # Ordenar por fecha de review (más reciente primero)
             .all()
         )
 
@@ -730,6 +747,8 @@ async def get_reviews_history_albums(id_user: int, db: Session = Depends(get_db)
                 "artist": review.artist,
                 "comment": review.comment,
                 "date_review": review.date_review,
+                "score": review.score,  # Puede ser null si no hay ranking
+                "date_score": review.date_score,  # Puede ser null si no hay ranking
                 "type": "album",  # Tipo específico: "album"
             }
             for review in reviewed_albums
@@ -742,11 +761,14 @@ async def get_reviews_history_albums(id_user: int, db: Session = Depends(get_db)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+    
+
+
 
 @router.get("/reviews_history_lists/{id_user}")
 async def get_reviews_history_lists(id_user: int, db: Session = Depends(get_db)):
     try:
-        # Obtener datos de listas revisadas
+        # Obtener datos de listas revisadas junto con datos de ranking (score y date)
         reviewed_lists = (
             db.query(
                 Lists.id_list.label("id_list"),
@@ -757,9 +779,15 @@ async def get_reviews_history_lists(id_user: int, db: Session = Depends(get_db))
                 Lists.comment.label("list_comment"),
                 ReviewedLists.comment.label("review_comment"),
                 ReviewedLists.date.label("date_review"),
+                RankedLists.score.label("score"),  # Agregar score desde RankedLists
+                RankedLists.date.label("date_score"),  # Agregar fecha desde RankedLists
             )
             .join(User, Lists.id_user == User.id_user)  # Relación con el creador de la lista
             .join(ReviewedLists, ReviewedLists.id_list == Lists.id_list)
+            .outerjoin(
+                RankedLists,
+                (RankedLists.id_list == Lists.id_list) & (RankedLists.id_user == id_user),
+            )  # Outer join para incluir datos de ranking si existen
             .filter(ReviewedLists.id_user == id_user)
             .order_by(ReviewedLists.date.desc())  # Ordenar por fecha (más reciente primero)
             .all()
@@ -776,6 +804,8 @@ async def get_reviews_history_lists(id_user: int, db: Session = Depends(get_db))
                 "list_comment": review.list_comment,
                 "comment": review.review_comment,
                 "date_review": review.date_review,
+                "score": review.score if review.score is not None else None,  # Dejar null si no hay score
+                "date_score": review.date_score if review.date_score is not None else None,  # Dejar null si no hay fecha de score
                 "type": "list",  # Tipo específico: "list"
             }
             for review in reviewed_lists
@@ -786,69 +816,46 @@ async def get_reviews_history_lists(id_user: int, db: Session = Depends(get_db))
 
         return {"reviews_history_lists": result}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
 
-@router.get("/ranked_albums/{id_user}")
-async def get_ranked_albums(id_user: int, db: Session = Depends(get_db)):
-    try:
-        # Obtener las listas rankeadas por el usuario
-        ranked_albums = (
-            db.query(
-                RankedAlbums.id_user.label("id_user"),
-                RankedAlbums.id_album.label("id_album"),
-                RankedAlbums.score.label("score"),
-                RankedAlbums.date.label("date")  # Añadir la fecha de ranking
-            )
-            .filter(RankedAlbums.id_user == id_user)
-            .order_by(RankedAlbums.date.desc())  # Ordenar por la fecha de ranking
-            .all()
-        )
 
-        # Formatear los resultados
-        result = [
-            {
-                "id_user": ranked_album.id_user,
-                "id_album": ranked_album.id_album,
-                "score": ranked_album.score,
-                "date": ranked_album.date,  # Añadir la fecha al resultado
-            }
-            for ranked_album in ranked_albums
-        ]
-
-        if not result:
-            raise HTTPException(status_code=404, detail="No ranked albums found for the user")
-
-        return {"ranked_albums": result}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/ranked_songs/{id_user}")
 async def get_ranked_songs(id_user: int, db: Session = Depends(get_db)):
     try:
-        # Obtener los rankeos de canciones del usuario
+        # Obtener datos de canciones rankeadas junto con el puntaje y fecha
         ranked_songs = (
             db.query(
-                RankedSongs.id_user.label("id_user"),
-                RankedSongs.id_song.label("id_song"),
+                Song.id_song.label("id_song"),
+                Song.name.label("name"),  # Agregar el nombre de la canción
+                Artist.name.label("artist"),
+                Song.photo.label("photo"),
+                Song.released.label("released"),
                 RankedSongs.score.label("score"),
-                RankedSongs.date.label("date")  # Añadir la fecha de ranking
+                RankedSongs.date.label("date_score"),
             )
-            .filter(RankedSongs.id_user == id_user)
-            .order_by(RankedSongs.date.desc())  # Ordenar por la fecha de ranking
+            .join(Artist, Song.id_artist == Artist.id_artist)
+            .join(RankedSongs, RankedSongs.id_song == Song.id_song)
+            .filter(RankedSongs.id_user == id_user)  # Filtrar por el id del usuario
+            .order_by(RankedSongs.date.desc())  # Ordenar por fecha del ranking (más reciente primero)
             .all()
         )
 
         # Formatear los resultados
         result = [
             {
-                "id_user": ranked_song.id_user,
-                "id_song": ranked_song.id_song,
-                "score": ranked_song.score,
-                "date": ranked_song.date,  # Añadir la fecha al resultado
+                "id_song": song.id_song,
+                "name": song.name,  # Nombre de la canción
+                "artist": song.artist,
+                "photo": song.photo,
+                "released": song.released,
+                "score": song.score,
+                "date_score": song.date_score,
+                "type": "song",  # Tipo específico: "song"
             }
-            for ranked_song in ranked_songs
+            for song in ranked_songs
         ]
 
         if not result:
@@ -859,38 +866,96 @@ async def get_ranked_songs(id_user: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/ranked_lists/{id_user}")
-async def get_ranked_lists(id_user: int, db: Session = Depends(get_db)):
+
+
+
+
+@router.get("/ranked_albums/{id_user}")
+async def get_ranked_albums(id_user: int, db: Session = Depends(get_db)):
     try:
-        # Asegúrate de que el modelo RankedLists tenga un campo de fecha, como 'date'
-        ranked_lists = (
+        # Obtener datos de álbumes rankeados junto con el puntaje y fecha
+        ranked_albums = (
             db.query(
-                RankedLists.id_user.label("id_user"),
-                RankedLists.id_list.label("id_list"),
-                RankedLists.score.label("score"),
-                RankedLists.date.label("date")  # Asegúrate de incluir el campo de fecha
+                Album.id_album.label("id_album"),
+                Album.name.label("name"),  # Agregar el nombre del álbum
+                Artist.name.label("artist"),
+                Album.photo.label("photo"),
+                Album.released.label("released"),
+                RankedAlbums.score.label("score"),
+                RankedAlbums.date.label("date_score"),
             )
-            .filter(RankedLists.id_user == id_user)
-            .order_by(RankedLists.date.desc())  # Ordenar por la fecha de ranking
+            .join(Artist, Album.id_artist == Artist.id_artist)
+            .join(RankedAlbums, RankedAlbums.id_album == Album.id_album)
+            .filter(RankedAlbums.id_user == id_user)  # Filtrar por el id del usuario
+            .order_by(RankedAlbums.date.desc())  # Ordenar por fecha del ranking (más reciente primero)
             .all()
         )
-
-        # Si no hay registros, responder con un 404
-        if not ranked_lists:
-            raise HTTPException(status_code=404, detail="No ranked lists found for the user")
 
         # Formatear los resultados
         result = [
             {
-                "id_user": ranked_list.id_user,
-                "id_list": ranked_list.id_list,
-                "score": ranked_list.score,
-                "date": ranked_list.date,  # Asegúrate de que la fecha esté en la respuesta
+                "id_album": album.id_album,
+                "name": album.name,  # Nombre del álbum
+                "artist": album.artist,
+                "photo": album.photo,
+                "released": album.released,
+                "score": album.score,
+                "date_score": album.date_score,
+                "type": "album",  # Tipo específico: "album"
             }
-            for ranked_list in ranked_lists
+            for album in ranked_albums
         ]
 
-        return {"ranked_lists": result}
+        if not result:
+            raise HTTPException(status_code=404, detail="No ranked albums found for the user")
 
+        return {"ranked_albums": result}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
+
+
+@router.get("/ranked_lists/{id_user}")
+async def get_ranked_lists(id_user: int, db: Session = Depends(get_db)):
+    try:
+        # Obtener datos de listas rankeadas junto con el puntaje, fecha y el ID del creador
+        ranked_lists = (
+            db.query(
+                Lists.id_list.label("id_list"),
+                Lists.name.label("name"),  # Agregar el nombre de la lista
+                User.id_user.label("id_user_creator"),  # Agregar el ID del creador de la lista
+                User.username.label("user_creator"),
+                Lists.photo.label("photo"),
+                RankedLists.score.label("score"),
+                RankedLists.date.label("date_score"),
+            )
+            .join(User, Lists.id_user == User.id_user)  # Relación con el creador de la lista
+            .join(RankedLists, RankedLists.id_list == Lists.id_list)
+            .filter(RankedLists.id_user == id_user)  # Filtrar por el id del usuario
+            .order_by(RankedLists.date.desc())  # Ordenar por fecha del ranking (más reciente primero)
+            .all()
+        )
+
+        # Formatear los resultados
+        result = [
+            {
+                "id_list": list.id_list,
+                "name": list.name,  # Nombre de la lista
+                "user_creator": list.user_creator,
+                "id_user_creator": list.id_user_creator,  # ID del creador de la lista
+                "photo": list.photo,
+                "score": list.score,
+                "date_score": list.date_score,
+                "type": "list",  # Tipo específico: "list"
+            }
+            for list in ranked_lists
+        ]
+
+        if not result:
+            raise HTTPException(status_code=404, detail="No ranked lists found for the user")
+
+        return {"ranked_lists": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

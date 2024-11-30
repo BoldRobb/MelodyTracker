@@ -1,63 +1,91 @@
-.contenedor_principal{
+.contenedor_principal {
+    font-family: 'jockey one', sans-serif;
     display: flex;
-    align-items: center;
-    padding: 2rem;
-    gap: 2rem;
-    width: 45rem;
-    height: 15rem;
-    background-color: #0D0B29;
-    border-radius: 2rem;
+    flex-wrap: wrap; /* Permite que los elementos se acomoden en varias filas */
+    justify-content: center;
+    gap: 3rem; /* Espaciado entre los elementos */
+    width: 150rem;
+    margin: 0 auto;
+    row-gap: 3rem;
 }
 
-
-.foto_ranked{
+.foto_ranked {
     width: 10.1rem;
+    height: 10.1rem;
     border-radius: 1.3rem;
+    margin-top: 1rem;
 }
 
-.datos_ranked{
+.datos_ranked {
     display: flex;
     flex-direction: column;
     row-gap: 0rem;
     line-height: 1.1;
 }
 
-.contenedor_nombre_released{
+.contenedor_nombre_released {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.nombre_song{
-    font-size: 4rem;
+.nombre_song {
+    font-size: 3rem;
+    max-width: 18rem;
     margin: 0;
 }
 
-.released_song{
+.nombre_list{
+    max-width: 26rem;
+}
+
+.released_song {
     font-size: 2.5rem;
     margin: 0;
     margin-top: 1rem;
+    margin-right: 1rem;
     opacity: 65%;
 }
 
-.nombre_artist{
+.nombre_artist {
     margin: 0;
     font-size: 2rem;
     color: #C6FF41;
 }
 
-.titulo_rate{
+.titulo_rate {
     margin: 0;
     font-size: 1.5rem;
     margin: 0.3rem 0 0.2rem 0;
 }
 
-.contenedor_rate{
+.contenedor_rate {
     display: flex;
     gap: 0.1rem;
 }
 
-.imagen_estrella{
+.imagen_estrella {
     width: 1.5rem;
     height: 1.5rem;
+}
+
+.contenedor_foto_ranked {
+    display: flex;
+    padding: 1rem 0rem 1rem 1.5rem;
+    gap: 2rem;
+    width: 45rem;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+}
+
+.texto_date_ranked{
+    margin: 0;
+    opacity: 70%;
+    margin: 0.5rem 0;
+    font-size: 1.4rem;
+}
+
+.texto_list_creator{
+    color: white;
+    opacity: 70%;
 }
