@@ -330,4 +330,12 @@ getUsersListened(id_song: number): Observable<number[]> {
 }
 
 
+// Método para obtener los IDs de usuarios que han dado "like" a una canción
+getUsersLiked(id_song: number): Observable<number[]> {
+  this.spinnerService.show(); // Muestra el spinner mientras se realiza la solicitud
+  return this.http.get<number[]>(`${this.apiUrl}/songs/${id_song}/users_liked`).pipe(
+    finalize(() => this.spinnerService.hide()) // Oculta el spinner cuando se termina la solicitud
+  );
+}
+
 }

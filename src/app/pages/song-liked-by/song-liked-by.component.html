@@ -1,0 +1,25 @@
+<div class="contenedor_principal">
+    <div class="lado_izquierdo">
+      <app-datos-song-album></app-datos-song-album>
+    </div>
+    <div class="lado_derecho">
+      <!-- El valor de 'total' es dinámico -->
+      <app-stat-total type_stat="heart" [total]="totalLiked"></app-stat-total>
+    </div>
+  </div>
+  
+  <div class="contenedor_texto_mensaje">
+    <p class="texto_mensaje">Users who liked it</p>
+  </div>
+  
+  <div class="contenedor_follows">
+    @if (userIds.length > 0) {
+        <app-follows [userIds]="userIds"></app-follows>
+       }
+  </div>
+  <!-- Componente Follows recibe la lista de IDs -->
+   
+  
+
+
+  

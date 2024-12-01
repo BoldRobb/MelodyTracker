@@ -1,5 +1,6 @@
 # app/endpoints/songs.py
 
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from datetime import date, datetime
@@ -929,5 +930,20 @@ def get_users_listened(id_song: int, db: Session = Depends(get_db)):
     
     # Convierte la salida en una lista de IDs
     user_ids = [user.id_user for user in users_listened]
+
+    return user_ids
+
+
+# Endpoint para obtener los usuarios que han dado "like" a una canción
+@router.get("/{id_song}/users_liked", response_model=List[int])
+def get_users_liked(id_song: int, db: Session = Depends(get_db)):
+    # Verifica si la canción tiene usuarios relacionados que le han dado "like"
+    users_liked = db.query(LikedSongs.id_user).filter(LikedSongs.id_song == id_song).all()
+
+    if not users_liked:
+        raise HTTPException(status_code=404, detail="No se encontraron usuarios que hayan dado like a esta canción.")
+
+    # Convierte la salida en una lista de IDs
+    user_ids = [user.id_user for user in users_liked]
 
     return user_ids

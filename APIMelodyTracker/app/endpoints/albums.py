@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -735,3 +736,32 @@ def get_songs_by_album(id_album: int, db: Session = Depends(get_db)):
     
     return result
 
+
+
+@router.get("/{id_album}/users_listened", response_model=List[int])
+def get_users_listened(id_album: int, db: Session = Depends(get_db)):
+    # Verifica si el álbum tiene usuarios que lo han escuchado
+    users_listened = db.query(ListenedAlbums.id_user).filter(ListenedAlbums.id_album == id_album).all()
+    
+    if not users_listened:
+        raise HTTPException(status_code=404, detail="No se encontraron usuarios que hayan escuchado este álbum.")
+    
+    # Convierte la salida en una lista de IDs
+    user_ids = [user.id_user for user in users_listened]
+
+    return user_ids
+
+
+
+@router.get("/{id_album}/users_liked", response_model=List[int])
+def get_users_liked(id_album: int, db: Session = Depends(get_db)):
+    # Verifica si el álbum tiene usuarios que le han dado "like"
+    users_liked = db.query(LikedAlbums.id_user).filter(LikedAlbums.id_album == id_album).all()
+
+    if not users_liked:
+        raise HTTPException(status_code=404, detail="No se encontraron usuarios que hayan dado like a este álbum.")
+
+    # Convierte la salida en una lista de IDs
+    user_ids = [user.id_user for user in users_liked]
+
+    return user_ids

@@ -46,6 +46,9 @@ import { ProfileHistoryComponent } from './components/profile-history/profile-hi
 import { ProfilePopularListsComponent } from './components/profile-popular-lists/profile-popular-lists.component';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 import { SongHeardByComponent } from './pages/song-heard-by/song-heard-by.component';
+import { SongLikedByComponent } from './pages/song-liked-by/song-liked-by.component';
+import { AlbumHeardByComponent } from './pages/album-heard-by/album-heard-by.component';
+import { AlbumLikedByComponent } from './pages/album-liked-by/album-liked-by.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -67,6 +70,12 @@ export const routes: Routes = [
     { path: 'followers/:id', component: FollowersComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'myLists/:id', component: MyListsComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'songHeardBy/:id', component: SongHeardByComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
+    { path: 'songLikedBy/:id', component: SongLikedByComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
+
+
+    { path: 'albumHeardBy/:id', component: AlbumHeardByComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
+    { path: 'albumLikedBy/:id', component: AlbumLikedByComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
+
 
     /* COMPONENTES */
     { path: 'navbarlogin', component: NavbarLoginComponent},

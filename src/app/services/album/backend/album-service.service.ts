@@ -337,4 +337,22 @@ getSongsOnAlbum(id_album: number): Observable<{ songs: any[] }> {
   return this.http.get<{ songs: any[] }>(`${this.apiUrl}/albums/songsOnAlbum/${id_album}`);
 }
 
+
+// Método para obtener los IDs de usuarios que han escuchado un álbum
+getUsersListened(id_album: number): Observable<number[]> {
+  this.spinnerService.show(); // Muestra el spinner mientras se realiza la solicitud
+  return this.http.get<number[]>(`${this.apiUrl}/albums/${id_album}/users_listened`).pipe(
+    finalize(() => this.spinnerService.hide()) // Oculta el spinner cuando se termina la solicitud
+  );
+}
+
+
+getUsersLiked(id_album: number): Observable<number[]> {
+  this.spinnerService.show(); // Muestra el spinner mientras se realiza la solicitud
+  return this.http.get<number[]>(`${this.apiUrl}/albums/${id_album}/users_liked`).pipe(
+    finalize(() => this.spinnerService.hide()) // Oculta el spinner cuando se termina la solicitud
+  );
+}
+
+
 }

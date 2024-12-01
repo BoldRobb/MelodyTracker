@@ -1,0 +1,31 @@
+.contenedor_principal{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 5rem;
+    margin-top: 3rem;
+   
+}
+
+.contenedor_texto_mensaje{
+    margin: 0 auto;
+    width: 110rem;
+
+}
+
+.texto_mensaje{
+    font-family: 'jomhuria';
+    width: 30rem;
+    font-size: 2.8rem;
+    opacity: 70%;
+    margin: 5rem 0 2rem 0;
+}
+
+.contenedor_follows {
+    display: grid;
+    gap: 2rem; /* Espaciado entre filas y columnas */
+    justify-content: center; /* Centra horizontalmente el contenido */
+    align-items: center; /* Centra verticalmente los elementos en sus celdas */
+    max-width: 1500px; /* Ajusta el ancho máximo si es necesario */
+    margin: 0 auto; /* Centrar todo el contenedor en la página */
+  }

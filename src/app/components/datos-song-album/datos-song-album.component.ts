@@ -31,8 +31,12 @@ export class DatosSongAlbumComponent implements OnInit {
   reviewCount: number = 0;
 
   isAlbumRoute: boolean = true;
+  isAlbumHeardBy: boolean = false;
+  isAlbumLikedBy: boolean = false;
+
   isSongRoute: boolean = false;
   isSongHeardBy: boolean = false;
+  isSongLikedBy: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -44,8 +48,12 @@ export class DatosSongAlbumComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAlbumRoute = this.router.url.startsWith('/album');
+    this.isAlbumHeardBy = this.router.url.startsWith('/albumHeardBy');
+    this.isAlbumLikedBy = this.router.url.startsWith('/albumLikedBy');
+
     this.isSongRoute = this.router.url.startsWith('/song');
     this.isSongHeardBy = this.router.url.startsWith('/songHeardBy');
+    this.isSongLikedBy = this.router.url.startsWith('/songLikedBy');
 
 
     this.spinnerService.show();
@@ -64,7 +72,7 @@ export class DatosSongAlbumComponent implements OnInit {
 
   // Método para obtener los detalles (álbum o canción según la ruta)
   getDetails(id: number): void {
-    if (this.isAlbumRoute) {
+    if (this.isAlbumRoute || this.isAlbumHeardBy) {
       this.albumService.getAlbumDetails(id).subscribe(
         (response) => {
           this.assignAlbumData(response);
@@ -79,7 +87,7 @@ export class DatosSongAlbumComponent implements OnInit {
           this.spinnerService.hide();
         }
       );
-    } else if (this.isSongRoute || this.isSongHeardBy) {
+    } else if (this.isSongRoute || this.isSongHeardBy || this.isSongLikedBy) {
       this.songService.getSongDetails(id).subscribe(
         (response) => {
           this.assignSongData(response);
