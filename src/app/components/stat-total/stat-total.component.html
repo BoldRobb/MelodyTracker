@@ -13,11 +13,11 @@
 
     <div class="contenedor_texto">
         @if (type_stat=='heart') {
-            <p class="texto_stat">Liked 1,421 times</p>
+            <p class="texto_stat">Liked {{total}} times</p>
         } @else if(type_stat=='listened') {
-            <p class="texto_stat">Listened 5,901 times</p>
+            <p class="texto_stat">Listened {{total}} times</p>
         } @else if(type_stat=='list') {
-            <p class="texto_stat">241 Lists with this song</p>
+            <p class="texto_stat">{{total}} Lists with this song</p>
             
         }
     </div>

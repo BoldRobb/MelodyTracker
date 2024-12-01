@@ -31,6 +31,8 @@ export class DatosSongAlbumComponent implements OnInit {
   reviewCount: number = 0;
 
   isAlbumRoute: boolean = true;
+  isSongRoute: boolean = false;
+  isSongHeardBy: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,6 +44,10 @@ export class DatosSongAlbumComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAlbumRoute = this.router.url.startsWith('/album');
+    this.isSongRoute = this.router.url.startsWith('/song');
+    this.isSongHeardBy = this.router.url.startsWith('/songHeardBy');
+
+
     this.spinnerService.show();
 
     this.route.paramMap.subscribe(params => {
@@ -73,13 +79,14 @@ export class DatosSongAlbumComponent implements OnInit {
           this.spinnerService.hide();
         }
       );
-    } else {
+    } else if (this.isSongRoute || this.isSongHeardBy) {
       this.songService.getSongDetails(id).subscribe(
         (response) => {
           this.assignSongData(response);
           this.getSongLikeCount(id);
           this.getSongReviewCount(id);
           this.getSongListenedCount(id);
+          this.getSongListCount(id);
           this.spinnerService.hide();
         },
         (error) => {
@@ -126,13 +133,13 @@ export class DatosSongAlbumComponent implements OnInit {
   }
 
   // Métodos para obtener los conteos de la canción
-  getSongLikeCount(id: number): void {
-    this.songService.getSongLikeCount(id).subscribe(
+  getSongListenedCount(id: number): void {
+    this.songService.getSongListenedCount(id).subscribe(
       (response) => {
-        this.likes = response.likes_count;
+        this.listens = response.user_count;
       },
       (error) => {
-        console.error('Error al obtener el conteo de likes de la canción:', error);
+        console.error('Error al obtener el conteo de escuchas de la canción:', error);
       }
     );
   }
@@ -148,13 +155,24 @@ export class DatosSongAlbumComponent implements OnInit {
     );
   }
 
-  getSongListenedCount(id: number): void {
-    this.songService.getSongListenedCount(id).subscribe(
+  getSongListCount(id: number): void{
+    this.songService.getSongListCount(id).subscribe(
       (response) => {
-        this.listens = response.user_count;
+        this.listsCreated = response.list_count;
       },
       (error) => {
-        console.error('Error al obtener el conteo de escuchas de la canción:', error);
+        console.error('Error al obtener el conteo de listas creadas de la canción:', error);
+      }
+   );
+  }
+
+  getSongLikeCount(id: number): void {
+    this.songService.getSongLikeCount(id).subscribe(
+      (response) => {
+        this.likes = response.likes_count;
+      },
+      (error) => {
+        console.error('Error al obtener el conteo de likes de la canción:', error);
       }
     );
   }

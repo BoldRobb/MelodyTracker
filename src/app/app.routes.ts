@@ -45,6 +45,7 @@ import { ProfileBioStatsComponent } from './components/profile-bio-stats/profile
 import { ProfileHistoryComponent } from './components/profile-history/profile-history.component';
 import { ProfilePopularListsComponent } from './components/profile-popular-lists/profile-popular-lists.component';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
+import { SongHeardByComponent } from './pages/song-heard-by/song-heard-by.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -65,6 +66,7 @@ export const routes: Routes = [
     { path: 'following/:id', component: FollowingComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'followers/:id', component: FollowersComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'myLists/:id', component: MyListsComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
+    { path: 'songHeardBy/:id', component: SongHeardByComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
 
     /* COMPONENTES */
     { path: 'navbarlogin', component: NavbarLoginComponent},

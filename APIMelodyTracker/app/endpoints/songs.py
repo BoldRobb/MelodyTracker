@@ -1,4 +1,5 @@
 # app/endpoints/songs.py
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from datetime import date, datetime
@@ -7,6 +8,7 @@ from datetime import date, datetime
 from app.models.users import User, Profile
 from app.models.songs import RankedSongs, ReviewedSongs, Song, WatchlistSongs, ListenedSongs, FavoriteSongsOfUser, LikedSongs
 from app.models.artists import Artist
+from app.models.lists import SongsOnList
 
 from app.schemas.Schemasongs import CreateSong, RankSongRequest, ReviewSongSchema, UpdateSong, SongListened, WatchlistSongRequest, LikeSongRequest, SongResponse, FavoriteSongCreate
 
@@ -622,6 +624,15 @@ def get_like_count(id_song: int, db: Session = Depends(get_db)):
     return {"id_song": id_song, "likes_count": likes_count}
 
 
+# TOTAL LISTAS DE UNA CANCIÓN
+@router.get("/{id_song}/list_count")
+def get_list_count(id_song: int, db: Session = Depends(get_db)):
+    # Contar el número de listas en las que está la canción específica
+    list_count = db.query(SongsOnList).filter(SongsOnList.id_song == id_song).count()
+
+    return {"id_song": id_song, "list_count": list_count}
+
+
 #TOTAL REVIEWS DE UNA CANCIÓN
 @router.get("/{id_song}/review_count")
 def get_review_count(id_song: int, db: Session = Depends(get_db)):
@@ -629,6 +640,7 @@ def get_review_count(id_song: int, db: Session = Depends(get_db)):
     reviews_count = db.query(ReviewedSongs).filter(ReviewedSongs.id_song == id_song).count()
 
     return {"id_song": id_song, "reviews_count": reviews_count}
+
 
 #CANCION ESCUCHADA
 @router.post("/listen_song")
@@ -905,3 +917,17 @@ def has_rank_song(id_user: int, id_song: int, db: Session = Depends(get_db)):
         }
 
 
+
+# Endpoint para Obtener que usuarios han escuchado tal canción
+@router.get("/{id_song}/users_listened")
+def get_users_listened(id_song: int, db: Session = Depends(get_db)):
+    # Verifica si la canción tiene usuarios relacionados
+    users_listened = db.query(ListenedSongs.id_user).filter(ListenedSongs.id_song == id_song).all()
+    
+    if not users_listened:
+        raise HTTPException(status_code=404, detail="No se encontraron usuarios para esta canción.")
+    
+    # Convierte la salida en una lista de IDs
+    user_ids = [user.id_user for user in users_listened]
+
+    return user_ids

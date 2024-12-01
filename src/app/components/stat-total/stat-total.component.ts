@@ -5,8 +5,9 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './stat-total.component.html',
-  styleUrl: './stat-total.component.css'
+  styleUrls: ['./stat-total.component.css']
 })
 export class StatTotalComponent {
-  @Input() type_stat: string = 'heart';
+  @Input() type_stat: string = 'list'; // Tipo de estadística
+  @Input() total: number = 0;         // Total para la estadística
 }

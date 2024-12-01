@@ -22,10 +22,14 @@ export class SongService {
     );
   }
 
-  // Método para obtener el conteo de likes de una canción
-  getSongLikeCount(id_song: number): Observable<{ id_song: number, likes_count: number }> {
+  
+
+  
+
+  // Método para obtener el conteo de usuarios que han escuchado una canción
+  getSongListenedCount(id_song: number): Observable<{ song_id: number, user_count: number }> {
     this.spinnerService.show();
-    return this.http.get<{ id_song: number, likes_count: number }>(`${this.apiUrl}/songs/${id_song}/like_count`).pipe(
+    return this.http.get<{ song_id: number, user_count: number }>(`${this.apiUrl}/songs/song_listened_count/${id_song}`).pipe(
       finalize(() => this.spinnerService.hide())
     );
   }
@@ -38,10 +42,19 @@ export class SongService {
     );
   }
 
-  // Método para obtener el conteo de usuarios que han escuchado una canción
-  getSongListenedCount(id_song: number): Observable<{ song_id: number, user_count: number }> {
+  // Método para obtener el conteo de listas de una canción
+  getSongListCount(id_song: number): Observable<{ id_song: number, list_count: number }> {
     this.spinnerService.show();
-    return this.http.get<{ song_id: number, user_count: number }>(`${this.apiUrl}/songs/song_listened_count/${id_song}`).pipe(
+    return this.http.get<{ id_song: number, list_count: number }>(`${this.apiUrl}/songs/${id_song}/list_count`).pipe(
+      finalize(() => this.spinnerService.hide())
+    );
+  }
+
+
+  // Método para obtener el conteo de likes de una canción
+  getSongLikeCount(id_song: number): Observable<{ id_song: number, likes_count: number }> {
+    this.spinnerService.show();
+    return this.http.get<{ id_song: number, likes_count: number }>(`${this.apiUrl}/songs/${id_song}/like_count`).pipe(
       finalize(() => this.spinnerService.hide())
     );
   }
@@ -307,6 +320,14 @@ reviewSong(id_user: number, id_song: number, comment: string): Observable<{ msg:
     .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
 }
 
+
+// Método para obtener los IDs de usuarios que han escuchado una canción
+getUsersListened(id_song: number): Observable<number[]> {
+  this.spinnerService.show();
+  return this.http.get<number[]>(`${this.apiUrl}/songs/${id_song}/users_listened`).pipe(
+    finalize(() => this.spinnerService.hide())
+  );
+}
 
 
 }
