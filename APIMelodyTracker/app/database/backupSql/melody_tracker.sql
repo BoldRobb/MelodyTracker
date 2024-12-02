@@ -69,7 +69,7 @@ CREATE TABLE `artist` (
 
 LOCK TABLES `artist` WRITE;
 /*!40000 ALTER TABLE `artist` DISABLE KEYS */;
-INSERT INTO `artist` VALUES (1,'Carlos Vives es un cantante, compositor y actor colombiano, conocido por su música de vallenato y su fusión con otros géneros.','url_de_la_foto_carlos_vives.jpg','https://open.spotify.com/artist/carlosvives','Carlos Vives'),(2,'Luis Fonsi es un cantante y compositor puertorriqueño, famoso por su éxito \"Despacito\".','url_de_la_foto_luis_fonsi.jpg','https://open.spotify.com/artist/luisfonsi','Luis Fonsi'),(3,'Ed Sheeran es un cantante y compositor británico, conocido por sus baladas emotivas y su estilo único.','url_de_la_foto_ed_sheeran.jpg','https://open.spotify.com/artist/edsheeran','Ed Sheeran'),(4,'The Weeknd es un cantante y productor canadiense, famoso por su estilo innovador y su música R&B.','url_de_la_foto_the_weeknd.jpg','https://open.spotify.com/artist/theweeknd','The Weeknd'),(5,'Justin Bieber es un cantante canadiense que ha sido una sensación mundial desde su adolescencia.','url_de_la_foto_justin_bieber.jpg','https://open.spotify.com/artist/justinbieber','Justin Bieber'),(7,'Tiago PZK es un cantante y rapero argentino, conocido por su música que mezcla géneros como el trap, reggaetón y pop.','','https://open.spotify.com/artist/6opBkyWwqkGa2ZgB1swh9a','Tiago PZK');
+INSERT INTO `artist` VALUES (1,'Carlos Vives es un cantante, compositor y actor colombiano, conocido por su música de vallenato y su fusión con otros géneros.','url_de_la_foto_carlos_vives.jpg','https://open.spotify.com/artist/carlosvives','Carlos Vives'),(2,'Luis Fonsi es un cantante y compositor puertorriqueño, famoso por su éxito \"Despacito\".','url_de_la_foto_luis_fonsi.jpg','https://open.spotify.com/artist/luisfonsi','Luis Fonsi'),(3,'Ed Sheeran es un cantante y compositor británico, conocido por sus baladas emotivas y su estilo único.','url_de_la_foto_ed_sheeran.jpg','https://open.spotify.com/artist/edsheeran','Ed Sheeran'),(4,'The Weeknd es un cantante y productor canadiense, famoso por su estilo innovador y su música R&B.','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Ftheweekendprofile.jpg?alt=media&token=35effd7c-ebcf-4d1a-8790-35123cac7aa9','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Ftheweekendprofile.jpg?alt=media&token=35effd7c-ebcf-4d1a-8790-35123cac7aa9','The Weeknd'),(5,'Justin Bieber es un cantante canadiense que ha sido una sensación mundial desde su adolescencia.','url_de_la_foto_justin_bieber.jpg','https://open.spotify.com/artist/justinbieber','Justin Bieber'),(7,'Tiago PZK es un cantante y rapero argentino, conocido por su música que mezcla géneros como el trap, reggaetón y pop.','','https://open.spotify.com/artist/6opBkyWwqkGa2ZgB1swh9a','Tiago PZK');
 /*!40000 ALTER TABLE `artist` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,7 +260,7 @@ CREATE TABLE `liked_albums` (
 
 LOCK TABLES `liked_albums` WRITE;
 /*!40000 ALTER TABLE `liked_albums` DISABLE KEYS */;
-INSERT INTO `liked_albums` VALUES (2,13,'2024-11-14'),(8,14,'2024-11-15'),(8,1,'2024-11-19'),(8,8,'2024-11-20'),(10,14,'2024-11-22'),(10,8,'2024-11-22'),(22,14,'2024-11-25');
+INSERT INTO `liked_albums` VALUES (2,13,'2024-11-14'),(8,1,'2024-11-19'),(10,14,'2024-11-22'),(10,8,'2024-11-22'),(22,14,'2024-11-25'),(8,14,'2024-11-26'),(8,15,'2024-11-27'),(8,8,'2024-11-27');
 /*!40000 ALTER TABLE `liked_albums` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -393,7 +393,7 @@ CREATE TABLE `liked_songs` (
 
 LOCK TABLES `liked_songs` WRITE;
 /*!40000 ALTER TABLE `liked_songs` DISABLE KEYS */;
-INSERT INTO `liked_songs` VALUES (5,7,'2024-11-13'),(1,7,'2024-11-13'),(2,7,'2024-11-13'),(3,7,'2024-11-13'),(8,7,'2024-11-14'),(8,9,'2024-11-19'),(8,14,'2024-11-19'),(10,8,'2024-11-22'),(10,9,'2024-11-22'),(22,8,'2024-11-25');
+INSERT INTO `liked_songs` VALUES (5,7,'2024-11-13'),(1,7,'2024-11-13'),(2,7,'2024-11-13'),(3,7,'2024-11-13'),(8,7,'2024-11-14'),(8,9,'2024-11-19'),(8,14,'2024-11-19'),(10,8,'2024-11-22'),(10,9,'2024-11-22'),(22,8,'2024-11-25'),(8,12,'2024-11-27'),(8,15,'2024-11-27'),(8,33,'2024-11-27'),(8,8,'2024-11-27');
 /*!40000 ALTER TABLE `liked_songs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -413,7 +413,7 @@ CREATE TABLE `list` (
   PRIMARY KEY (`id_list`),
   KEY `list_user_fk_idx` (`id_user`),
   CONSTRAINT `list_user_fk` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -422,7 +422,7 @@ CREATE TABLE `list` (
 
 LOCK TABLES `list` WRITE;
 /*!40000 ALTER TABLE `list` DISABLE KEYS */;
-INSERT INTO `list` VALUES (1,8,'Mi Primera Lista','Esta es una lista de prueba Numero 1.','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fportales.jpg?alt=media&token=c1be0f28-d412-41df-a18e-bc126c8a58b8'),(2,8,'Mi Segunda Lista','Esta es una lista de prueba Numero 2.','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fportales.jpg?alt=media&token=c1be0f28-d412-41df-a18e-bc126c8a58b8'),(3,8,'asdasd','asdasdasd','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Faudifonos%20(1).png?alt=media&token=5db0f39a-d88f-48e4-b08a-655e66c2c33e'),(4,8,'Creacion desde Modal','UAUAUAUAUA','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fheart.png?alt=media&token=4c1a8ac2-3277-476b-9103-15bb472639bf'),(5,8,'Para Probar Webp','JEJEJEJEJE','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemowebp.webp?alt=media&token=9c707911-d44a-4250-bbe9-f9de1891226a'),(6,8,'asdasd','Jejeje','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemowebp.webp?alt=media&token=b85f1990-6f10-4471-941a-4d0a68e2e8ff'),(7,8,'sdfgsdfg','sdfgsdfg','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FCredencial%20Jaziel.webp?alt=media&token=aedefbf9-00a1-487b-86fb-09fdd375f073');
+INSERT INTO `list` VALUES (1,8,'Mi Primera Lista','Esta es una lista de prueba Numero 1.','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fportales.jpg?alt=media&token=c1be0f28-d412-41df-a18e-bc126c8a58b8'),(2,8,'Mi Segunda Lista','Esta es una lista de prueba Numero 2.','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fportales.jpg?alt=media&token=c1be0f28-d412-41df-a18e-bc126c8a58b8'),(3,8,'asdasd','asdasdasd','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Faudifonos%20(1).png?alt=media&token=5db0f39a-d88f-48e4-b08a-655e66c2c33e'),(4,8,'Creacion desde Modal','UAUAUAUAUA','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fheart.png?alt=media&token=4c1a8ac2-3277-476b-9103-15bb472639bf'),(5,8,'Para Probar Webp','JEJEJEJEJE','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemowebp.webp?alt=media&token=9c707911-d44a-4250-bbe9-f9de1891226a'),(6,8,'asdasd','Jejeje','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemowebp.webp?alt=media&token=b85f1990-6f10-4471-941a-4d0a68e2e8ff'),(7,8,'sdfgsdfg','sdfgsdfg','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FCredencial%20Jaziel.webp?alt=media&token=aedefbf9-00a1-487b-86fb-09fdd375f073'),(8,8,'Para Probar Lists Of User','Si programas en angular esta es sin duda tu mejor opción para concentrate. Disfruta de la Musica \nMientras Tiras codigo','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fperro.webp?alt=media&token=59ba614a-218d-4581-8c49-e66623c697b9'),(9,8,'Funciona Por Favor','asdasasfasdfsdfasdfasvsdfvsdfbsdfasdasasfasdfsdfasdfasvsdfvsdfbsdfasdasasfasdfsdfasdfasvsdfvsdfbsdfasdasasfasdfsdfasdfasvsdfvsdfbsdfasdasasfasdfsdfasdfasvsdfvsdfbsdf','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fperro.webp?alt=media&token=f4dce852-1606-4762-a5ed-b4dab0a3bfe3');
 /*!40000 ALTER TABLE `list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -450,7 +450,7 @@ CREATE TABLE `listened_albums` (
 
 LOCK TABLES `listened_albums` WRITE;
 /*!40000 ALTER TABLE `listened_albums` DISABLE KEYS */;
-INSERT INTO `listened_albums` VALUES (3,1,'2024-10-01'),(3,7,'2024-10-01'),(3,12,'2024-10-01'),(8,8,'2024-11-14'),(8,1,'2024-11-19'),(8,14,'2024-11-21'),(10,14,'2024-11-22'),(10,8,'2024-11-22'),(10,10,'2024-11-22'),(22,14,'2024-11-25'),(22,5,'2024-11-25'),(22,7,'2024-11-25'),(22,8,'2024-11-25'),(22,9,'2024-11-25'),(22,10,'2024-11-25'),(8,5,'2024-11-25'),(8,10,'2024-11-25'),(8,9,'2024-11-25');
+INSERT INTO `listened_albums` VALUES (3,1,'2024-10-01'),(3,7,'2024-10-01'),(3,12,'2024-10-01'),(8,8,'2024-11-14'),(8,1,'2024-11-19'),(8,14,'2024-11-21'),(10,14,'2024-11-22'),(10,8,'2024-11-22'),(10,10,'2024-11-22'),(22,14,'2024-11-25'),(22,5,'2024-11-25'),(22,7,'2024-11-25'),(22,8,'2024-11-25'),(22,9,'2024-11-25'),(22,10,'2024-11-25'),(8,5,'2024-11-25'),(8,10,'2024-11-25'),(8,9,'2024-11-25'),(8,15,'2024-11-27');
 /*!40000 ALTER TABLE `listened_albums` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -478,7 +478,7 @@ CREATE TABLE `listened_songs` (
 
 LOCK TABLES `listened_songs` WRITE;
 /*!40000 ALTER TABLE `listened_songs` DISABLE KEYS */;
-INSERT INTO `listened_songs` VALUES (7,7,'2024-10-01'),(7,8,'2024-10-01'),(7,9,'2024-10-01'),(1,12,'2024-10-01'),(1,9,'2024-10-01'),(1,8,'2024-10-01'),(1,7,'2024-10-01'),(9,7,'2024-11-13'),(6,7,'2024-11-13'),(5,7,'2024-11-13'),(3,7,'2024-11-13'),(2,7,'2024-11-13'),(8,7,'2024-11-14'),(8,13,'2024-11-17'),(8,9,'2024-11-19'),(8,8,'2024-11-21'),(10,8,'2024-11-22'),(10,9,'2024-11-22'),(22,8,'2024-11-25');
+INSERT INTO `listened_songs` VALUES (7,7,'2024-10-01'),(7,8,'2024-10-01'),(7,9,'2024-10-01'),(1,12,'2024-10-01'),(1,9,'2024-10-01'),(1,8,'2024-10-01'),(1,7,'2024-10-01'),(9,7,'2024-11-13'),(6,7,'2024-11-13'),(5,7,'2024-11-13'),(3,7,'2024-11-13'),(2,7,'2024-11-13'),(8,13,'2024-11-17'),(8,9,'2024-11-19'),(10,8,'2024-11-22'),(10,9,'2024-11-22'),(22,8,'2024-11-25'),(8,12,'2024-11-26'),(8,7,'2024-11-26'),(8,15,'2024-11-27'),(8,33,'2024-11-27'),(8,20,'2024-11-29'),(8,21,'2024-11-29'),(8,8,'2024-12-01');
 /*!40000 ALTER TABLE `listened_songs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -504,7 +504,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES (6,'Soy un Chavito Bien que le gusta programar Pero Tiene Mucho que aprender',''),(7,'ඞඞඞඞඞඞ',''),(9,'Sin biografía disponible.eee',NULL),(8,'Aasdasdasdaaadfgdfgaaaa','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemo2.jpeg?alt=media&token=fac20b12-71ba-4e32-9f36-57f02800307c'),(3,'Holis','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemo2.jpeg?alt=media&token=fac20b12-71ba-4e32-9f36-57f02800307c'),(10,'Que tranza chavalosaaaaa','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemo2.jpeg?alt=media&token=fac20b12-71ba-4e32-9f36-57f02800307c'),(11,'Dios te escucheeeeee','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemo2.jpeg?alt=media&token=fac20b12-71ba-4e32-9f36-57f02800307c'),(22,'Prototipo de user Numero 4','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FavatarDefault.png?alt=media&token=8aa7f9ce-79a4-4fd4-9133-8fd8b000b0e4');
+INSERT INTO `profile` VALUES (6,'Soy un Chavito Bien que le gusta programar Pero Tiene Mucho que aprender','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FavatarDefault.png?alt=media&token=8aa7f9ce-79a4-4fd4-9133-8fd8b000b0e4'),(7,'ඞඞඞඞඞඞ','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FavatarDefault.png?alt=media&token=8aa7f9ce-79a4-4fd4-9133-8fd8b000b0e4'),(9,'Sin biografía disponible.eee','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FavatarDefault.png?alt=media&token=8aa7f9ce-79a4-4fd4-9133-8fd8b000b0e4'),(8,'Biografia Perrona','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemo2.jpeg?alt=media&token=fac20b12-71ba-4e32-9f36-57f02800307c'),(3,'Holis','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemo2.jpeg?alt=media&token=fac20b12-71ba-4e32-9f36-57f02800307c'),(10,'Que tranza chavalosaaaaa','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemo2.jpeg?alt=media&token=fac20b12-71ba-4e32-9f36-57f02800307c'),(11,'Dios te escucheeeeee','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2Fteemo2.jpeg?alt=media&token=fac20b12-71ba-4e32-9f36-57f02800307c'),(22,'Prototipo de user Numero 4','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FavatarDefault.png?alt=media&token=8aa7f9ce-79a4-4fd4-9133-8fd8b000b0e4'),(1,'Sin Biografía disponible.','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FavatarDefault.png?alt=media&token=8aa7f9ce-79a4-4fd4-9133-8fd8b000b0e4'),(2,'Sin Biografía disponible.','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FavatarDefault.png?alt=media&token=8aa7f9ce-79a4-4fd4-9133-8fd8b000b0e4'),(3,'Sin Biografía disponible.','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FavatarDefault.png?alt=media&token=8aa7f9ce-79a4-4fd4-9133-8fd8b000b0e4'),(5,'Sin Biografía disponible.','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/uploads%2FavatarDefault.png?alt=media&token=8aa7f9ce-79a4-4fd4-9133-8fd8b000b0e4');
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -533,7 +533,7 @@ CREATE TABLE `ranked_albums` (
 
 LOCK TABLES `ranked_albums` WRITE;
 /*!40000 ALTER TABLE `ranked_albums` DISABLE KEYS */;
-INSERT INTO `ranked_albums` VALUES (2,14,4.5,'2024-10-09'),(7,14,5,'2024-10-01'),(6,14,5,'2024-10-01'),(5,14,5,'2024-10-01'),(3,14,5,'2024-10-01'),(6,15,2,'2024-10-01'),(5,15,2,'2024-10-01'),(3,15,2,'2024-10-01'),(2,15,2,'2024-10-01'),(6,1,2,'2024-10-01'),(5,1,2,'2024-10-01'),(3,1,2,'2024-10-01'),(2,1,2,'2024-10-01'),(7,1,2,'2024-10-01'),(7,2,2,'2024-10-01'),(7,3,2,'2024-10-01'),(7,4,2,'2024-10-01'),(7,5,4.5,'2024-10-01'),(7,7,4.5,'2024-10-01'),(7,8,4.5,'2024-10-01'),(7,9,3.5,'2024-10-01'),(7,10,3.5,'2024-10-01'),(7,11,3.5,'2024-10-01'),(7,12,3.5,'2024-10-01'),(7,13,3.5,'2024-10-01'),(7,15,3.5,'2024-10-01'),(7,16,1.5,'2024-10-01');
+INSERT INTO `ranked_albums` VALUES (2,14,4.5,'2024-10-09'),(7,14,5,'2024-10-01'),(6,14,5,'2024-10-01'),(5,14,5,'2024-10-01'),(3,14,5,'2024-10-01'),(6,15,2,'2024-10-01'),(5,15,2,'2024-10-01'),(3,15,2,'2024-10-01'),(2,15,2,'2024-10-01'),(6,1,2,'2024-10-01'),(5,1,2,'2024-10-01'),(3,1,2,'2024-10-01'),(2,1,2,'2024-10-01'),(7,1,2,'2024-10-01'),(7,2,2,'2024-10-01'),(7,3,2,'2024-10-01'),(7,4,2,'2024-10-01'),(7,5,4.5,'2024-10-01'),(7,7,4.5,'2024-10-01'),(7,8,4.5,'2024-10-01'),(7,9,3.5,'2024-10-01'),(7,10,3.5,'2024-10-01'),(7,11,3.5,'2024-10-01'),(7,12,3.5,'2024-10-01'),(7,13,3.5,'2024-10-01'),(7,15,3.5,'2024-10-01'),(7,16,1.5,'2024-10-01'),(8,9,2,'2024-11-26'),(8,15,3.5,'2024-11-27');
 /*!40000 ALTER TABLE `ranked_albums` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -562,6 +562,7 @@ CREATE TABLE `ranked_lists` (
 
 LOCK TABLES `ranked_lists` WRITE;
 /*!40000 ALTER TABLE `ranked_lists` DISABLE KEYS */;
+INSERT INTO `ranked_lists` VALUES (8,4,4,'2024-10-09'),(7,4,5,'2024-10-09'),(9,4,3.5,'2024-10-09'),(10,4,2,'2024-10-09'),(11,4,3.5,'2024-10-09'),(8,4,4,'2024-11-29'),(8,8,4.5,'2024-11-28'),(8,3,3.5,'2024-11-28'),(8,4,4,'2024-11-29'),(8,3,3.5,'2024-11-28');
 /*!40000 ALTER TABLE `ranked_lists` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -646,7 +647,7 @@ CREATE TABLE `ranked_songs` (
 
 LOCK TABLES `ranked_songs` WRITE;
 /*!40000 ALTER TABLE `ranked_songs` DISABLE KEYS */;
-INSERT INTO `ranked_songs` VALUES (8,13,2.5,'2024-11-17'),(8,8,4,'2024-11-17'),(1,8,4,'2024-11-17'),(2,8,4,'2024-11-17');
+INSERT INTO `ranked_songs` VALUES (8,13,2.5,'2024-11-17'),(1,8,4,'2024-11-17'),(2,8,4,'2024-11-17'),(8,7,1,'2024-11-26'),(8,8,5,'2024-11-30'),(8,15,3.5,'2024-11-27'),(8,20,1,'2024-11-29'),(8,21,2,'2024-11-29');
 /*!40000 ALTER TABLE `ranked_songs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -668,7 +669,7 @@ CREATE TABLE `reviewed_albums` (
   KEY `reviewed_albums_id_user_fk` (`id_user`),
   CONSTRAINT `reviewed_albums_id_album_fk` FOREIGN KEY (`id_album`) REFERENCES `album` (`id_album`),
   CONSTRAINT `reviewed_albums_id_user_fk` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -677,7 +678,7 @@ CREATE TABLE `reviewed_albums` (
 
 LOCK TABLES `reviewed_albums` WRITE;
 /*!40000 ALTER TABLE `reviewed_albums` DISABLE KEYS */;
-INSERT INTO `reviewed_albums` VALUES (1,8,8,'Nice Song Bro','2024-11-13'),(2,2,8,'Nice Song Brooooo','2024-11-14');
+INSERT INTO `reviewed_albums` VALUES (1,8,8,'Nice Song Bro','2024-11-13'),(2,2,8,'Nice Song Brooooo','2024-11-14'),(3,9,16,'WOOOOW','2024-11-26'),(4,7,8,'WOOOOW','2024-11-26'),(5,2,8,'WOOOOW Nice Bro','2024-11-26'),(6,1,8,'WOOOOW Nice Bro','2024-11-26'),(7,5,8,'WOOOOW Nice Bro','2024-11-26'),(8,5,7,'WOOOOW Nice Bro','2024-11-26'),(10,10,7,'WOOOOW Nice Bro','2024-11-26'),(11,2,7,'WOOOOW Nice Bro','2024-11-26'),(12,22,10,'Este álbum tiene una gran producción y una variedad impresionante de sonidos.','2024-11-27'),(13,8,15,'Buena Rola','2024-11-27'),(14,8,15,'Buenisimaaaaa','2024-11-27');
 /*!40000 ALTER TABLE `reviewed_albums` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -706,6 +707,7 @@ CREATE TABLE `reviewed_lists` (
 
 LOCK TABLES `reviewed_lists` WRITE;
 /*!40000 ALTER TABLE `reviewed_lists` DISABLE KEYS */;
+INSERT INTO `reviewed_lists` VALUES (8,4,'Siempre utilizo esta lista para Hacer ejercicio','2024-11-28'),(8,8,'Sin duda cuando tengo que estudiar angular uso esta play list','2024-11-28');
 /*!40000 ALTER TABLE `reviewed_lists` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -727,7 +729,7 @@ CREATE TABLE `reviewed_songs` (
   KEY `reviewed_songs_id_user_fk` (`id_user`),
   CONSTRAINT `reviewed_songs_id_song_fk` FOREIGN KEY (`id_song`) REFERENCES `songs` (`id_song`),
   CONSTRAINT `reviewed_songs_id_user_fk` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -736,7 +738,7 @@ CREATE TABLE `reviewed_songs` (
 
 LOCK TABLES `reviewed_songs` WRITE;
 /*!40000 ALTER TABLE `reviewed_songs` DISABLE KEYS */;
-INSERT INTO `reviewed_songs` VALUES (1,8,7,'Buenas Rola Chavalo','2024-11-13'),(2,8,8,'Amazing song! I loved it.','2024-11-13'),(3,9,7,'Me guta','2024-11-13'),(4,7,7,'This song makes me travel to the beach thinking about my other half This song makes me travel to the beach thinking about my other half me travel to the beach thinking about my other half other half This song makes me travel to the beach thinking about my other half This song makes me travel to the beach thinking about my other half','2024-11-13'),(5,6,7,'Me guta','2024-11-13'),(6,5,7,'Me guta','2024-11-13'),(7,3,7,'Me guta','2024-11-13'),(8,2,7,'Me guta','2024-11-13'),(9,1,7,'Me guta machin','2024-11-13');
+INSERT INTO `reviewed_songs` VALUES (12,8,20,'Buena Rola Me gusta Mucho false Alarm','2024-11-29'),(13,8,21,'Buena Rola Me gusta Mucho Reminder','2024-11-29'),(14,8,8,'At first I didn\'t like the song so much but then I started to feel like my butt started to dance by itself, I got scared but I let myself go, DURO.','2024-11-29'),(15,8,12,'Me la Pongo cuando ando Comiendo xD','2024-11-30');
 /*!40000 ALTER TABLE `reviewed_songs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -758,7 +760,7 @@ CREATE TABLE `songs` (
   PRIMARY KEY (`id_song`),
   KEY `songs_id_artist_fk` (`id_artist`),
   CONSTRAINT `songs_id_artist_fk` FOREIGN KEY (`id_artist`) REFERENCES `artist` (`id_artist`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -767,7 +769,7 @@ CREATE TABLE `songs` (
 
 LOCK TABLES `songs` WRITE;
 /*!40000 ALTER TABLE `songs` DISABLE KEYS */;
-INSERT INTO `songs` VALUES (7,'Despacito',2,'2017-01-13','Español','Reggaetón','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fdespacito.jpg?alt=media&token=1fe7ae2a-7947-4dd0-be46-4fff282e8da2'),(8,'Shape of You',3,'2017-01-06','Inglés','Pop','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fshapeofyou.jpg?alt=media&token=9c055b0f-d0b7-4fc2-8743-e64d7bd1a7cc'),(9,'Blinding Lights',4,'2019-11-29','Inglés','Synthwave','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fblindinglights.png?alt=media&token=0500c257-fc74-459c-a746-40f0357d4cfa'),(12,'Vivir Mi Vida',3,'2013-04-19','Español','Salsa','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fvivirmivida.jpeg?alt=media&token=3281358e-21df-47d4-bc89-c8f133d3ed4c'),(13,'Échame la Culpa',2,'2017-11-17','Español','Pop Latino','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fechamelaculpa.jpg?alt=media&token=a3bd4e3b-ad7e-4af9-a125-03a661b140a3'),(14,'Aquí Estoy Yo',2,'2008-08-25','Español','Balada','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Faquiestoyyo.jpg?alt=media&token=6224e05a-e655-40d0-bc38-0e9e9de848c9'),(15,'No Me Doy Por Vencido',2,'2008-07-04','Español','Pop Latino','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fnomedoyporvencido.jpeg?alt=media&token=c79e68d3-01d2-4f88-b9ae-d308b793f70a'),(16,'Nada Es Para Siempre',2,'2005-09-26','Español','Balada','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fnadaesparasiempre.jpeg?alt=media&token=0813b07e-b260-4ba2-83a3-70cf4508966b'),(17,'Dive',3,'2017-03-03','Inglés','Pop','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fdive.jpg?alt=media&token=eb1ebb89-f7c8-4bf8-884e-ae324210ca3b');
+INSERT INTO `songs` VALUES (7,'Despacito',2,'2017-01-13','Español','Reggaetón','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fdespacito.jpg?alt=media&token=1fe7ae2a-7947-4dd0-be46-4fff282e8da2'),(8,'Shape of You',3,'2017-01-06','Inglés','Pop','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fshapeofyou.jpg?alt=media&token=9c055b0f-d0b7-4fc2-8743-e64d7bd1a7cc'),(9,'Blinding Lights',4,'2019-11-29','Inglés','Synthwave','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fblindinglights.png?alt=media&token=0500c257-fc74-459c-a746-40f0357d4cfa'),(12,'Vivir Mi Vida',3,'2013-04-19','Español','Salsa','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fvivirmivida.jpeg?alt=media&token=3281358e-21df-47d4-bc89-c8f133d3ed4c'),(13,'Échame la Culpa',2,'2017-11-17','Español','Pop Latino','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fechamelaculpa.jpg?alt=media&token=a3bd4e3b-ad7e-4af9-a125-03a661b140a3'),(14,'Aquí Estoy Yo',2,'2008-08-25','Español','Balada','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Faquiestoyyo.jpg?alt=media&token=6224e05a-e655-40d0-bc38-0e9e9de848c9'),(15,'No Me Doy Por Vencido',2,'2008-07-04','Español','Pop Latino','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fnomedoyporvencido.jpeg?alt=media&token=c79e68d3-01d2-4f88-b9ae-d308b793f70a'),(16,'Nada Es Para Siempre',2,'2005-09-26','Español','Balada','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fnadaesparasiempre.jpeg?alt=media&token=0813b07e-b260-4ba2-83a3-70cf4508966b'),(17,'Dive',3,'2017-03-03','Inglés','Pop','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/songs%2Fdive.jpg?alt=media&token=eb1ebb89-f7c8-4bf8-884e-ae324210ca3b'),(18,'Starboy',4,'2016-09-21','Inglés','R&B','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(19,'Party Monster',4,'2016-11-25','Inglés','R&B','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(20,'False Alarm',4,'2016-09-29','Inglés','Pop','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(21,'Reminder',4,'2016-11-25','Inglés','R&B','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(22,'Rockin',4,'2016-11-25','Inglés','Dance','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(23,'Secrets',4,'2016-11-25','Inglés','Pop','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(24,'True Colors',4,'2016-11-25','Inglés','Pop','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(25,'Stargirl Interlude',4,'2016-11-25','Inglés','R&B','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(26,'Sidewalks',4,'2016-11-25','Inglés','Hip-Hop','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(27,'Six Feet Under',4,'2016-11-25','Inglés','Trap','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(28,'Love to Lay',4,'2016-11-25','Inglés','Pop','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(29,'A Lonely Night',4,'2016-11-25','Inglés','R&B','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(30,'Attention',4,'2016-11-25','Inglés','R&B','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(31,'Ordinary Life',4,'2016-11-25','Inglés','R&B','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(32,'Nothing Without You',4,'2016-11-25','Inglés','R&B','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(33,'All I Know',4,'2016-11-25','Inglés','Trap','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(34,'Die for You',4,'2016-11-25','Inglés','R&B','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88'),(35,'I Feel It Coming',4,'2016-11-25','Inglés','Pop','https://firebasestorage.googleapis.com/v0/b/melodytrackerimages.appspot.com/o/albums%2Fstarboy.jpg?alt=media&token=b00869cc-a96b-4f70-bc9c-5ef173464b88');
 /*!40000 ALTER TABLE `songs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -794,6 +796,7 @@ CREATE TABLE `songs_on_album` (
 
 LOCK TABLES `songs_on_album` WRITE;
 /*!40000 ALTER TABLE `songs_on_album` DISABLE KEYS */;
+INSERT INTO `songs_on_album` VALUES (8,18),(8,19),(8,20),(8,21),(8,22),(8,23),(8,24),(8,25),(8,26),(8,27),(8,28),(8,29),(8,30),(8,31),(8,32),(8,33),(8,34),(8,35);
 /*!40000 ALTER TABLE `songs_on_album` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -807,7 +810,7 @@ DROP TABLE IF EXISTS `songs_on_list`;
 CREATE TABLE `songs_on_list` (
   `id_list` bigint NOT NULL,
   `id_song` bigint NOT NULL,
-  `date` datetime NOT NULL,
+  `date` date NOT NULL,
   KEY `songs_on_list_id_list_fk` (`id_list`),
   KEY `songs_on_list_id_song_fk` (`id_song`),
   CONSTRAINT `songs_on_list_id_list_fk` FOREIGN KEY (`id_list`) REFERENCES `list` (`id_list`),
@@ -821,6 +824,7 @@ CREATE TABLE `songs_on_list` (
 
 LOCK TABLES `songs_on_list` WRITE;
 /*!40000 ALTER TABLE `songs_on_list` DISABLE KEYS */;
+INSERT INTO `songs_on_list` VALUES (4,8,'2024-11-26'),(4,9,'2024-11-26'),(1,8,'2024-11-26'),(2,8,'2024-11-26'),(5,8,'2024-11-26'),(6,8,'2024-11-26'),(3,12,'2024-11-27'),(6,15,'2024-11-27'),(4,33,'2024-11-28');
 /*!40000 ALTER TABLE `songs_on_list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -905,7 +909,7 @@ CREATE TABLE `watchlist_songs` (
 
 LOCK TABLES `watchlist_songs` WRITE;
 /*!40000 ALTER TABLE `watchlist_songs` DISABLE KEYS */;
-INSERT INTO `watchlist_songs` VALUES (1,8,'2024-09-27'),(5,12,'2024-10-01'),(5,13,'2024-10-01'),(5,14,'2024-10-01'),(2,16,'2024-10-01'),(2,7,'2024-10-01'),(2,8,'2024-10-01'),(8,7,'2024-11-15'),(8,8,'2024-11-15'),(8,13,'2024-11-15'),(8,14,'2024-11-15'),(8,16,'2024-11-15'),(8,17,'2024-11-15'),(10,8,'2024-11-22');
+INSERT INTO `watchlist_songs` VALUES (1,8,'2024-09-27'),(5,12,'2024-10-01'),(5,13,'2024-10-01'),(5,14,'2024-10-01'),(2,16,'2024-10-01'),(2,7,'2024-10-01'),(2,8,'2024-10-01'),(8,7,'2024-11-15'),(8,8,'2024-11-15'),(8,13,'2024-11-15'),(8,14,'2024-11-15'),(8,16,'2024-11-15'),(8,17,'2024-11-15'),(10,8,'2024-11-22'),(8,33,'2024-11-27');
 /*!40000 ALTER TABLE `watchlist_songs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -918,4 +922,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-25 13:12:31
+-- Dump completed on 2024-12-02 14:31:20
