@@ -1,0 +1,30 @@
+<div class="contenedor_principal">
+    <div class="lado_izquierdo">
+      <div class="contenedor_imagen_biografia">
+        <img class="foto_artista" [src]="artist?.photo || 'images/placeholder.jpg'" alt="Artist Photo">
+        <p class="nombre_artista">{{ artist?.name }}</p>
+        <p class="texto_biografia">{{ artist?.bio }}</p>
+      </div>
+    </div>
+  
+    <div class="lado_derecho">
+      <div class="contenedor_songs_albums">
+        <p class="texto_songs_albums">Songs</p>
+        <div class="contenedor_fotos">
+          <a *ngFor="let song of songs" [routerLink]="['/song', song.id_song]">
+            <img class="foto_song_album" [src]="song.photo || 'images/placeholder.jpg'" alt="Song Photo">
+          </a>
+        </div>
+      </div>
+  
+      <div class="contenedor_songs_albums">
+        <p class="texto_songs_albums">Albums</p>
+        <div class="contenedor_fotos">
+          <a *ngFor="let album of albums" [routerLink]="['/album', album.id_album]">
+            <img class="foto_song_album" [src]="album.photo || 'images/placeholder.jpg'" alt="Album Photo">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  

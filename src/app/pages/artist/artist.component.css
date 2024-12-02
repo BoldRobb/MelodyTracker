@@ -1,0 +1,65 @@
+.contenedor_principal {
+    font-family: 'jomhuria', cursive;
+    display: flex;
+    gap: 8rem;
+    margin: 3rem auto 0 auto;
+    width: 138rem; /* Asegúrate de definir un ancho */
+}
+
+.contenedor_imagen_biografia {
+    display: flex;
+    flex-direction: column;
+    width: 40rem;
+    background-color: #0D0B29;
+    border-radius: 2rem;
+    padding: 1.5rem;
+    align-items: center;
+    position: sticky;
+    top: 5rem; /* Ajusta la distancia desde la parte superior */
+}
+
+.foto_artista{
+    width: 30rem;
+    border-radius: 1.2rem;
+}
+
+.nombre_artista{
+    font-size: 6rem;
+    margin: 0;
+    margin-top: 1rem;
+}
+
+.texto_biografia{
+    width: 30rem;
+    font-size: 2rem;
+    opacity: 70%;
+    margin: 0;
+}
+
+.contenedor_songs_albums{
+    width: 90rem;
+    border-radius: 2rem;
+    background-color: #0D0B29;
+    padding: 2rem;
+    margin-bottom: 3rem;
+}
+
+.texto_songs_albums{
+    font-size: 6rem;
+    color: #C6FF41;
+    margin: 0;
+    margin-left: 2rem;
+}
+
+.contenedor_fotos{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 2rem;
+    row-gap: 1.5rem;
+}
+
+.foto_song_album{
+    width: 20rem;
+    height: 20rem;
+    border-radius: 1.2rem;
+}

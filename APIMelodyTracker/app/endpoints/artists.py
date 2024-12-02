@@ -11,7 +11,7 @@ from app.models.albums import Album
 
 
 from app.schemas.users import UserCreate, ProfileResponse, FollowUserRequest
-from app.schemas.artists import ArtistResponse, SongResponse, AlbumResponse
+from app.schemas.artists import AlbumsArtistResponse, ArtistResponse, SongResponse, AlbumResponse, SongsArtistResponse
 
 
 router = APIRouter()
@@ -97,18 +97,46 @@ def albums_by_artist(id_artist: int, db: Session = Depends(get_db)):
 
 
 
+@router.get("/get_artists/{id_artist}", response_model=ArtistResponse)
+def get_artist(id_artist: int, db: Session = Depends(get_db)):
+    # Consulta para obtener el artista por su id_artist
+    artist = db.query(Artist).filter(Artist.id_artist == id_artist).first()
+
+    # Si el artista no existe, devolvemos un error 404
+    if not artist:
+        raise HTTPException(status_code=404, detail="Artist not found")
+
+    # Retorna el artista con su foto
+    return artist
+
+
+
+@router.get("/artist_songs/{id_artist}", response_model=List[SongsArtistResponse])
+def get_artist_songs(id_artist: int, db: Session = Depends(get_db)):
+    # Consulta para obtener las canciones de un artista por su id_artist
+    songs = db.query(Song).filter(Song.id_artist == id_artist).all()
+
+    # Si no hay canciones, devuelve un error 404
+    if not songs:
+        raise HTTPException(status_code=404, detail="No songs found for this artist")
+
+    # Retorna las canciones en formato JSON
+    return songs
 
 
 
 
+@router.get("/artist_albums/{id_artist}", response_model=List[AlbumsArtistResponse])
+def get_artist_albums(id_artist: int, db: Session = Depends(get_db)):
+    # Consulta para obtener los álbumes de un artista por su id_artist
+    albums = db.query(Album).filter(Album.id_artist == id_artist).all()
 
+    # Si no hay álbumes, devuelve un error 404
+    if not albums:
+        raise HTTPException(status_code=404, detail="No albums found for this artist")
 
-
-
-
-
-
-
+    # Retorna los álbumes en formato JSON
+    return albums
 
 
 

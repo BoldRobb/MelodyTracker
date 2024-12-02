@@ -134,8 +134,7 @@ export class AlbumService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('access_token')}`);
     
     const listenData = {
-      id_album: id_album,
-      id_user: id_user
+      id_album: id_album,id_user: id_user
     };
   
     return this.http.post<{ message: string }>(`${this.apiUrl}/albums/listened_album`, listenData, { headers }).pipe(

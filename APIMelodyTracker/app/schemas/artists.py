@@ -5,9 +5,9 @@ from typing import Optional, List
 
 class ArtistResponse(BaseModel):
     id_artist: int
-    bio: str
-    spotify: str
     name: str
+    bio: str
+    photo: str  # Agregamos el campo de la foto
 
     class Config:
         from_attributes = True 
@@ -37,3 +37,13 @@ class AlbumResponse(BaseModel):
     class Config:
         # Configuración para Pydantic V2
         from_attributes = True
+
+
+class SongsArtistResponse(BaseModel):
+    id_song: int
+    photo: str
+
+
+class AlbumsArtistResponse(BaseModel):
+    id_album: int
+    photo: str
