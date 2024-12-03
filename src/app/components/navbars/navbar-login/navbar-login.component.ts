@@ -79,6 +79,7 @@ export class NavbarLoginComponent implements OnInit {
 
   logout(): void {
     localStorage.removeItem('access_token'); // Elimina el token del localStorage
-    window.location.href = '/login'; // Redirige a la página de inicio de sesión o al home
+    this.userService.isLoggedIn$ = false; // Cambia el estado de isLoggedIn$
+    console.log('isLoggedIn checkToken1 UserService:', this.userService.isLoggedIn$);
   }
 }

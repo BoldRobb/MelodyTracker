@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UsersService } from '../../../services/users/backend/users.service';
 import { Router } from '@angular/router'; // Importa Router
@@ -13,7 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
   templateUrl: './logindata.component.html',
   styleUrls: ['./logindata.component.css']
 })
-export class LogindataComponent {
+export class LogindataComponent implements OnInit {
   loginForm: FormGroup;
 
   constructor(private fb: FormBuilder, private usersService: UsersService, private router: Router) { // Inyecta Router
@@ -21,6 +21,11 @@ export class LogindataComponent {
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+  }
+  ngOnInit(): void {
+    if (this.usersService.isLoggedIn$) {
+      this.router.navigate(['/homepage']); // Cambia '/dashboard' por la ruta deseada
+    }
   }
 
   onSubmit() {
@@ -32,6 +37,7 @@ export class LogindataComponent {
           console.log('Login successful');
           alert('Login successful');
           // Redirigir al usuario a otro componente (por ejemplo, el dashboard)
+          this.usersService.isLoggedIn$ = true;
           this.router.navigate(['/homepage']); // Cambia '/dashboard' por la ruta deseada
         },
         (error) => {

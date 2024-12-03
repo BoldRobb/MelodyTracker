@@ -69,8 +69,8 @@ export class UsersService {
   }
 
   // Definir un BehaviorSubject para el estado de login
-  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
-  isLoggedIn$ = this.isLoggedInSubject.asObservable(); 
+  
+  public isLoggedIn$ = true; 
 
   // Verificar si el token es válido
   checkToken(): void {
@@ -78,8 +78,8 @@ export class UsersService {
       const token = localStorage.getItem('access_token');
     
       if (!token) {
-        this.isLoggedInSubject.next(false);
-        console.log('Token no encontrado, isLoggedIn:', false);
+        this.isLoggedIn$ = false;
+        console.log('isLoggedIn checkToken1 UserService:', this.isLoggedIn$);
         return;
       }
     
@@ -88,11 +88,12 @@ export class UsersService {
       // Validar el token
       this.http.get(`${this.apiUrl}/users/me`, { headers }).subscribe({
         next: () => {
-          this.isLoggedInSubject.next(true);
-          console.log('Token válido, isLoggedIn después de set(true):', true);
+          this.isLoggedIn$ = true;
+          console.log('isLoggedIn checkToken2 UserService:', this.isLoggedIn$);
         },
         error: (error) => {
-          this.isLoggedInSubject.next(false);
+          this.isLoggedIn$ = false;
+          console.log('isLoggedIn checkToken3 UserService:', this.isLoggedIn$);
           console.log('Token inválido o error en la petición:', error);
           console.log('isLoggedIn después de set(false):', false);
         }
@@ -101,13 +102,12 @@ export class UsersService {
   }
 
 
-  
-
   // Cerrar sesión y limpiar el token
   logout(): void {
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.removeItem('access_token');
-      this.isLoggedInSubject.next(false);
+      this.isLoggedIn$ = false;
+      console.log('isLoggedIn logout UserService:', this.isLoggedIn$);
     }
   }
 
@@ -144,7 +144,7 @@ export class UsersService {
   
   // Verificar si el usuario está logueado
   isUserLoggedIn(): boolean {
-    return this.isLoggedInSubject.value;
+    return this.isLoggedIn$;
   }
 
   // Método para obtener los detalles del encabezado de la watchlist

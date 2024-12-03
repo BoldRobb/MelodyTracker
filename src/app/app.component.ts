@@ -67,6 +67,7 @@ export class AppComponent implements OnInit {
   login(username: string, password: string): void {
     this.usersService.login(username, password).subscribe({
       next: (accessToken) => {
+        this.usersService.isLoggedIn$ = true;
         // console.log('Login exitoso, token:', accessToken);
       },
       error: () => {
