@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { SpinnerService } from '../../others/spinner.service';
-import { finalize } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 import { BestAlbumsResponse, AlbumDetailsResponse  } from '../../../interfaces/album';
 
 
@@ -18,7 +18,8 @@ export class AlbumService {
 
   constructor(private http: HttpClient, private spinnerService: SpinnerService) {}
 
-
+  private commentUpdatedSource = new Subject<void>(); // Crear el Subject para emitir cuando se actualicen los comentarios
+  commentUpdated$ = this.commentUpdatedSource.asObservable(); // Exponer el Observable para suscripción
 
 
   // -----------------------------------------------------------
@@ -304,8 +305,9 @@ hasRankAlbum(id_user: number, id_album: number): Observable<{ has_rank: boolean,
 }
 
 
-// Servicio para obtener los comentarios de un álbum
-getAlbumComments(id_album: number): Observable<any[]> {
+
+ // Servicio para obtener los comentarios de un álbum
+ getAlbumComments(id_album: number): Observable<any[]> {
   this.spinnerService.show(); // Mostrar el spinner
 
   return this.http
@@ -317,6 +319,7 @@ getAlbumComments(id_album: number): Observable<any[]> {
 
 
 // Servicio para agregar un comentario a un álbum
+
 reviewAlbum(id_user: number, id_album: number, comment: string): Observable<{ msg: string, review: any }> {
   this.spinnerService.show(); // Mostrar el spinner
 
@@ -327,9 +330,18 @@ reviewAlbum(id_user: number, id_album: number, comment: string): Observable<{ ms
       `${this.apiUrl}/albums/review_album`, reviewData,
       { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras si es necesario
     )
-    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+    .pipe(
+      finalize(() => this.spinnerService.hide()), // Ocultar el spinner al finalizar
+      tap(() => {
+        // Emitir el evento cuando el comentario haya sido creado
+        this.commentUpdatedSource.next(); // Emitir la actualización de los comentarios
+      })
+    );
 }
 
+updateComments() {
+  this.commentUpdatedSource.next(); // Emitir la actualización de los comentarios
+}
 
 // Servicio para obtener las canciones de un álbum
 getSongsOnAlbum(id_album: number): Observable<{ songs: any[] }> {

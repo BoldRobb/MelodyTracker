@@ -15,7 +15,7 @@ import { CreateReviewComponent } from "../modals/create-review/create-review.com
 })
 export class DatosSongAlbumComponent implements OnInit {
   albumId: number | null = null;
-
+  
   // Variables para almacenar los detalles del álbum o la canción
   albumCover: string = '';
   title: string = '';
@@ -50,6 +50,8 @@ export class DatosSongAlbumComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+
     this.isAlbumRoute = this.router.url.startsWith('/album');
     this.isAlbumHeardBy = this.router.url.startsWith('/albumHeardBy');
     this.isAlbumLikedBy = this.router.url.startsWith('/albumLikedBy');
@@ -82,6 +84,7 @@ export class DatosSongAlbumComponent implements OnInit {
       this.albumService.getAlbumDetails(id).subscribe(
         (response) => {
           this.assignAlbumData(response);
+          
           this.getAlbumLikeCount(id);
           this.getAlbumReviewCount(id);
           this.getAlbumListenedCount(id);
@@ -208,7 +211,7 @@ export class DatosSongAlbumComponent implements OnInit {
       title: this.title,
       artist: this.artist,
       releaseYear: this.releaseYear,
-      albumCover: this.albumCover
+      albumCover: this.albumCover,
     });
   }
 

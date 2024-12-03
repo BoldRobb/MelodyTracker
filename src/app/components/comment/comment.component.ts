@@ -13,11 +13,11 @@ import { Router } from '@angular/router'; // Para la navegación
   imports: [CommonModule],
   styleUrls: ['./comment.component.css'],
 })
+
+
+
+
 export class CommentComponent implements OnInit {
-  comments: any[] = [];
-  isLoading = true;
-  userId: number | undefined; // Variable para almacenar el id_user
-  isAlbum: boolean = false; // Determina si es álbum o canción
 
   constructor(
     private songService: SongService, 
@@ -27,9 +27,22 @@ export class CommentComponent implements OnInit {
     private route: ActivatedRoute // Para obtener parámetros de la URL
   ) {}
 
+  
+  comments: any[] = [];
+  isLoading = true;
+  userId: number | undefined; // Variable para almacenar el id_user
+  isAlbum: boolean = false; // Determina si es álbum o canción
+
+  
+
   ngOnInit() {
+    this.albumService.commentUpdated$.subscribe(() => {
+      console.log('Comentarios actualizados');
+      this.loadComments();  // Recargar los comentarios
+    });
+  
     this.checkIfAlbum();
-    this.loadComments();
+    this.loadComments();  // Cargar los comentarios inicialmente
   }
 
   // Método para verificar si es un álbum o una canción
@@ -57,16 +70,16 @@ export class CommentComponent implements OnInit {
 
   // Método para manejar los comentarios obtenidos
   handleComments(comments: any[]) {
-    console.log('Comentarios recibidos:', comments); // Verifica la estructura de los comentarios
-    this.comments = comments;
-
-    // Asignar el userId del primer comentario (si existe)
-    if (comments && comments.length > 0) {
-      this.userId = comments[0].id_user; // Asignar el id_user del primer comentario
+    console.log('Comentarios recibidos:', comments);
+    if (Array.isArray(comments) && comments.length > 0) {
+      this.comments = comments;
+      this.userId = comments[0].id_user;
+    } else {
+      console.error('No se recibieron comentarios válidos');
     }
-
     this.isLoading = false;
   }
+
 
   // Método para manejar errores al cargar los comentarios
   handleError(error: any) {

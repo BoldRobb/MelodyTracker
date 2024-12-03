@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CreateListComponent } from "../../modals/create-list/create-list.component";
 import { UsersService } from '../../../services/users/backend/users.service';
+import { Router } from '@angular/router'; // Importa Router
 
 @Component({
   selector: 'app-navbar-login',
@@ -17,7 +18,7 @@ export class NavbarLoginComponent implements OnInit {
   photo: string = ''; // Variable para almacenar la photo
   userId: number | null = null; // Variable para almacenar el id_user
 
-  constructor(private userService: UsersService) {}
+  constructor(private userService: UsersService, private router: Router) {}
 
   ngOnInit(): void {
     const token = localStorage.getItem('access_token');  
@@ -81,5 +82,6 @@ export class NavbarLoginComponent implements OnInit {
     localStorage.removeItem('access_token'); // Elimina el token del localStorage
     this.userService.isLoggedIn$ = false; // Cambia el estado de isLoggedIn$
     console.log('isLoggedIn checkToken1 UserService:', this.userService.isLoggedIn$);
+    this.router.navigate(['/homepage']); // Cambia '/dashboard' por la ruta deseada
   }
 }

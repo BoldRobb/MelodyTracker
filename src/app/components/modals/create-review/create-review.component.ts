@@ -177,9 +177,9 @@ export class CreateReviewComponent implements OnInit {
   }
 
   createReview(commentInput: HTMLTextAreaElement) {
-    const commentValue = commentInput.value.trim(); // Obtener el valor del textarea
+    const commentValue = commentInput.value.trim();
 
-    if (commentValue.length > 4) { // Solo si el comentario tiene más de 4 caracteres
+    if (commentValue.length > 4) {
       const review$ = this.isAlbum
         ? this.albumService.reviewAlbum(this.userId!, this.albumId!, commentValue)
         : this.songService.reviewSong(this.userId!, this.songId!, commentValue);
@@ -187,14 +187,20 @@ export class CreateReviewComponent implements OnInit {
       review$.subscribe({
         next: (response) => {
           console.log('Reseña creada:', response);
+
+          // Emite la señal de actualización de comentarios
+          this.albumService.updateComments();
+          
           this.closeModal(); // Cerrar el modal después de crear la reseña
         },
         error: (error) => {
           console.error('Error al crear la reseña:', error);
-        }
+        },
       });
     } else {
       console.error('El comentario debe tener más de 4 caracteres');
     }
   }
+
+
 }
