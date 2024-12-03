@@ -50,20 +50,9 @@ export class DatosSongAlbumComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    
 
-    this.albumService.statsUpdatedSource$.subscribe(() => {
-      console.log('Stats');
-      if (this.albumId !== null) {
-        // this.getDetails(this.albumId);  // Recargar los comentarios
-        this.getAlbumLikeCount(this.albumId);
-        this.getAlbumReviewCount(this.albumId);
-        this.getAlbumListenedCount(this.albumId);
-        this.getSongLikeCount(this.albumId);
-        this.getSongReviewCount(this.albumId);
-        this.getSongListenedCount(this.albumId);
-        this.getSongListCount(this.albumId);
-      }
-    });
+    
 
     this.isAlbumRoute = this.router.url.startsWith('/album');
     this.isAlbumHeardBy = this.router.url.startsWith('/albumHeardBy');
@@ -76,6 +65,23 @@ export class DatosSongAlbumComponent implements OnInit {
     this.isCommentOnReviewSong = this.router.url.startsWith('/comentsOnReview/song');
     this.isCommentOnReviewAlbum = this.router.url.startsWith('/comentsOnReview/album');
 
+
+    this.albumService.statsUpdatedSource$.subscribe(() => {
+      console.log('Stats');
+      if (this.albumId !== null && this.isAlbumRoute) {
+        // this.getDetails(this.albumId);  // Recargar los comentarios
+        this.getAlbumLikeCount(this.albumId);
+        this.getAlbumReviewCount(this.albumId);
+        this.getAlbumListenedCount(this.albumId);
+        
+      }
+      if (this.albumId !== null && this.isSongRoute) {
+        this.getSongLikeCount(this.albumId);
+        this.getSongReviewCount(this.albumId);
+        this.getSongListenedCount(this.albumId);
+        this.getSongListCount(this.albumId);
+      }
+    });
 
     this.spinnerService.show();
 
@@ -126,6 +132,7 @@ export class DatosSongAlbumComponent implements OnInit {
         }
       );
     }
+
   }
 
   // Métodos para obtener los conteos del álbum

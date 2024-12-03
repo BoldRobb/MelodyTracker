@@ -95,6 +95,7 @@ export class YourRatingComponent implements OnInit {
         .subscribe(
           () => {
             this.selectedRating = score;
+            this.albumService.updateComments();
             console.log(`Calificación para el álbum realizada con éxito`);
             this.fillStars(score);
           },
@@ -107,6 +108,7 @@ export class YourRatingComponent implements OnInit {
         .subscribe(
           () => {
             this.selectedRating = score;
+            this.albumService.updateComments();
             console.log(`Calificación para la canción realizada con éxito`);
             this.fillStars(score);
           },
@@ -115,6 +117,7 @@ export class YourRatingComponent implements OnInit {
           }
         );
     }
+    
   }
 
   clearHover(): void {
@@ -145,7 +148,8 @@ export class YourRatingComponent implements OnInit {
         this.fillStars(0);
       }))
       .subscribe(
-        () => console.log(`Calificación de ${this.entityType} eliminada con éxito`),
+        () => this.albumService.updateComments(), 
+        
         (error) => console.error(`Error al eliminar la calificación de ${this.entityType}`, error)
       );
   }
