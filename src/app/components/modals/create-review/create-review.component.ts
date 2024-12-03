@@ -190,6 +190,7 @@ export class CreateReviewComponent implements OnInit {
 
           // Emite la señal de actualización de comentarios
           this.albumService.updateComments();
+          this.albumService.updateStats();
           
           this.closeModal(); // Cerrar el modal después de crear la reseña
         },

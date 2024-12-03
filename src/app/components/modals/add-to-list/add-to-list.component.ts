@@ -3,6 +3,7 @@ import { CreateListComponent } from "../../modals/create-list/create-list.compon
 import { ListsService } from '../../../services/lists/backend/lists.service'; // Importar el servicio
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { AlbumService } from '../../../services/album/backend/album-service.service';
 
 @Component({
   selector: 'app-add-to-list',
@@ -23,7 +24,8 @@ export class AddToListComponent implements OnInit {
 
   constructor(
     private listService: ListsService,
-    private route: ActivatedRoute // Inyectar ActivatedRoute para obtener los parámetros de la URL
+    private route: ActivatedRoute, // Inyectar ActivatedRoute para obtener los parámetros de la URL
+    private albumService: AlbumService
   ) {}
 
   ngOnInit(): void {
@@ -98,6 +100,7 @@ export class AddToListComponent implements OnInit {
       this.listService.addSongToList(id_list, this.songId).subscribe(
         (response) => {
           console.log('Canción agregada a la lista:', response);
+          this.albumService.updateStats();
           this.closeAddToListModal(); // Cerrar el modal solo si la canción fue agregada correctamente
         },
         (error) => {

@@ -21,6 +21,19 @@ export class AlbumService {
   private commentUpdatedSource = new Subject<void>(); // Crear el Subject para emitir cuando se actualicen los comentarios
   commentUpdated$ = this.commentUpdatedSource.asObservable(); // Exponer el Observable para suscripción
 
+  private statsUpdatedSource = new Subject<void>(); // Crear el Subject para emitir cuando se actualicen los comentarios
+  statsUpdatedSource$ = this.statsUpdatedSource.asObservable(); // Exponer el Observable para suscripción
+
+
+
+  updateComments() {
+    this.commentUpdatedSource.next(); // Emitir la actualización de los comentarios
+  }
+
+
+  updateStats(){
+    this.statsUpdatedSource.next(); // Emitir la actualización de los stats
+  }
 
   // -----------------------------------------------------------
   // Servicio para obtener los mejores álbumes
@@ -339,9 +352,7 @@ reviewAlbum(id_user: number, id_album: number, comment: string): Observable<{ ms
     );
 }
 
-updateComments() {
-  this.commentUpdatedSource.next(); // Emitir la actualización de los comentarios
-}
+
 
 // Servicio para obtener las canciones de un álbum
 getSongsOnAlbum(id_album: number): Observable<{ songs: any[] }> {

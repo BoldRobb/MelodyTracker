@@ -51,6 +51,19 @@ export class DatosSongAlbumComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.albumService.statsUpdatedSource$.subscribe(() => {
+      console.log('Stats');
+      if (this.albumId !== null) {
+        // this.getDetails(this.albumId);  // Recargar los comentarios
+        this.getAlbumLikeCount(this.albumId);
+        this.getAlbumReviewCount(this.albumId);
+        this.getAlbumListenedCount(this.albumId);
+        this.getSongLikeCount(this.albumId);
+        this.getSongReviewCount(this.albumId);
+        this.getSongListenedCount(this.albumId);
+        this.getSongListCount(this.albumId);
+      }
+    });
 
     this.isAlbumRoute = this.router.url.startsWith('/album');
     this.isAlbumHeardBy = this.router.url.startsWith('/albumHeardBy');

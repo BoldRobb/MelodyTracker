@@ -185,6 +185,7 @@ export class ListenLikeWatchComponent implements OnInit {
       like$.pipe(finalize(() => this.spinnerService.hide())).subscribe({
         next: (response) => {
           this.isLiked = !this.isLiked;
+          this.albumService.updateStats();
           console.log(response.message);
         },
         error: (error) => {
@@ -205,6 +206,7 @@ export class ListenLikeWatchComponent implements OnInit {
       listen$.pipe(finalize(() => this.spinnerService.hide())).subscribe({
         next: (response) => {
           this.isListened = !this.isListened;
+          this.albumService.updateStats();
           console.log('Estado de escucha cambiado:', this.isListened);
         },
         error: (error) => {
