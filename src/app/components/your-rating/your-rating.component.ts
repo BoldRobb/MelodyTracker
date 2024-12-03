@@ -46,9 +46,8 @@ export class YourRatingComponent implements OnInit {
     return userData ? userData.id_user : 0;
   }
 
-  private checkIfRanked(): void {
-    if (this.entityType === 'album') {
-      this.albumService.hasRankAlbum(this.id_user, this.id_entity)
+  setRank(){
+    this.albumService.hasRankAlbum(this.id_user, this.id_entity)
         .subscribe(
           (response) => {
             if (response.has_rank) {
@@ -60,6 +59,11 @@ export class YourRatingComponent implements OnInit {
             console.error(`Error verificando si el álbum fue calificado`, error);
           }
         );
+      }
+
+  private checkIfRanked(): void {
+    if (this.entityType === 'album') {
+      this.setRank();
     } else {
       this.songService.hasRankSong(this.id_user, this.id_entity)
         .subscribe(
@@ -87,6 +91,7 @@ export class YourRatingComponent implements OnInit {
     const newRating = index + (isHalf ? 0.5 : 1);
 
     this.rankEntity(newRating);
+    this.checkIfRanked();
   }
 
   private rankEntity(score: number): void {
@@ -95,6 +100,7 @@ export class YourRatingComponent implements OnInit {
         .subscribe(
           () => {
             this.selectedRating = score;
+            this.checkIfRanked();
             this.albumService.updateComments();
             console.log(`Calificación para el álbum realizada con éxito`);
             this.fillStars(score);
@@ -138,6 +144,7 @@ export class YourRatingComponent implements OnInit {
     // Determina si el mouse está sobre la mitad izquierda o derecha de la estrella
     const isHalf = mouseX < rect.width / 2;
     this.hoverIndex = index + (isHalf ? 0.5 : 1);
+    
   }
 
   resetRating(): void {

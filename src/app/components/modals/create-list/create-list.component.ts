@@ -52,6 +52,7 @@ export class CreateListComponent {
         this.listService.createList(this.listData).subscribe({
           next: (response) => {
             console.log('Lista creada con éxito:', response);
+            this.listService.updateLists();
             this.closeModal();
           },
           error: (err) => {

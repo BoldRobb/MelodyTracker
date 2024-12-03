@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { SpinnerService } from '../../others/spinner.service';
 import { ListCreateRequest, ListCreateResponse } from '../../../interfaces/lists';
@@ -14,6 +14,14 @@ export class ListsService {
   private apiUrl = 'http://127.0.0.1:8000'; // Cambia por tu URL base
 
   constructor(private http: HttpClient, private spinnerService: SpinnerService) {}
+
+  private UpdateLists = new Subject<void>(); // Crear el Subject para emitir cuando se actualicen los comentarios
+  UpdateLists$ = this.UpdateLists.asObservable(); // Exponer el Observable para suscripción
+
+
+  updateLists() {
+    this.UpdateLists.next(); // Emitir la actualización de la lista de listas
+  }
 
   createList(listData: ListCreateRequest): Observable<ListCreateResponse> {
     this.spinnerService.show();

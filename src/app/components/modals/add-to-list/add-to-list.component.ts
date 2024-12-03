@@ -29,6 +29,12 @@ export class AddToListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+    this.listService.UpdateLists$.subscribe(() => {
+      console.log('Lista de Listas Actualizada');
+      this.loadUserLists();
+    });
+
     this.extractUserIdFromToken();
     if (this.userId) {
       this.loadUserLists();
