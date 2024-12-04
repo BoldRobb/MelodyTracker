@@ -432,3 +432,37 @@ def delete_ranked_list(id_user: int, id_list: int, db: Session = Depends(get_db)
     db.commit()
 
     return {"msg": "Ranked list deleted successfully", "id_user": id_user, "id_list": id_list}
+
+
+
+@router.get("/songsOnList/{id_list}")
+def get_songs_by_list(id_list: int, db: Session = Depends(get_db)):
+    # Consultar la lista con el id proporcionado
+    list_obj = db.query(List).filter(List.id_list == id_list).first()
+    
+    if not list_obj:
+        raise HTTPException(status_code=404, detail="List not found")
+    
+    # Obtener las canciones que pertenecen a esta lista
+    songs_on_list = (
+        db.query(SongsOnList)
+        .join(Song, SongsOnList.id_song == Song.id_song)
+        .filter(SongsOnList.id_list == id_list)
+        .all()
+    )
+
+    if not songs_on_list:
+        raise HTTPException(status_code=404, detail="No songs found for this list")
+
+    # Construir la respuesta con id_list, id_song, nombre y foto de la canción
+    result = [
+        {
+            "id_list": song_on_list.id_list,
+            "id_song": song_on_list.id_song,
+            "name": song_on_list.song.name,
+            "photo": song_on_list.song.photo
+        }
+        for song_on_list in songs_on_list
+    ]
+    
+    return result

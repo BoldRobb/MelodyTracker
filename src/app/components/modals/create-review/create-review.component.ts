@@ -28,6 +28,9 @@ export class CreateReviewComponent implements OnInit {
   albumId: number | undefined;
   isAlbum: boolean = false;
 
+  isList: boolean = false; // Para saber si se está en la lista de reproducción
+  listId: number | undefined; // Para almacenar el id de la lista de reproducción
+
   comment: string = ''; // Para almacenar el comentario que se introduce
 
   constructor(
@@ -50,6 +53,7 @@ export class CreateReviewComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.songId = +params['id']; // id de la canción
       this.albumId = +params['id']; // id del álbum, si existe en la URL
+      this.listId = +params['id']; // id de la lista de reproducción, si existe en la URL
 
       console.log('albumId:', this.albumId);
 
@@ -61,12 +65,10 @@ export class CreateReviewComponent implements OnInit {
         // Si la ruta es de un álbum (/album/id)
         if (path.startsWith('album')) {
           this.isAlbum = true; // Estás en una ruta de álbum
-          console.log('ES ALBUUMMMMMMMM');
         }
         // Si la ruta es de una canción (/song/id)
         else if (path.startsWith('song')) {
           this.isAlbum = false; // No es un álbum, es una canción
-          console.log('ES CANCIOOOOOOON');
         }
 
         console.log('albumId:', this.albumId);

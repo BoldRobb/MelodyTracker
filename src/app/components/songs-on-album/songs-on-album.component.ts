@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AlbumService } from '../../services/album/backend/album-service.service';  // Asegúrate de que el servicio está bien importado
 import { SpinnerService } from '../../services/others/spinner.service';  // Servicio de spinner para mostrar/ocultar el cargador
 import { RouterModule } from '@angular/router';
@@ -12,28 +12,43 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./songs-on-album.component.css']
 })
 export class SongsOnAlbumComponent implements OnInit {
-  id_album!: number;  // Variable para almacenar el id_album
+  id!: number;  // Variable para almacenar el id_album
   songs: any[] = []; // Variable para almacenar las canciones del álbum
+  isAlbumRoute: boolean = false;
+  isListRoute: boolean = false;
 
   constructor(
     private route: ActivatedRoute,  // Para acceder a los parámetros de la URL
     private albumService: AlbumService,  // Servicio para obtener las canciones del álbum
-    private spinnerService: SpinnerService  // Para controlar el spinner
+    private spinnerService: SpinnerService,  // Para controlar el spinner
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     // Obtener el id_album de la URL
-    this.id_album = +this.route.snapshot.paramMap.get('id')!;  // Asegúrate de que el 'id' esté en la URL
+
+    this.isAlbumRoute = this.router.url.startsWith('/album');
+
+    
+    this.isListRoute = this.router.url.startsWith('/list');
+
+
+    this.id = +this.route.snapshot.paramMap.get('id')!;  // Asegúrate de que el 'id' esté en la URL
     // Llamar al servicio para obtener las canciones del álbum
-    this.loadSongs();
+    if (this.isAlbumRoute) {
+      this.loadAlbumSongs();
+    } else if (this.isListRoute) {
+      this.loadAlbumSongs();
+    }
+    
   }
 
-  loadSongs(): void {
+  loadAlbumSongs(): void {
     // Mostrar el spinner mientras se hace la solicitud
     this.spinnerService.show();
   
     // Obtener las canciones del álbum
-    this.albumService.getSongsOnAlbum(this.id_album).subscribe({
+    this.albumService.getSongsOnAlbum(this.id).subscribe({
       next: (response) => {
         if (Array.isArray(response)) {
           this.songs = response;  // Asignar el arreglo directamente a `songs`
