@@ -15,6 +15,7 @@
     width: 24rem;
     height: 24rem;
     border-radius: 1rem;
+    cursor: pointer;
 }
 
 .contenedor_datos{
@@ -31,6 +32,7 @@
 .title_song{
     font-size: 7rem;
     margin: 0;
+    cursor: pointer;
 }
 
 .released{
@@ -43,6 +45,7 @@
     margin: 0;
     font-size: 3.5rem;
     color: #C6FF41;
+    cursor: pointer;    
 }
 
 .contenedor_stats{
@@ -58,6 +61,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    cursor: pointer;
 }
 
 .imagen_stat{

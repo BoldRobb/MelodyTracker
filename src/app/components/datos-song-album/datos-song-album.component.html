@@ -1,30 +1,38 @@
 <div class="contenedor_principal">
     <div class="contenedor_foto">
-      <img class="foto_song" [src]="albumCover || 'ruta/a/imagen_por_defecto.jpg'" alt="Album Cover">
+      <img class="foto_song" [routerLink]="['/', rutaclick, albumId]" [src]="albumCover || 'ruta/a/imagen_por_defecto.jpg'" alt="Album Cover">
     </div>
     <div class="contenedor_datos">
       <div class="contenedor_title_released">
-        <p class="title_song">{{ title || 'Título desconocido' }}</p>
+        <p class="title_song" [routerLink]="['/', rutaclick, albumId]">{{ title || 'Título desconocido' }}</p>
         <p class="released">{{ releaseYear || 'Año desconocido' }}</p>
       </div>
-      <p class="name_artist">{{ artist || 'Artista desconocido' }}</p>
+      <p [routerLink]="['/artist', idArtist]" class="name_artist">{{ artist || 'Artista desconocido' }}</p>
       <div class="contenedor_stats">
-        <div class="stat">
-          <img class="imagen_stat" src="images/song_listened.png" alt="">
-          <p class="cantidad_stat">{{ listens || 0 }}</p>
-        </div>
+        @if (!isSongHeardBy && !isAlbumHeardBy) {
+          <div class="stat" [routerLink]="['/', rutaclick + 'HeardBy', albumId]">
+            <img class="imagen_stat" src="images/song_listened.png" alt="">
+            <p class="cantidad_stat">{{ listens || 0 }}</p>
+          </div>
+        }
+        
         <div class="stat">
           <img class="imagen_stat" src="images/comment.png" alt="">
           <p class="cantidad_stat">{{ reviewCount || 0 }}</p>
         </div>
-        <div class="stat">
-          <img class="imagen_stat" src="images/lists_created.png" alt="">
-          <p class="cantidad_stat">{{ listsCreated || 0 }}</p>
-        </div>
-        <div class="stat">
-          <img class="imagen_stat" src="images/heart.png" alt="">
-          <p class="cantidad_stat">{{ likes || 0 }}</p>
-        </div>
+        @if (isSongRoute) {
+          <div class="stat">
+            <img class="imagen_stat" src="images/lists_created.png" alt="">
+            <p class="cantidad_stat">{{ listsCreated || 0 }}</p>
+          </div>
+        }
+        @if (!isSongLikedBy && !isAlbumLikedBy) {
+          <div class="stat" [routerLink]="['/', rutaclick + 'LikedBy', albumId]">
+            <img class="imagen_stat" src="images/heart.png" alt="">
+            <p class="cantidad_stat">{{ likes || 0 }}</p>
+          </div>
+        }
+       
       </div>
       <div class="contenedor_rate">
         <img class="imagen_estrella" src="images/star.png" alt="">

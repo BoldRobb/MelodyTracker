@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AlbumService } from '../../services/album/backend/album-service.service';
 import { SongService } from '../../services/song/backend/song.service';
 import { SpinnerService } from '../../services/others/spinner.service';
@@ -10,17 +10,19 @@ import { CreateReviewComponent } from "../modals/create-review/create-review.com
   templateUrl: './datos-song-album.component.html',
   styleUrls: ['./datos-song-album.component.css'],
   standalone: true,
-  imports: [CreateReviewComponent] // Aquí podrías agregar otros módulos si es necesario, por ejemplo, `CommonModule`
+  imports: [CreateReviewComponent, RouterLink] // Aquí podrías agregar otros módulos si es necesario, por ejemplo, `CommonModule`
  // Aquí podrías agregar otros módulos si es necesario, por ejemplo, `CommonModule`
 })
 export class DatosSongAlbumComponent implements OnInit {
   albumId: number | null = null;
   
+  rutaclick: string = '';
   // Variables para almacenar los detalles del álbum o la canción
   albumCover: string = '';
   title: string = '';
   releaseYear: number = 0;
   artist: string = '';
+  idArtist: number = 0;
   language: string = '';
   releaseDate: string = '';
   listens: number = 0;
@@ -40,6 +42,7 @@ export class DatosSongAlbumComponent implements OnInit {
 
   isCommentOnReviewSong: boolean = false;
   isCommentOnReviewAlbum: boolean = false;
+  
 
   constructor(
     private route: ActivatedRoute,
@@ -73,7 +76,6 @@ export class DatosSongAlbumComponent implements OnInit {
         this.getAlbumLikeCount(this.albumId);
         this.getAlbumReviewCount(this.albumId);
         this.getAlbumListenedCount(this.albumId);
-        
       }
       if (this.albumId !== null && this.isSongRoute) {
         this.getSongLikeCount(this.albumId);
@@ -91,10 +93,17 @@ export class DatosSongAlbumComponent implements OnInit {
         this.albumId = Number(idParam);
         this.getDetails(this.albumId);
       } else {
-        this.router.navigate(['/404']);
+
         this.spinnerService.hide();
       }
     });
+
+    if (this.isAlbumRoute) {
+      this.rutaclick = 'album';
+    } else if (this.isSongRoute) {
+      this.rutaclick = 'song';
+    }
+
   }
 
   // Método para obtener los detalles (álbum o canción según la ruta)
@@ -219,6 +228,7 @@ export class DatosSongAlbumComponent implements OnInit {
     this.title = response.name;
     this.releaseYear = new Date(response.released).getFullYear();
     this.artist = response.artist_name;
+    this.idArtist = response.id_artist;
     this.language = response.language;
     this.releaseDate = response.released;
     this.listens = response.listens;
