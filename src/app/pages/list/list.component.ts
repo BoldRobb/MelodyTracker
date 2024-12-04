@@ -9,12 +9,12 @@ import { CommentComponent } from "../../components/comment/comment.component";
 import { BtnViewMoreComponent } from "../../components/btn-view-more/btn-view-more.component"; // Importa el componente standalone
 
 @Component({
-  selector: 'app-album',
-  templateUrl: './album.component.html',
-  styleUrls: ['./album.component.css'],
-  standalone: true,  // Hacemos que el componente sea standalone
-  imports: [DatosSongAlbumComponent, ListenLikeWatchComponent, YourRatingComponent, BtnReviewComponent, SongsOnAlbumComponent, FeaturedReviewsComponent, CommentComponent, BtnViewMoreComponent] 
+  selector: 'app-list',
+  standalone: true,
+  imports: [DatosSongAlbumComponent, ListenLikeWatchComponent, YourRatingComponent, BtnReviewComponent, SongsOnAlbumComponent, FeaturedReviewsComponent, CommentComponent, BtnViewMoreComponent],
+  templateUrl: './list.component.html',
+  styleUrl: './list.component.css'
 })
-export class AlbumComponent{
-  
+export class ListComponent {
+
 }

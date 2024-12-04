@@ -20,6 +20,7 @@ class LikedLists(Base):
 
     id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
     id_list = Column(BigInteger, ForeignKey('list.id_list'), nullable=False)
+    date = Column(Date, nullable=False)  # Asegúrate de tener este campo `date`
 
     # Definimos la clave primaria compuesta
     __table_args__ = (

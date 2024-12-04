@@ -11,6 +11,11 @@
 
 }
 
+.background_list{
+    width: 20rem;
+    margin: 0 auto;
+}
+
 .contenedor_stat {
     display: flex;
     flex-direction: column;

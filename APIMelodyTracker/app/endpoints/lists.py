@@ -7,6 +7,7 @@ from sqlalchemy import func
 from app.database.database import get_db
 from typing import List
 from datetime import date
+from datetime import datetime
 
 from app.models.users import User, Profile, Followers
 from app.models.artists import Artist
@@ -14,7 +15,7 @@ from app.models.songs import Song
 from app.models.lists import Lists, LikedLists, SongsOnList, RankedLists, ReviewedLists
 
 from app.schemas.users import UserCreate, ProfileResponse, FollowUserRequest
-from app.schemas.lists import ListCreate, SongToAdd
+from app.schemas.lists import LikeListRequest, ListCreate, SongToAdd
 
 router = APIRouter()
 
@@ -244,3 +245,116 @@ def get_user_lists(id_user: int, db: Session = Depends(get_db)):
     ]
 
     return result
+
+
+@router.get("/info_list/{id_list}")
+def get_list_details(id_list: int, db: Session = Depends(get_db)):
+    # Buscar la lista por su ID y obtener información del usuario mediante un join
+    list_details = (
+        db.query(
+            Lists.id_list,
+            Lists.name.label("list_name"),
+            Lists.comment,
+            Lists.photo.label("list_photo"),
+            User.id_user.label("id_user_creator"),
+            User.username.label("creator_username"),
+            Profile.photo.label("creator_photo")
+        )
+        .join(User, User.id_user == Lists.id_user)
+        .outerjoin(Profile, Profile.id_user == User.id_user)  # Outer join para incluir perfiles sin foto
+        .filter(Lists.id_list == id_list)
+        .first()
+    )
+
+    # Si no se encuentra la lista, lanzar un error
+    if not list_details:
+        raise HTTPException(status_code=404, detail="List not found")
+
+    # Devolver la información
+    return {
+        "id_user_creator": list_details.id_user_creator,
+        "creator_username": list_details.creator_username,
+        "creator_photo": list_details.creator_photo,  # Puede ser None si el usuario no tiene foto
+        "id_list": list_details.id_list,
+        "list_name": list_details.list_name,
+        "list_photo": list_details.list_photo,
+        "comment": list_details.comment
+    }
+
+
+# Verificar si un usuario ya le ha dado like a una lista
+@router.get("/has_liked_list")
+def has_liked_list(id_list: int, id_user: int, db: Session = Depends(get_db)):
+    # Verifica si la lista y el usuario existen
+    list_item = db.query(Lists).filter(Lists.id_list == id_list).first()
+    user = db.query(User).filter(User.id_user == id_user).first()
+    
+    if not list_item or not user:
+        raise HTTPException(status_code=404, detail="List or user not found")
+    
+    # Verifica si el usuario ya ha dado like a la lista
+    liked_list = db.query(LikedLists).filter(
+        LikedLists.id_user == id_user,
+        LikedLists.id_list == id_list
+    ).first()
+    
+    # Si existe la relación, significa que el usuario ya dio like
+    if liked_list:
+        return {"has_liked": True}
+    else:
+        return {"has_liked": False}
+
+
+
+
+
+@router.post("/like_list")
+def like_list(request: LikeListRequest, db: Session = Depends(get_db)):
+    # Verifica si la lista y el usuario existen
+    list_item = db.query(Lists).filter(Lists.id_list == request.id_list).first()
+    user = db.query(User).filter(User.id_user == request.id_user).first()
+    
+    if not list_item or not user:
+        raise HTTPException(status_code=404, detail="List or user not found")
+    
+    # Verifica si ya le ha dado like
+    existing_like = db.query(LikedLists).filter(
+        LikedLists.id_list == request.id_list,
+        LikedLists.id_user == request.id_user
+    ).first()
+    
+    if existing_like:
+        raise HTTPException(status_code=400, detail="User already liked this list")
+    
+    # Crear la relación con la fecha actual
+    new_like = LikedLists(
+        id_list=request.id_list, 
+        id_user=request.id_user, 
+        date=datetime.now().date()  # Agrega la fecha actual
+    )
+    
+    db.add(new_like)
+    db.commit()
+    
+    return {"message": "List liked successfully"}
+
+
+
+
+@router.delete("/unlike_list")
+def unlike_list(request: LikeListRequest, db: Session = Depends(get_db)):
+    # Verifica si la relación existe
+    liked_list = db.query(LikedLists).filter(
+        LikedLists.id_list == request.id_list,
+        LikedLists.id_user == request.id_user
+    ).first()
+    
+    if not liked_list:
+        raise HTTPException(status_code=404, detail="Like not found")
+    
+    # Eliminar la relación
+    db.delete(liked_list)
+    db.commit()
+    
+    return {"message": "List unliked successfully"}
+

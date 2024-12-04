@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SongService } from '../../services/song/backend/song.service'; // Servicio para manejar las canciones
 import { AlbumService } from '../../services/album/backend/album-service.service' // Servicio para manejar los álbumes
 import { UsersService } from '../../services/users/backend/users.service'; // Servicio para manejar al usuario
+import { ListsService } from '../../services/lists/backend/lists.service'; // Servicio para manejar las listas
 import { SpinnerService } from '../../services/others/spinner.service';
 import { SpinnerComponent } from "../spinner/spinner.component"; // Servicio para mostrar/ocultar el spinner
 import { finalize, Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-listen-like-watch',
   standalone: true,
-  imports: [SpinnerComponent],
+  imports: [SpinnerComponent, CommonModule],
   templateUrl: './listen-like-watch.component.html',
   styleUrl: './listen-like-watch.component.css'
 })
@@ -18,46 +20,62 @@ export class ListenLikeWatchComponent implements OnInit {
 
   songId: number | undefined;
   albumId: number | undefined;
+  listId: number | undefined;
+
   userId: number | undefined;
   isLiked: boolean = false;
   isListened: boolean = false;
   isSong: boolean = true; // Variable para identificar si es una canción o un álbum
   isInWatchlist: boolean = false; // Nueva variable
 
+  isListRoute: boolean = false;
+
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private songService: SongService,
     private albumService: AlbumService,
     private usersService: UsersService,
-    private spinnerService: SpinnerService
+    private spinnerService: SpinnerService,
+    private listsService: ListsService
   ) {}
 
   ngOnInit(): void {
+
+    this.isListRoute = this.router.url.startsWith('/list');
+
     this.usersService.getUserId().subscribe({
       next: (id) => {
         this.userId = id;
         // Asegúrate de que songId o albumId están definidos antes de continuar
         if (this.songId !== undefined || this.albumId !== undefined) {
           this.checkIfInWatchlist();
-        } else {
-          console.error('No se ha definido ni songId ni albumId');
-        }
+        } 
   
         this.activatedRoute.url?.subscribe(urlSegments => {
           this.isSong = urlSegments.some(segment => segment.path === 'song');
           const idParam = +this.activatedRoute.snapshot.paramMap.get('id')!;
           if (this.isSong) {
             this.songId = idParam;
+          } else if (this.isListRoute) {
+            this.listId = idParam;
           } else {
             this.albumId = idParam;
           }
   
           // Verificar si está en la watchlist solo después de definir los IDs
-          this.checkIfInWatchlist();
+          if (!this.isListRoute){
+            this.checkIfInWatchlist();
+          }
+         
         });
         
         this.checkIfLiked();
-        this.checkIfListened();
+        
+        if (!this.isListRoute){
+          this.checkIfListened();
+        }
+        
       },
       error: (error) => {
         console.error('Error al obtener el ID del usuario:', error);
@@ -138,10 +156,13 @@ export class ListenLikeWatchComponent implements OnInit {
   checkIfLiked(): void {
     if (this.userId !== undefined) {
       this.spinnerService.show();
-      const checkLike$ = this.isSong 
+  
+      const checkLike$ = this.isSong
         ? this.songService.checkIfUserLikedSong(this.songId!, this.userId)
-        : this.albumService.checkIfUserLikedAlbum(this.albumId!, this.userId);
-
+        : this.isListRoute
+          ? this.listsService.checkIfUserLikedList(this.listId!, this.userId)
+          : this.albumService.checkIfUserLikedAlbum(this.albumId!, this.userId)
+  
       checkLike$.pipe(finalize(() => this.spinnerService.hide())).subscribe({
         next: (response) => {
           this.isLiked = response.has_liked;
@@ -153,6 +174,7 @@ export class ListenLikeWatchComponent implements OnInit {
       });
     }
   }
+  
 
   // Método para verificar si el usuario ha escuchado
   checkIfListened(): void {
@@ -180,7 +202,9 @@ export class ListenLikeWatchComponent implements OnInit {
       this.spinnerService.show();
       const like$ = this.isSong 
         ? (this.isLiked ? this.songService.unlikeSong(this.songId!, this.userId) : this.songService.likeSong(this.songId!, this.userId))
-        : (this.isLiked ? this.albumService.unlikeAlbum(this.albumId!, this.userId) : this.albumService.likeAlbum(this.albumId!, this.userId));
+        : this.isListRoute
+          ? (this.isLiked ? this.listsService.unlikeList(this.listId!, this.userId) : this.listsService.likeList(this.listId!, this.userId))
+          : (this.isLiked ? this.albumService.unlikeAlbum(this.albumId!, this.userId) : this.albumService.likeAlbum(this.albumId!, this.userId));
 
       like$.pipe(finalize(() => this.spinnerService.hide())).subscribe({
         next: (response) => {

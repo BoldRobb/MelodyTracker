@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject, throwError } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { SpinnerService } from '../../others/spinner.service';
-import { ListCreateRequest, ListCreateResponse } from '../../../interfaces/lists';
+import { ListCreateRequest, ListCreateResponse, ListDetailsResponse } from '../../../interfaces/lists';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
@@ -109,6 +109,77 @@ getInfoUserLists(id_user: number): Observable<any[]> {
     .get<any[]>(`${this.apiUrl}/lists/user_lists/${id_user}`)
     .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
 }
+
+
+// Método para obtener los detalles de una lista
+getListDetails(id_list: number): Observable<ListDetailsResponse> {
+  // Muestra el spinner antes de hacer la petición
+  this.spinnerService.show();
+
+  // Realiza la petición HTTP
+  return this.http.get<ListDetailsResponse>(`${this.apiUrl}/lists/info_list/${id_list}`).pipe(
+    // Oculta el spinner cuando la solicitud se complete
+    finalize(() => {
+      this.spinnerService.hide();
+    })
+  );
+}
+
+
+
+
+// Nuevo método para verificar si un usuario ha dado like a una lista
+checkIfUserLikedList(id_list: number, id_user: number): Observable<{ has_liked: boolean }> {
+  // Muestra el spinner antes de hacer la solicitud
+  this.spinnerService.show();
+
+  // Crear los parámetros de la solicitud
+  const params = new HttpParams()
+    .set('id_list', id_list.toString())
+    .set('id_user', id_user.toString());
+
+  // Realizar la solicitud GET al backend para verificar el like
+  return this.http.get<{ has_liked: boolean }>(`${this.apiUrl}/lists/has_liked_list`, { params }).pipe(
+    finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+  );
+}
+
+
+// Método para dar like a una lista
+likeList(id_list: number, id_user: number): Observable<{ message: string }> {
+  this.spinnerService.show();
+  
+  // Crear el objeto que se enviará al backend
+  const likeData = {
+    id_list: id_list,
+    id_user: id_user
+  };
+
+  // Realizar la solicitud POST al backend
+  return this.http.post<{ message: string }>(`${this.apiUrl}/lists/like_list`, likeData).pipe(
+    finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+  );
+}
+
+
+// Método para quitar el like de una lista
+unlikeList(id_list: number, id_user: number): Observable<{ message: string }> {
+  this.spinnerService.show();  // Muestra el spinner
+
+  // Crear el objeto que se enviará al backend
+  const unlikeData = {
+    id_list: id_list,
+    id_user: id_user
+  };
+
+  // Realizar la solicitud DELETE al backend
+  return this.http.delete<{ message: string }>(`${this.apiUrl}/lists/unlike_list`, {
+    body: unlikeData
+  }).pipe(
+    finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando termine
+  );
+}
+
 
 
 }

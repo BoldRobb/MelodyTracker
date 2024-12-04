@@ -10,6 +10,10 @@
     line-height: 0.7;
 }
 
+.background-transparent {
+    background-color: transparent !important;
+  }
+
 
 .foto_song{
     width: 24rem;
@@ -51,9 +55,10 @@
 .contenedor_stats{
     display: flex;
     align-items: center;
-    justify-content: center;
+
     gap: 4rem;
     margin: 1rem 0;
+    min-width: 10rem;
 }
 
 .stat{
@@ -106,4 +111,40 @@
     opacity: 75%;
     margin: 0;
     margin: 0.5rem 0;
+}
+
+.comment{
+    font-family: 'Jomhuria';
+    font-size: 2.5rem;
+    color: white;
+    opacity: 60%;
+    margin: 0;
+}
+
+.contenedor_rate_list{
+    margin: 0;
+}
+
+.stat_list{
+    font-size: 3rem;
+}
+
+.contenedor_datos_creator{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.foto_creator{
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+}
+
+.text_creator{
+    font-family: 'jockey one', sans-serif;
+    margin: 0;
+    font-size: 2rem;
+    opacity: 70%;
 }

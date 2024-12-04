@@ -4,13 +4,15 @@ import { AlbumService } from '../../services/album/backend/album-service.service
 import { SongService } from '../../services/song/backend/song.service';
 import { SpinnerService } from '../../services/others/spinner.service';
 import { CreateReviewComponent } from "../modals/create-review/create-review.component";
+import { ListsService } from '../../services/lists/backend/lists.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-datos-song-album',
   templateUrl: './datos-song-album.component.html',
   styleUrls: ['./datos-song-album.component.css'],
   standalone: true,
-  imports: [CreateReviewComponent, RouterLink] // Aquí podrías agregar otros módulos si es necesario, por ejemplo, `CommonModule`
+  imports: [CreateReviewComponent, RouterLink, CommonModule] // Aquí podrías agregar otros módulos si es necesario, por ejemplo, `CommonModule`
  // Aquí podrías agregar otros módulos si es necesario, por ejemplo, `CommonModule`
 })
 export class DatosSongAlbumComponent implements OnInit {
@@ -32,6 +34,13 @@ export class DatosSongAlbumComponent implements OnInit {
   ratingCount: number = 0;
   reviewCount: number = 0;
 
+  id_user_creator: number = 0;
+  creator_username: string = '';
+  creator_photo: string = '';
+  listComment: string = '';
+
+
+
   isAlbumRoute: boolean = true;
   isAlbumHeardBy: boolean = false;
   isAlbumLikedBy: boolean = false;
@@ -40,8 +49,11 @@ export class DatosSongAlbumComponent implements OnInit {
   isSongHeardBy: boolean = false;
   isSongLikedBy: boolean = false;
 
+  isListRoute: boolean = false;
+
   isCommentOnReviewSong: boolean = false;
   isCommentOnReviewAlbum: boolean = false;
+  
   
 
   constructor(
@@ -49,7 +61,8 @@ export class DatosSongAlbumComponent implements OnInit {
     private router: Router,
     private albumService: AlbumService,
     private songService: SongService,
-    private spinnerService: SpinnerService
+    private spinnerService: SpinnerService,
+    private listService: ListsService
   ) {}
 
   ngOnInit(): void {
@@ -64,6 +77,8 @@ export class DatosSongAlbumComponent implements OnInit {
     this.isSongRoute = this.router.url.startsWith('/song');
     this.isSongHeardBy = this.router.url.startsWith('/songHeardBy');
     this.isSongLikedBy = this.router.url.startsWith('/songLikedBy');
+    
+    this.isListRoute = this.router.url.startsWith('/list');
 
     this.isCommentOnReviewSong = this.router.url.startsWith('/comentsOnReview/song');
     this.isCommentOnReviewAlbum = this.router.url.startsWith('/comentsOnReview/album');
@@ -136,6 +151,19 @@ export class DatosSongAlbumComponent implements OnInit {
         },
         (error) => {
           console.error('Error al obtener los detalles de la canción:', error);
+          this.router.navigate(['/404']);
+          this.spinnerService.hide();
+        }
+      );
+    } else if (this.isListRoute){
+      this.listService.getListDetails(id).subscribe(
+        (response) => {
+          this.assingListData(response);
+          console.log('estoooooo: ', response);
+          this.spinnerService.hide();
+        },
+        (error) => {
+          console.error('Error al obtener los detalles de la lista:', error);
           this.router.navigate(['/404']);
           this.spinnerService.hide();
         }
@@ -249,6 +277,7 @@ export class DatosSongAlbumComponent implements OnInit {
     this.albumCover = response.photo;
     this.title = response.name;
     this.artist = response.artist_name;
+    this.idArtist = response.id_artist;
     this.language = response.language;
     this.releaseDate = response.released;
     this.releaseYear = new Date(response.released).getFullYear();
@@ -262,6 +291,20 @@ export class DatosSongAlbumComponent implements OnInit {
       title: this.title,
       artist: this.artist,
       releaseYear: this.releaseYear,
+      albumCover: this.albumCover
+    });
+  }
+
+  assingListData(response: any): void {
+    this.id_user_creator = response.id_user_creator;
+    this.creator_username = response.creator_username;
+    this.creator_photo = response.creator_photo;
+    this.albumCover = response.list_photo;
+    this.title = response.list_name;
+    this.listComment = response.comment;
+
+    this.songService.updateData({
+      title: this.title,
       albumCover: this.albumCover
     });
   }

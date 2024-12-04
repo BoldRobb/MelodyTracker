@@ -12,3 +12,8 @@ class ListCreate(BaseModel):
 class SongToAdd(BaseModel):
     id_list: int
     id_song: int
+
+
+class LikeListRequest(BaseModel):
+    id_list: int
+    id_user: int
