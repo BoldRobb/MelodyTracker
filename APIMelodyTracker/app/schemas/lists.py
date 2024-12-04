@@ -17,3 +17,8 @@ class SongToAdd(BaseModel):
 class LikeListRequest(BaseModel):
     id_list: int
     id_user: int
+
+class RankedList(BaseModel):
+    id_user: int
+    id_list: int
+    score: float

@@ -15,7 +15,7 @@ from app.models.songs import Song
 from app.models.lists import Lists, LikedLists, SongsOnList, RankedLists, ReviewedLists
 
 from app.schemas.users import UserCreate, ProfileResponse, FollowUserRequest
-from app.schemas.lists import LikeListRequest, ListCreate, SongToAdd
+from app.schemas.lists import LikeListRequest, ListCreate, RankedList, SongToAdd
 
 router = APIRouter()
 
@@ -358,3 +358,77 @@ def unlike_list(request: LikeListRequest, db: Session = Depends(get_db)):
     
     return {"message": "List unliked successfully"}
 
+
+
+@router.get("/has_rank_list/{id_user}/{id_list}")
+def has_rank_list(id_user: int, id_list: int, db: Session = Depends(get_db)):
+    # Buscar el ranking
+    existing_rank = (
+        db.query(RankedLists)
+        .filter(RankedLists.id_user == id_user, RankedLists.id_list == id_list)
+        .first()
+    )
+
+    if existing_rank:
+        return {
+            "has_rank": True,
+            "score": existing_rank.score,
+            "date": existing_rank.date
+        }
+    else:
+        return {
+            "has_rank": False,
+            "score": None,
+            "date": None
+        }
+    
+
+
+
+@router.post("/rankList")
+def rank_list(rank_data: RankedList, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    user, role = current_user
+
+    # Verificar si la lista ya ha sido calificada por el usuario
+    existing_rank = db.query(RankedLists).filter(
+        RankedLists.id_user == rank_data.id_user,
+        RankedLists.id_list == rank_data.id_list
+    ).first()
+
+    if existing_rank:
+        # Si ya existe, actualizamos el puntaje y la fecha
+        existing_rank.score = rank_data.score
+        existing_rank.date = date.today()
+    else:
+        # Crear una nueva calificación para la lista
+        new_rank = RankedLists(
+            id_user=rank_data.id_user,
+            id_list=rank_data.id_list,
+            score=rank_data.score,
+            date=date.today()  # Insertar la fecha actual
+        )
+        db.add(new_rank)
+
+    # Guardamos los cambios (ya sea actualizando o creando)
+    db.commit()
+
+    return {"msg": "List ranked successfully", "rank_data": rank_data}
+
+
+@router.delete("/rank_list/{id_user}/{id_list}")
+def delete_ranked_list(id_user: int, id_list: int, db: Session = Depends(get_db)):
+    # Verificar si el ranking de la lista existe
+    ranked_list = (
+        db.query(RankedLists)
+        .filter(RankedLists.id_user == id_user, RankedLists.id_list == id_list)
+        .first()
+    )
+
+    if not ranked_list:
+        raise HTTPException(status_code=404, detail="Ranked list not found")
+
+    # Eliminar el ranking
+    db.delete(ranked_list)
+    db.commit()
+
+    return {"msg": "Ranked list deleted successfully", "id_user": id_user, "id_list": id_list}

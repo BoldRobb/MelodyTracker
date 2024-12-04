@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlbumService } from '../../services/album/backend/album-service.service';
 import { SongService } from '../../services/song/backend/song.service'; // Importar el servicio para canciones
+import { ListsService } from '../../services/lists/backend/lists.service'; // Importar el servicio para listas
 import { SpinnerService } from '../../services/others/spinner.service';
 import { CommonModule } from '@angular/common';
 import { finalize } from 'rxjs';
+import { response } from 'express';
 
 @Component({
   selector: 'app-your-rating',
@@ -19,26 +21,36 @@ export class YourRatingComponent implements OnInit {
   selectedRating = 0;
   id_entity!: number; // ID del álbum o canción
   id_user!: number; 
-  entityType!: 'album' | 'song'; // Tipo de entidad
+  entityType!: 'album' | 'song' | 'list'; 
+
 
   constructor(
     private route: ActivatedRoute,
     private albumService: AlbumService,
     private songService: SongService, // Cambiar UsersService por tu servicio correcto
-    private spinnerService: SpinnerService
+    private spinnerService: SpinnerService,
+    private listsService: ListsService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.id_entity = +params['id'];
       this.id_user = this.getUserIdFromLocalStorage();
-
-      // Determina si es álbum o canción desde la URL
-      this.entityType = this.route.snapshot.url[0].path === 'album' ? 'album' : 'song';
-
+  
+      // Determina el tipo de entidad desde la URL
+      const entityPath = this.route.snapshot.url[0]?.path;
+      if (entityPath === 'album') {
+        this.entityType = 'album';
+      } else if (entityPath === 'song') {
+        this.entityType = 'song';
+      } else if (entityPath === 'list') {
+        this.entityType = 'list';
+      }
+  
       this.checkIfRanked(); // Verificar si ya está calificado
     });
   }
+  
 
   private getUserIdFromLocalStorage(): number {
     const accessToken = localStorage.getItem('access_token');
@@ -60,10 +72,24 @@ export class YourRatingComponent implements OnInit {
           }
         );
       }
-
+      
   private checkIfRanked(): void {
     if (this.entityType === 'album') {
       this.setRank();
+    } else if(this.entityType === 'list'){
+      this.listsService.hasRankList(this.id_user, this.id_entity)
+      .subscribe(
+        (response) => {
+          if (response.has_rank) {
+            this.selectedRating = response.score || 0;
+            this.fillStars(this.selectedRating);
+          }
+        },
+        (error) => {
+          console.error(`Error verificando si la lista fue calificada`, error);
+        }
+      );
+
     } else {
       this.songService.hasRankSong(this.id_user, this.id_entity)
         .subscribe(
@@ -78,6 +104,20 @@ export class YourRatingComponent implements OnInit {
           }
         );
     }
+  }
+
+  private rankList(score: number): void {
+    this.listsService.rankList(this.id_user, this.id_entity, score)
+      .subscribe(
+        () => {
+          this.selectedRating = score;
+          console.log(`Calificación para la lista realizada con éxito`);
+          this.fillStars(score);
+        },
+        (error) => {
+          console.error(`Error calificando la lista`, error);
+        }
+      );
   }
 
   setRating(index: number, event: MouseEvent): void {
@@ -100,7 +140,6 @@ export class YourRatingComponent implements OnInit {
         .subscribe(
           () => {
             this.selectedRating = score;
-            this.checkIfRanked();
             this.albumService.updateComments();
             console.log(`Calificación para el álbum realizada con éxito`);
             this.fillStars(score);
@@ -109,7 +148,7 @@ export class YourRatingComponent implements OnInit {
             console.error(`Error calificando el álbum`, error);
           }
         );
-    } else {
+    } else if (this.entityType === 'song') {
       this.songService.rankSong(this.id_user, this.id_entity, score)
         .subscribe(
           () => {
@@ -122,9 +161,11 @@ export class YourRatingComponent implements OnInit {
             console.error(`Error calificando la canción`, error);
           }
         );
+    } else if (this.entityType === 'list') {
+      this.rankList(score);
     }
-    
   }
+  
 
   clearHover(): void {
     this.hoverIndex = 0; // Reinicia el índice de hover al salir del área
@@ -148,18 +189,28 @@ export class YourRatingComponent implements OnInit {
   }
 
   resetRating(): void {
-    const service = this.entityType === 'album' ? this.albumService.deleteRankedAlbum : this.songService.deleteRankedSong;
-    service.call(this.entityType === 'album' ? this.albumService : this.songService, this.id_user, this.id_entity)
-      .pipe(finalize(() => {
-        this.selectedRating = 0;
-        this.fillStars(0);
-      }))
-      .subscribe(
-        () => this.albumService.updateComments(), 
-        
-        (error) => console.error(`Error al eliminar la calificación de ${this.entityType}`, error)
-      );
+    const service = 
+      this.entityType === 'album' ? this.albumService.deleteRankedAlbum :
+      this.entityType === 'song' ? this.songService.deleteRankedSong :
+      this.listsService.deleteRankedList; // Manejar listas
+  
+    service.call(
+      this.entityType === 'album' ? this.albumService :
+      this.entityType === 'song' ? this.songService :
+      this.listsService,
+      this.id_user,
+      this.id_entity
+    )
+    .pipe(finalize(() => {
+      this.selectedRating = 0;
+      this.fillStars(0);
+    }))
+    .subscribe(
+      () => console.log(`Calificación eliminada para ${this.entityType}`),
+      (error) => console.error(`Error al eliminar la calificación de ${this.entityType}`, error)
+    );
   }
+  
 
   private fillStars(score: number): void {
     this.stars = Array(5).fill(0).map((_, index) => {

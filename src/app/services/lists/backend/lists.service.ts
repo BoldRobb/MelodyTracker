@@ -181,5 +181,68 @@ unlikeList(id_list: number, id_user: number): Observable<{ message: string }> {
 }
 
 
+ // Función para obtener el token desde localStorage
+ private getAuthToken(): string | null {
+  return localStorage.getItem('access_token'); // Obtener el token del localStorage
+}
+
+// Función para agregar el token en los encabezados
+private getAuthHeaders(): HttpHeaders {
+  const token = this.getAuthToken();
+  let headers = new HttpHeaders();
+
+  if (token) {
+    headers = headers.set('Authorization', `Bearer ${token}`);
+  }
+
+  return headers;
+}
+
+
+
+// Servicio para verificar si un usuario ha rankeado una lista
+hasRankList(id_user: number, id_list: number): Observable<{ has_rank: boolean, score: number | null, date: string | null }> {
+  this.spinnerService.show(); // Mostrar el spinner
+
+  return this.http
+    .get<{ has_rank: boolean, score: number | null, date: string | null }>(
+      `${this.apiUrl}/lists/has_rank_list/${id_user}/${id_list}`, // URL del endpoint
+      { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner cuando termine
+}
+
+
+rankList(id_user: number, id_list: number, score: number): Observable<{ msg: string, rank_data: any }> {
+  this.spinnerService.show(); // Mostrar el spinner
+
+  const rankData = {
+    id_user: id_user,
+    id_list: id_list,
+    score: score,
+  };
+
+  return this.http
+    .post<{ msg: string, rank_data: any }>(
+      `${this.apiUrl}/lists/rankList`, // Cambiar la ruta al endpoint de listas
+      rankData,
+      { headers: this.getAuthHeaders() } // Incluir las cabeceras de autorización
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+deleteRankedList(id_user: number, id_list: number): Observable<{ msg: string }> {
+  this.spinnerService.show(); // Mostrar el spinner
+
+  return this.http
+    .delete<{ msg: string }>(
+      `${this.apiUrl}/lists/rank_list/${id_user}/${id_list}`, // URL del endpoint
+      { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
 
 }
