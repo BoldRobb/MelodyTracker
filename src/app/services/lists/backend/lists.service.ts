@@ -19,6 +19,7 @@ export class ListsService {
   UpdateLists$ = this.UpdateLists.asObservable(); // Exponer el Observable para suscripción
 
 
+
   updateLists() {
     this.UpdateLists.next(); // Emitir la actualización de la lista de listas
   }
@@ -280,6 +281,34 @@ getListComments(id_list: number): Observable<any[]> {
     .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
 }
 
+
+// Servicio para obtener el total de Likes de una Lista
+getListLikeCount(id_list: number): Observable<{ id_list: number, likes_count: number }> {
+  this.spinnerService.show();
+  return this.http.get<{ id_list: number, likes_count: number }>(`${this.apiUrl}/lists/${id_list}/like_count`).pipe(
+    finalize(() => this.spinnerService.hide())
+  );
+}
+
+
+// Servicio para obtener el total de Reseñas de una Lista
+getListReviewCount(id_list: number): Observable<{ id_list: number, reviews_count: number }> {
+  this.spinnerService.show();
+  return this.http.get<{ id_list: number, reviews_count: number }>(`${this.apiUrl}/lists/${id_list}/review_count`).pipe(
+    finalize(() => this.spinnerService.hide())
+  );
+}
+
+
+// Método para obtener el conteo de canciones en una lista
+getListSongCount(id_list: number): Observable<{ id_list: number, songs_count: number }> {
+  this.spinnerService.show();  // Mostrar el spinner mientras se hace la solicitud
+  return this.http.get<{ id_list: number, songs_count: number }>(
+    `${this.apiUrl}/lists/${id_list}/songs_count`
+  ).pipe(
+    finalize(() => this.spinnerService.hide())  // Ocultar el spinner cuando la solicitud termine
+  );
+}
 
 
 

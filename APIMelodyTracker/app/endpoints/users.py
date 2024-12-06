@@ -14,9 +14,9 @@ from app.models.users import User, Profile, Followers
 
 from app.models.lists import Lists, RankedLists, ReviewedLists
 
-from app.models.songs import LikedSongs, ListenedSongs, RankedSongs, ReviewedSongs, Song, WatchlistSongs
+from app.models.songs import LikedSongs, ListenedSongs, RankedReviewedSong, RankedSongs, ReviewedSongs, Song, WatchlistSongs
 
-from app.models.albums import Album, LikedAlbums, ListenedAlbums, RankedAlbums, ReviewedAlbums, SongsOnAlbum, WatchlistAlbums
+from app.models.albums import Album, LikedAlbums, ListenedAlbums, RankedAlbums, RankedReviewedAlbum, ReviewedAlbums, SongsOnAlbum, WatchlistAlbums
 
 from app.models.artists import Artist
 
@@ -538,8 +538,21 @@ def get_top_users(db: Session = Depends(get_db)):
 
         total_lists_created = db.query(Lists).filter(Lists.id_user == user_id).count()
 
+        # Obtener los rankeds del usuario
+        total_ranked_songs = db.query(RankedSongs).filter(RankedSongs.id_user == user_id).count()
+        total_ranked_albums = db.query(RankedAlbums).filter(RankedAlbums.id_user == user_id).count()
+        total_ranked_lists = db.query(RankedLists).filter(RankedLists.id_user == user_id).count()
+
+        # Imprimir las cantidades de rankeds para depuración
+        print(f"User ID {user_id} - Rankeds Reviewed Songs: {total_ranked_songs}")
+        print(f"User ID {user_id} - Rankeds Reviewed Albums: {total_ranked_albums}")
+        print(f"User ID {user_id} - Rankeds Lists: {total_ranked_lists}")
+
+        # Sumar los rankeds
+        total_rankeds = total_ranked_songs + total_ranked_albums + total_ranked_lists
+
         # Crear la puntuación del usuario basado en sus stats
-        user_score = total_listened + total_reviews + total_liked + total_lists_created
+        user_score = total_listened + total_reviews + total_liked + total_lists_created + total_rankeds
 
         # Agregar la información del usuario a la lista
         users_stats.append({
@@ -550,6 +563,7 @@ def get_top_users(db: Session = Depends(get_db)):
             "total_reviews": total_reviews,
             "total_lists_created": total_lists_created,
             "total_liked": total_liked,
+            "total_rankeds": total_rankeds,  # Total de rankeds
             "user_score": user_score  # Puntuación total
         })
 

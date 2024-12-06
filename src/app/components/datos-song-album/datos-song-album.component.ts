@@ -34,10 +34,14 @@ export class DatosSongAlbumComponent implements OnInit {
   ratingCount: number = 0;
   reviewCount: number = 0;
 
+  totalSongs: number = 0;
+
   id_user_creator: number = 0;
   creator_username: string = '';
   creator_photo: string = '';
   listComment: string = '';
+
+  likesaux: number = 0;
 
 
 
@@ -69,6 +73,7 @@ export class DatosSongAlbumComponent implements OnInit {
     
 
     
+    
 
     this.isAlbumRoute = this.router.url.startsWith('/album');
     this.isAlbumHeardBy = this.router.url.startsWith('/albumHeardBy');
@@ -98,6 +103,12 @@ export class DatosSongAlbumComponent implements OnInit {
         this.getSongListenedCount(this.albumId);
         this.getSongListCount(this.albumId);
       }
+      if (this.albumId !== null && this.isListRoute) {
+        if (this.albumId !== null) {
+          this.getListLikeCount(this.albumId);
+          this.getListReviewCount(this.albumId);
+        }
+      }
     });
 
     this.spinnerService.show();
@@ -118,6 +129,8 @@ export class DatosSongAlbumComponent implements OnInit {
     } else if (this.isSongRoute) {
       this.rutaclick = 'song';
     }
+
+
 
   }
 
@@ -159,6 +172,9 @@ export class DatosSongAlbumComponent implements OnInit {
       this.listService.getListDetails(id).subscribe(
         (response) => {
           this.assingListData(response);
+          this.getListLikeCount(id);
+          this.getListReviewCount(id);
+          this.getListSongsOnListCount(id);
           console.log('estoooooo: ', response);
           this.spinnerService.hide();
         },
@@ -250,6 +266,42 @@ export class DatosSongAlbumComponent implements OnInit {
       }
     );
   }
+
+
+  getListLikeCount(id: number): void {
+    this.listService.getListLikeCount(id).subscribe(
+      (response) => {
+        this.likes = response.likes_count;
+      },
+      (error) => {
+        console.error('Error al obtener el conteo de likes de la lista:', error);
+      }
+    );
+  }
+
+  getListReviewCount(id: number): void {
+    this.listService.getListReviewCount(id).subscribe(
+      (response) => {
+        this.reviewCount = response.reviews_count;
+      },
+      (error) => {
+        console.error('Error al obtener el conteo de likes de la lista:', error);
+      }
+    );
+  }
+
+  getListSongsOnListCount(id: number): void {
+    this.listService.getListSongCount(id).subscribe(
+      (response) => {
+        this.totalSongs = response.songs_count;
+      },
+      (error) => {
+        console.error('Error al obtener el conteo de likes de la lista:', error);
+      }
+    );
+  }
+
+
 
   assignAlbumData(response: any): void {
     this.albumCover = response.photo;

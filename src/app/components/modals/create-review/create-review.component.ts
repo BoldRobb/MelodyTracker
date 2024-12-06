@@ -216,13 +216,10 @@ export class CreateReviewComponent implements OnInit {
             console.log('Reseña creada:', response);
   
             // Emite la señal de actualización de comentarios
-            if (this.isAlbum || this.isSong) {
+            if (this.isAlbum || this.isSong || this.isList) {
               this.albumService.updateComments();
               this.albumService.updateStats();
-            } else if (this.isList) {
-              // Aquí puedes hacer lo que necesites cuando la reseña sea de una lista
-              this.albumService.updateComments();  // O una función para actualizar los comentarios de listas
-            }
+            } 
   
             this.closeModal(); // Cerrar el modal después de crear la reseña
           },

@@ -491,10 +491,18 @@ def review_list(
     return {"msg": "Review created successfully", "review": new_review}
 
 
+
+
 @router.get("/{id_list}/comments_list")
 def get_list_comments(id_list: int, db: Session = Depends(get_db)):
+    # Crear un subquery para limitar duplicados en RankedLists
+    ranked_subquery = db.query(
+        RankedLists.id_user,
+        RankedLists.id_list,
+        RankedLists.score
+    ).distinct().subquery()
 
-    # Consulta los comentarios de la lista junto con la información del usuario y las calificaciones
+    # Consulta principal con outerjoins
     comments = db.query(
         ReviewedLists.id_reviewed_lists,
         ReviewedLists.id_user,
@@ -502,23 +510,28 @@ def get_list_comments(id_list: int, db: Session = Depends(get_db)):
         ReviewedLists.date,
         User.username,
         Profile.photo,
-        RankedLists.score
+        ranked_subquery.c.score  # Usar el subquery para evitar duplicados
     ).join(
         User, ReviewedLists.id_user == User.id_user
     ).outerjoin(
-        Profile, User.id_user == Profile.id_user  # Cambiar a outerjoin para obtener foto de perfil si existe
+        Profile, User.id_user == Profile.id_user  # Perfil opcional
     ).outerjoin(
-        RankedLists, (ReviewedLists.id_user == RankedLists.id_user) & (ReviewedLists.id_list == RankedLists.id_list)
-    ).filter(ReviewedLists.id_list == id_list).order_by(desc(ReviewedLists.date)).all()
+        ranked_subquery, 
+        (ReviewedLists.id_user == ranked_subquery.c.id_user) & 
+        (ReviewedLists.id_list == ranked_subquery.c.id_list)
+    ).filter(
+        ReviewedLists.id_list == id_list
+    ).order_by(
+        desc(ReviewedLists.date)
+    ).all()
 
-    # Verifica si existen comentarios
+    # Verifica si hay resultados
     if not comments:
         raise HTTPException(status_code=404, detail="No comments found for this list")
 
-    # Formatea los resultados
-    result = []
-    for comment_id, user_id, comment_text, date, username, photo, score in comments:
-        result.append({
+    # Formatear los resultados en una lista de diccionarios
+    result = [
+        {
             "id_list": id_list,
             "id_reviewed_lists": comment_id,
             "id_user": user_id,
@@ -526,7 +539,39 @@ def get_list_comments(id_list: int, db: Session = Depends(get_db)):
             "date": date,
             "username": username,
             "photo": photo,
-            "score": score if score is not None else 0  # Si no hay calificación, se asigna 0
-        })
+            "score": score if score is not None else 0  # Si no hay score, poner 0
+        }
+        for comment_id, user_id, comment_text, date, username, photo, score in comments
+    ]
 
     return result
+
+
+# Obtener el conteo de likes de una lista específica
+@router.get("/{id_list}/like_count")
+def get_list_like_count(id_list: int, db: Session = Depends(get_db)):
+    """
+    Endpoint para obtener el conteo de likes de una lista específica.
+    """
+    # Contar el número de likes para la lista específica
+    likes_count = db.query(func.count(LikedLists.id_list)).filter(LikedLists.id_list == id_list).scalar()
+
+    return {"id_list": id_list, "likes_count": likes_count}
+
+
+
+
+# Obtener el conteo de reseñas de una lista específica
+@router.get("/{id_list}/review_count")
+def get_review_count(id_list: int, db: Session = Depends(get_db)):
+    # Consultar la cantidad de reseñas para la lista específica
+    reviews_count = db.query(ReviewedLists).filter(ReviewedLists.id_list == id_list).count()
+
+    return {"id_list": id_list, "reviews_count": reviews_count}
+
+
+@router.get("/{id_list}/songs_count")
+def get_songs_count(id_list: int, db: Session = Depends(get_db)):
+    # Consultar el total de canciones en la lista específica
+    songs_count = db.query(SongsOnList).filter(SongsOnList.id_list == id_list).count()
+    return {"id_list": id_list, "songs_count": songs_count}
