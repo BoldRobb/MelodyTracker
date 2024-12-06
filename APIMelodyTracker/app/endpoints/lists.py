@@ -3,7 +3,8 @@ from app.jwt.auth import get_current_user
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, desc
+
 from app.database.database import get_db
 from typing import List
 from datetime import date
@@ -488,3 +489,44 @@ def review_list(
     db.refresh(new_review)
 
     return {"msg": "Review created successfully", "review": new_review}
+
+
+@router.get("/{id_list}/comments_list")
+def get_list_comments(id_list: int, db: Session = Depends(get_db)):
+
+    # Consulta los comentarios de la lista junto con la información del usuario y las calificaciones
+    comments = db.query(
+        ReviewedLists.id_reviewed_lists,
+        ReviewedLists.id_user,
+        ReviewedLists.comment,
+        ReviewedLists.date,
+        User.username,
+        Profile.photo,
+        RankedLists.score
+    ).join(
+        User, ReviewedLists.id_user == User.id_user
+    ).outerjoin(
+        Profile, User.id_user == Profile.id_user  # Cambiar a outerjoin para obtener foto de perfil si existe
+    ).outerjoin(
+        RankedLists, (ReviewedLists.id_user == RankedLists.id_user) & (ReviewedLists.id_list == RankedLists.id_list)
+    ).filter(ReviewedLists.id_list == id_list).order_by(desc(ReviewedLists.date)).all()
+
+    # Verifica si existen comentarios
+    if not comments:
+        raise HTTPException(status_code=404, detail="No comments found for this list")
+
+    # Formatea los resultados
+    result = []
+    for comment_id, user_id, comment_text, date, username, photo, score in comments:
+        result.append({
+            "id_list": id_list,
+            "id_reviewed_lists": comment_id,
+            "id_user": user_id,
+            "comment": comment_text,
+            "date": date,
+            "username": username,
+            "photo": photo,
+            "score": score if score is not None else 0  # Si no hay calificación, se asigna 0
+        })
+
+    return result

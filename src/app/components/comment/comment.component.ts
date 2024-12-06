@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'; // Para obtener el id y el tipo desde la URL
 import { SongService } from '../../services/song/backend/song.service'; // Servicio para las canciones
 import { AlbumService } from '../../services/album/backend/album-service.service'; // Servicio para los álbumes
+import { ListsService } from '../../services/lists/backend/lists.service';
 import { SpinnerService } from '../../services/others/spinner.service'; // Servicio para el spinner
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'; // Para la navegación
@@ -24,7 +25,8 @@ export class CommentComponent implements OnInit {
     private albumService: AlbumService, 
     private spinnerService: SpinnerService,
     private router: Router,
-    private route: ActivatedRoute // Para obtener parámetros de la URL
+    private route: ActivatedRoute, // Para obtener parámetros de la URL
+    private listsService: ListsService // Inyectar el servicio
   ) {}
 
   
@@ -32,6 +34,8 @@ export class CommentComponent implements OnInit {
   isLoading = true;
   userId: number | undefined; // Variable para almacenar el id_user
   isAlbum: boolean = false; // Determina si es álbum o canción
+  isSong: boolean = false; // Determina si es una canción
+  isList: boolean = false; // Determina si es una lista
 
   
 
@@ -41,14 +45,16 @@ export class CommentComponent implements OnInit {
       this.loadComments();  // Recargar los comentarios
     });
   
-    this.checkIfAlbum();
+    this.checkIfAlbumSongList();
     this.loadComments();  // Cargar los comentarios inicialmente
   }
 
   // Método para verificar si es un álbum o una canción
-  checkIfAlbum() {
+  checkIfAlbumSongList() {
     const url = window.location.pathname;
     this.isAlbum = url.includes('/album/');
+    this.isSong = url.includes('/song/');
+    this.isList = url.includes('/list/');
   }
 
   // Método para cargar los comentarios
@@ -60,8 +66,13 @@ export class CommentComponent implements OnInit {
         (comments) => this.handleComments(comments),
         (error) => this.handleError(error)
       );
-    } else {
+    } else if (this.isSong) {
       this.songService.getComments(id).subscribe(
+        (comments) => this.handleComments(comments),
+        (error) => this.handleError(error)
+      );
+    } else if (this.isList) {
+      this.listsService.getListComments(id).subscribe(
         (comments) => this.handleComments(comments),
         (error) => this.handleError(error)
       );

@@ -58,12 +58,8 @@ class RankedLists(Base):
 class ReviewedLists(Base):
     __tablename__ = "reviewed_lists"
 
+    id_reviewed_lists = Column(BigInteger, primary_key=True, nullable=False, index=True)
     id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
     id_list = Column(BigInteger, ForeignKey('list.id_list'), nullable=False)
     comment = Column(Text, nullable=False)
     date = Column(Date, nullable=False)
-
-    # Definimos la clave primaria compuesta
-    __table_args__ = (
-        PrimaryKeyConstraint('id_user', 'id_list'),  # Clave primaria compuesta
-    )

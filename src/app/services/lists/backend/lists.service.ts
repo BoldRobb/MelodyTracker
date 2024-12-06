@@ -268,4 +268,19 @@ reviewList(id_user: number, id_list: number, comment: string): Observable<{ msg:
 }
 
 
+
+// Servicio para obtener los comentarios de una lista
+getListComments(id_list: number): Observable<any[]> {
+  this.spinnerService.show(); // Mostrar el spinner
+
+  return this.http
+    .get<any[]>(`${this.apiUrl}/lists/${id_list}/comments_list`, {
+      headers: this.getAuthHeaders() // Incluir el token en las cabeceras si es necesario
+    })
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+
+
 }
