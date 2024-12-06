@@ -128,6 +128,8 @@ export class DatosSongAlbumComponent implements OnInit {
       this.rutaclick = 'album';
     } else if (this.isSongRoute) {
       this.rutaclick = 'song';
+    } else if (this.isListRoute) {
+      this.rutaclick = 'list';
     }
 
 

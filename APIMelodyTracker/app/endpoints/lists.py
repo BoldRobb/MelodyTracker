@@ -570,8 +570,24 @@ def get_review_count(id_list: int, db: Session = Depends(get_db)):
     return {"id_list": id_list, "reviews_count": reviews_count}
 
 
+# Consultar el total de canciones en la lista específica
 @router.get("/{id_list}/songs_count")
 def get_songs_count(id_list: int, db: Session = Depends(get_db)):
     # Consultar el total de canciones en la lista específica
     songs_count = db.query(SongsOnList).filter(SongsOnList.id_list == id_list).count()
     return {"id_list": id_list, "songs_count": songs_count}
+
+
+# Que usuarios le han dado Like a una Lista
+@router.get("/{id_list}/users_liked", response_model=List[int])
+def get_users_liked(id_list: int, db: Session = Depends(get_db)):
+    # Verifica si la lista tiene usuarios que le han dado "like"
+    users_liked = db.query(LikedLists.id_user).filter(LikedLists.id_list == id_list).all()
+
+    if not users_liked:
+        raise HTTPException(status_code=404, detail="No se encontraron usuarios que hayan dado like a esta lista.")
+
+    # Convierte la salida en una lista de IDs
+    user_ids = [user.id_user for user in users_liked]
+
+    return user_ids

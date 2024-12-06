@@ -52,6 +52,7 @@ import { AlbumLikedByComponent } from './pages/album-liked-by/album-liked-by.com
 import { ArtistComponent } from './pages/artist/artist.component';
 import { ComentsOnReviewComponent } from './pages/coments-on-review/coments-on-review.component';
 import { ListComponent } from './pages/list/list.component';
+import { ListLikedByComponent } from './pages/list-liked-by/list-liked-by.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -82,6 +83,8 @@ export const routes: Routes = [
 
     { path: 'albumHeardBy/:id', component: AlbumHeardByComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'albumLikedBy/:id', component: AlbumLikedByComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
+
+    { path: 'listLikedBy/:id', component: ListLikedByComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
 
 
     /* COMPONENTES */

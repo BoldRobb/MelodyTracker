@@ -311,5 +311,12 @@ getListSongCount(id_list: number): Observable<{ id_list: number, songs_count: nu
 }
 
 
+// Método para obtener los usuarios que han dado like a una lista
+getUsersLiked(id_list: number): Observable<number[]> {
+  this.spinnerService.show(); // Muestra el spinner mientras se realiza la solicitud
+  return this.http.get<number[]>(`${this.apiUrl}/lists/${id_list}/users_liked`).pipe(
+    finalize(() => this.spinnerService.hide()) // Oculta el spinner cuando se termina la solicitud
+  );
+}
 
 }
