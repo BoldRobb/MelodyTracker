@@ -22,3 +22,8 @@ class RankedList(BaseModel):
     id_user: int
     id_list: int
     score: float
+
+class ReviewListSchema(BaseModel):
+    id_user: int
+    id_list: int
+    comment: Optional[str] = None

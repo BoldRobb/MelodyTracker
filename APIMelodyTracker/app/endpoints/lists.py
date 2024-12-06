@@ -15,7 +15,7 @@ from app.models.songs import Song
 from app.models.lists import Lists, LikedLists, SongsOnList, RankedLists, ReviewedLists
 
 from app.schemas.users import UserCreate, ProfileResponse, FollowUserRequest
-from app.schemas.lists import LikeListRequest, ListCreate, RankedList, SongToAdd
+from app.schemas.lists import LikeListRequest, ListCreate, RankedList, ReviewListSchema, SongToAdd
 
 router = APIRouter()
 
@@ -306,8 +306,6 @@ def has_liked_list(id_list: int, id_user: int, db: Session = Depends(get_db)):
 
 
 
-
-
 @router.post("/like_list")
 def like_list(request: LikeListRequest, db: Session = Depends(get_db)):
     # Verifica si la lista y el usuario existen
@@ -435,34 +433,58 @@ def delete_ranked_list(id_user: int, id_list: int, db: Session = Depends(get_db)
 
 
 
-@router.get("/songsOnList/{id_list}")
+@router.get("/{id_list}/songs", response_model=list[dict])
 def get_songs_by_list(id_list: int, db: Session = Depends(get_db)):
-    # Consultar la lista con el id proporcionado
-    list_obj = db.query(List).filter(List.id_list == id_list).first()
-    
+    # Verifica si la lista existe
+    list_obj = db.query(Lists).filter(Lists.id_list == id_list).first()
     if not list_obj:
         raise HTTPException(status_code=404, detail="List not found")
-    
-    # Obtener las canciones que pertenecen a esta lista
-    songs_on_list = (
-        db.query(SongsOnList)
-        .join(Song, SongsOnList.id_song == Song.id_song)
+
+    # Consulta para obtener las canciones asociadas a la lista
+    songs = (
+        db.query(Song.id_song, Song.name, Song.photo, SongsOnList.id_list)
+        .join(SongsOnList, SongsOnList.id_song == Song.id_song)
         .filter(SongsOnList.id_list == id_list)
         .all()
     )
 
-    if not songs_on_list:
-        raise HTTPException(status_code=404, detail="No songs found for this list")
-
-    # Construir la respuesta con id_list, id_song, nombre y foto de la canción
+    # Formatea los resultados en la estructura solicitada
     result = [
         {
-            "id_list": song_on_list.id_list,
-            "id_song": song_on_list.id_song,
-            "name": song_on_list.song.name,
-            "photo": song_on_list.song.photo
+            "id_list": song.id_list,
+            "id_song": song.id_song,
+            "name": song.name,
+            "photo": song.photo,
         }
-        for song_on_list in songs_on_list
+        for song in songs
     ]
-    
+
     return result
+
+
+
+@router.post("/review_list")
+def review_list(
+    review_data: ReviewListSchema, 
+    db: Session = Depends(get_db), 
+    current_user: dict = Depends(get_current_user)
+):
+    user, role = current_user
+
+    # Verificar si la lista existe
+    existing_list = db.query(Lists).filter(Lists.id_list == review_data.id_list).first()
+    if not existing_list:
+        raise HTTPException(status_code=404, detail="List not found")
+
+    # Crear una nueva reseña en reviewed_lists
+    new_review = ReviewedLists(
+        id_user=review_data.id_user,
+        id_list=review_data.id_list,
+        comment=review_data.comment,
+        date=date.today()
+    )
+    db.add(new_review)
+    db.commit()
+    db.refresh(new_review)
+
+    return {"msg": "Review created successfully", "review": new_review}

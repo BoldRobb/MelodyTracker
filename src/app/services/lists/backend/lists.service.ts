@@ -244,5 +244,28 @@ deleteRankedList(id_user: number, id_list: number): Observable<{ msg: string }> 
 }
 
 
+ // Servicio para obtener las canciones de una lista
+ getSongsByList(id_list: number): Observable<{ id_list: number; id_song: number; name: string; photo: string }[]> {
+  return this.http.get<{ id_list: number; id_song: number; name: string; photo: string }[]>(
+    `${this.apiUrl}/lists/${id_list}/songs`
+  );
+}
+
+
+// Servicio para reseñar listas
+reviewList(id_user: number, id_list: number, comment: string): Observable<{ msg: string, review: any }> {
+  this.spinnerService.show(); // Mostrar el spinner
+
+  const reviewData = { id_user, id_list, comment };
+
+  return this.http
+    .post<{ msg: string, review: any }>(
+      `${this.apiUrl}/lists/review_list`, 
+      reviewData, 
+      { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
 
 }
