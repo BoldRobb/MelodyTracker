@@ -1,107 +1,31 @@
 <div class="contenedor_popular_lists">
     <p class="contenedor_titulo">Most Popular Lists</p>
     <div class="fourth_lists">
-        <div class="popular_list">
-            <img class="imagen_popular_list" src="images/BeautyBehindtheMadness.jpg" alt="">
-            <img class="imagen_popular_list" src="images/purpose.jpg" alt="">
-            <img class="imagen_popular_list" src="images/changes.jpg" alt="">
-            <img class="imagen_popular_list" src="images/starboy.jpg" alt="">
-
-            <div class="contenido_popular_list">
-                <div class="nombre_lista">
-                    <p>Canciones pa barrer</p>
-                </div>
-                <div class="stats_lista">
-                    <div class="stat">
-                        <p class="cantidad">25 songs</p>
-                    </div>
-                    <div class="stat">
-                        <img class="imagen_stat" src="images/heart.png" alt="imagenCorazon">
-                        <p class="cantidad">32.1k</p>
-                    </div>
-                    <div class="stat">
-                        <img class="imagen_stat" src="images/comment.png" alt="imagenCorazon">
-                        <p class="cantidad">231</p>
-                    </div>
-                </div>
+      <div *ngFor="let list of topLists" class="popular_list">
+  
+        <!-- Imágenes de las canciones -->
+        <img *ngFor="let song of list.last_4_songs_photos; let i = index" class="imagen_popular_list" [src]="song" alt="Song Image {{i + 1}}">
+  
+        <div class="contenido_popular_list">
+          <div class="nombre_lista">
+            <p>{{ list.name }} </p>
+            
+          </div>
+          <div class="stats_lista">
+            <div class="stat">
+              <p class="cantidad">{{ list.song_count }} songs</p>
             </div>
-
-        </div>
-        <div class="popular_list">
-            <img class="imagen_popular_list" src="images/BeautyBehindtheMadness.jpg" alt="">
-            <img class="imagen_popular_list" src="images/purpose.jpg" alt="">
-            <img class="imagen_popular_list" src="images/changes.jpg" alt="">
-            <img class="imagen_popular_list" src="images/starboy.jpg" alt="">
-
-            <div class="contenido_popular_list">
-                <div class="nombre_lista">
-                    <p>Canciones pa barrer</p>
-                </div>
-                <div class="stats_lista">
-                    <div class="stat">
-                        <p class="cantidad">25 songs</p>
-                    </div>
-                    <div class="stat">
-                        <img class="imagen_stat" src="images/heart.png" alt="imagenCorazon">
-                        <p class="cantidad">32.1k</p>
-                    </div>
-                    <div class="stat">
-                        <img class="imagen_stat" src="images/comment.png" alt="imagenCorazon">
-                        <p class="cantidad">231</p>
-                    </div>
-                </div>
+            <div class="stat">
+              <img class="imagen_stat" src="images/heart.png" alt="imagenCorazon">
+              <p class="cantidad">{{ list.like_count }}</p>
             </div>
-        </div>
-        <div class="popular_list">
-            <img class="imagen_popular_list" src="images/BeautyBehindtheMadness.jpg" alt="">
-            <img class="imagen_popular_list" src="images/purpose.jpg" alt="">
-            <img class="imagen_popular_list" src="images/changes.jpg" alt="">
-            <img class="imagen_popular_list" src="images/starboy.jpg" alt="">
-
-            <div class="contenido_popular_list">
-                <div class="nombre_lista">
-                    <p>Canciones pa barrer</p>
-                </div>
-                <div class="stats_lista">
-                    <div class="stat">
-                        <p class="cantidad">25 songs</p>
-                    </div>
-                    <div class="stat">
-                        <img class="imagen_stat" src="images/heart.png" alt="imagenCorazon">
-                        <p class="cantidad">32.1k</p>
-                    </div>
-                    <div class="stat">
-                        <img class="imagen_stat" src="images/comment.png" alt="imagenCorazon">
-                        <p class="cantidad">231</p>
-                    </div>
-                </div>
+            <div class="stat">
+              <img class="imagen_stat" src="images/comment.png" alt="imagenComentario">
+              <p class="cantidad">{{ list.review_count | number }}</p>
             </div>
+          </div>
         </div>
-        <div class="popular_list">
-            <img class="imagen_popular_list" src="images/BeautyBehindtheMadness.jpg" alt="">
-            <img class="imagen_popular_list" src="images/purpose.jpg" alt="">
-            <img class="imagen_popular_list" src="images/changes.jpg" alt="">
-            <img class="imagen_popular_list" src="images/starboy.jpg" alt="">
-
-            <div class="contenido_popular_list">
-                <div class="nombre_lista">
-                    <p>Canciones pa barrer</p>
-                </div>
-                <div class="stats_lista">
-                    <div class="stat">
-                        <p class="cantidad">25 songs</p>
-                    </div>
-                    <div class="stat">
-                        <img class="imagen_stat" src="images/heart.png" alt="imagenCorazon">
-                        <p class="cantidad">32.1k</p>
-                    </div>
-                    <div class="stat">
-                        <img class="imagen_stat" src="images/comment.png" alt="imagenCorazon">
-                        <p class="cantidad">231</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-    
-</div>
+  </div>
+  

@@ -12,7 +12,7 @@ from app.database.database import get_db
 
 from app.models.users import User, Profile, Followers
 
-from app.models.lists import Lists, RankedLists, ReviewedLists
+from app.models.lists import LikedLists, Lists, RankedLists, ReviewedLists, SongsOnList
 
 from app.models.songs import LikedSongs, ListenedSongs, RankedReviewedSong, RankedSongs, ReviewedSongs, Song, WatchlistSongs
 
@@ -20,7 +20,7 @@ from app.models.albums import Album, LikedAlbums, ListenedAlbums, RankedAlbums, 
 
 from app.models.artists import Artist
 
-from app.schemas.users import BioUpdateRequest, UserCreate, UserIdsRequest, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse, UsernameUpdateRequest 
+from app.schemas.users import BioUpdateRequest, ListDetailsResponse, UserCreate, UserIdsRequest, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse, UsernameUpdateRequest 
 
 from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_current_user  # Asegúrate de importar hash_password
 
@@ -184,7 +184,79 @@ def get_followers(id_user: int, db: Session = Depends(get_db)):
     return followers_ids
 
 
-# Crear un modelo para aceptar un array de IDs en el cuerpo de la solicitud
+
+
+@router.get("/top_users", response_model=List[dict])
+def get_top_users(db: Session = Depends(get_db)):
+    users_stats = []
+
+    # Obtener todos los usuarios
+    users = db.query(User).all()
+
+    if not users:
+        raise HTTPException(status_code=404, detail="No users found.")
+
+    # Obtener detalles de cada usuario
+    for user in users:
+        user_id = user.id_user
+        
+        # Obtener el perfil del usuario
+        profile = db.query(Profile).filter(Profile.id_user == user_id).first()
+
+        # Obtener los stats del usuario
+        total_listened_songs = db.query(ListenedSongs).filter(ListenedSongs.id_user == user_id).count()
+        total_listened_albums = db.query(ListenedAlbums).filter(ListenedAlbums.id_user == user_id).count()
+        total_listened = total_listened_songs + total_listened_albums
+
+        total_reviews_songs = db.query(ReviewedSongs).filter(ReviewedSongs.id_user == user_id).count()
+        total_reviews_albums = db.query(ReviewedAlbums).filter(ReviewedAlbums.id_user == user_id).count()
+        total_reviews_lists = db.query(ReviewedLists).filter(ReviewedLists.id_user == user_id).count()
+
+        total_reviews = total_reviews_songs + total_reviews_albums + total_reviews_lists
+
+        total_liked_songs = db.query(LikedSongs).filter(LikedSongs.id_user == user_id).count()
+        total_liked_albums = db.query(LikedAlbums).filter(LikedAlbums.id_user == user_id).count()
+        total_liked_lists = db.query(LikedLists).filter(LikedLists.id_user == user_id).count()
+        total_liked = total_liked_songs + total_liked_albums + total_liked_lists
+
+        total_lists_created = db.query(Lists).filter(Lists.id_user == user_id).count()
+
+        # Obtener los rankeds del usuario
+        total_ranked_songs = db.query(RankedSongs).filter(RankedSongs.id_user == user_id).count()
+        total_ranked_albums = db.query(RankedAlbums).filter(RankedAlbums.id_user == user_id).count()
+        total_ranked_lists = db.query(RankedLists).filter(RankedLists.id_user == user_id).count()
+
+        # Imprimir las cantidades de rankeds para depuración
+        print(f"User ID {user_id} - Rankeds Reviewed Songs: {total_ranked_songs}")
+        print(f"User ID {user_id} - Rankeds Reviewed Albums: {total_ranked_albums}")
+        print(f"User ID {user_id} - Rankeds Lists: {total_ranked_lists}")
+
+        # Sumar los rankeds
+        total_rankeds = total_ranked_songs + total_ranked_albums + total_ranked_lists
+
+        # Crear la puntuación del usuario basado en sus stats
+        user_score = total_listened + total_reviews + total_liked + total_lists_created + total_rankeds
+
+        # Agregar la información del usuario a la lista
+        users_stats.append({
+            "id_user": user.id_user,  # Se agrega el id_user
+            "username": user.username,
+            "photo": profile.photo if profile else None,  # Si no tiene perfil, se asigna None
+            "total_listened": total_listened,
+            "total_reviews": total_reviews,
+            "total_lists_created": total_lists_created,
+            "total_liked": total_liked,
+            "total_rankeds": total_rankeds,  # Total de rankeds
+            "user_score": user_score  # Puntuación total
+        })
+
+    # Ordenar los usuarios por la puntuación total (de mayor a menor)
+    users_stats = sorted(users_stats, key=lambda x: x["user_score"], reverse=True)
+
+    # Devolver los primeros 50 usuarios (o menos si no hay suficientes)
+    return users_stats[:50]
+
+
 
 
 
@@ -210,12 +282,15 @@ def get_users_details(request: UserIdsRequest, db: Session = Depends(get_db)):
         # Obtener la cantidad total de reseñas de canciones y álbumes
         total_reviews_songs = db.query(ReviewedSongs).filter(ReviewedSongs.id_user == user_id).count()
         total_reviews_albums = db.query(ReviewedAlbums).filter(ReviewedAlbums.id_user == user_id).count()
-        total_reviews = total_reviews_songs + total_reviews_albums
+        total_reviews_lists = db.query(ReviewedLists).filter(ReviewedLists.id_user == user_id).count()
+
+        total_reviews = total_reviews_songs + total_reviews_albums + total_reviews_lists
 
         # Obtener la cantidad total de canciones y álbumes marcados como "Me gusta"
         total_liked_songs = db.query(LikedSongs).filter(LikedSongs.id_user == user_id).count()
         total_liked_albums = db.query(LikedAlbums).filter(LikedAlbums.id_user == user_id).count()
-        total_liked = total_liked_songs + total_liked_albums
+        total_liked_lists = db.query(LikedLists).filter(LikedLists.id_user == user_id).count()
+        total_liked = total_liked_songs + total_liked_albums + total_liked_lists
 
         # Obtener la cantidad de listas creadas por el usuario
         total_lists_created = db.query(Lists).filter(Lists.id_user == user_id).count()
@@ -233,6 +308,42 @@ def get_users_details(request: UserIdsRequest, db: Session = Depends(get_db)):
         users_details.append(user_info)
 
     return users_details
+
+
+@router.get("/total_listened_rankeds_reviews/{user_id}", response_model=dict)
+def get_user_totals(user_id: int, db: Session = Depends(get_db)):
+    # Obtener el usuario
+    user = db.query(User).filter(User.id_user == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found.")
+    
+    # Obtener el total de canciones y álbumes escuchados
+    total_listened_songs = db.query(ListenedSongs).filter(ListenedSongs.id_user == user_id).count()
+    total_listened_albums = db.query(ListenedAlbums).filter(ListenedAlbums.id_user == user_id).count()
+    total_listened = total_listened_songs + total_listened_albums
+
+    # Obtener el total de reseñas de canciones, álbumes y listas
+    total_reviews_songs = db.query(ReviewedSongs).filter(ReviewedSongs.id_user == user_id).count()
+    total_reviews_albums = db.query(ReviewedAlbums).filter(ReviewedAlbums.id_user == user_id).count()
+    total_reviews_lists = db.query(ReviewedLists).filter(ReviewedLists.id_user == user_id).count()
+    total_reviews = total_reviews_songs + total_reviews_albums + total_reviews_lists
+
+    # Obtener el total de rankeds de canciones, álbumes y listas
+    total_ranked_reviewed_songs = db.query(RankedSongs).filter(RankedSongs.id_user == user_id).count()
+    total_ranked_reviewed_albums = db.query(RankedAlbums).filter(RankedAlbums.id_user == user_id).count()
+    total_ranked_lists = db.query(RankedLists).filter(RankedLists.id_user == user_id).count()
+
+    total_ranked = total_ranked_reviewed_songs + total_ranked_reviewed_albums + total_ranked_lists
+
+    # Crear el diccionario con los totales
+    user_totals = {
+        "id_user": user.id_user,
+        "total_listened": total_listened,
+        "total_reviews": total_reviews,
+        "total_ranked": total_ranked
+    }
+
+    return user_totals
 
 
 
@@ -505,73 +616,6 @@ async def get_user_details(id_user: int, db: Session = Depends(get_db)):
 
 
 
-
-@router.get("/top_users", response_model=List[dict])
-def get_top_users(db: Session = Depends(get_db)):
-    users_stats = []
-
-    # Obtener todos los usuarios
-    users = db.query(User).all()
-
-    if not users:
-        raise HTTPException(status_code=404, detail="No users found.")
-
-    # Obtener detalles de cada usuario
-    for user in users:
-        user_id = user.id_user
-        
-        # Obtener el perfil del usuario
-        profile = db.query(Profile).filter(Profile.id_user == user_id).first()
-
-        # Obtener los stats del usuario
-        total_listened_songs = db.query(ListenedSongs).filter(ListenedSongs.id_user == user_id).count()
-        total_listened_albums = db.query(ListenedAlbums).filter(ListenedAlbums.id_user == user_id).count()
-        total_listened = total_listened_songs + total_listened_albums
-
-        total_reviews_songs = db.query(ReviewedSongs).filter(ReviewedSongs.id_user == user_id).count()
-        total_reviews_albums = db.query(ReviewedAlbums).filter(ReviewedAlbums.id_user == user_id).count()
-        total_reviews = total_reviews_songs + total_reviews_albums
-
-        total_liked_songs = db.query(LikedSongs).filter(LikedSongs.id_user == user_id).count()
-        total_liked_albums = db.query(LikedAlbums).filter(LikedAlbums.id_user == user_id).count()
-        total_liked = total_liked_songs + total_liked_albums
-
-        total_lists_created = db.query(Lists).filter(Lists.id_user == user_id).count()
-
-        # Obtener los rankeds del usuario
-        total_ranked_songs = db.query(RankedSongs).filter(RankedSongs.id_user == user_id).count()
-        total_ranked_albums = db.query(RankedAlbums).filter(RankedAlbums.id_user == user_id).count()
-        total_ranked_lists = db.query(RankedLists).filter(RankedLists.id_user == user_id).count()
-
-        # Imprimir las cantidades de rankeds para depuración
-        print(f"User ID {user_id} - Rankeds Reviewed Songs: {total_ranked_songs}")
-        print(f"User ID {user_id} - Rankeds Reviewed Albums: {total_ranked_albums}")
-        print(f"User ID {user_id} - Rankeds Lists: {total_ranked_lists}")
-
-        # Sumar los rankeds
-        total_rankeds = total_ranked_songs + total_ranked_albums + total_ranked_lists
-
-        # Crear la puntuación del usuario basado en sus stats
-        user_score = total_listened + total_reviews + total_liked + total_lists_created + total_rankeds
-
-        # Agregar la información del usuario a la lista
-        users_stats.append({
-            "id_user": user.id_user,  # Se agrega el id_user
-            "username": user.username,
-            "photo": profile.photo if profile else None,  # Si no tiene perfil, se asigna None
-            "total_listened": total_listened,
-            "total_reviews": total_reviews,
-            "total_lists_created": total_lists_created,
-            "total_liked": total_liked,
-            "total_rankeds": total_rankeds,  # Total de rankeds
-            "user_score": user_score  # Puntuación total
-        })
-
-    # Ordenar los usuarios por la puntuación total (de mayor a menor)
-    users_stats = sorted(users_stats, key=lambda x: x["user_score"], reverse=True)
-
-    # Devolver los primeros 50 usuarios (o menos si no hay suficientes)
-    return users_stats[:50]
 
 
 
@@ -971,5 +1015,87 @@ async def get_ranked_lists(id_user: int, db: Session = Depends(get_db)):
             raise HTTPException(status_code=404, detail="No ranked lists found for the user")
 
         return {"ranked_lists": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
+# Endpoint para obtener following / followers de un usuario
+@router.get("/user_follow_stats/{user_id}", response_model=dict)
+def get_user_follow_stats(user_id: int, db: Session = Depends(get_db)):
+    # Obtener el usuario
+    user = db.query(User).filter(User.id_user == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found.")
+    
+    # Obtener el total de seguidores (followers)
+    total_followers = db.query(Followers).filter(Followers.id_user == user_id).count()
+    
+    # Obtener el total de personas que sigue (following)
+    total_following = db.query(Followers).filter(Followers.id_follower == user_id).count()
+    
+    # Crear el diccionario con los totales de seguidores y seguidos
+    follow_stats = {
+        "id_user": user.id_user,
+        "total_followers": total_followers,
+        "total_following": total_following
+    }
+
+    return follow_stats
+
+
+
+# Endpoint para obtener las 4 listas más populares
+@router.get("/top_lists/{user_id}")
+async def get_top_lists(user_id: int, db: Session = Depends(get_db)):
+    try:
+        # Consulta principal
+        top_lists = db.query(
+            Lists.id_list,
+            Lists.name,
+            func.count(SongsOnList.id_song).label("song_count"),
+            func.count(LikedLists.id_list).label("like_count"),
+            func.count(ReviewedLists.id_list).label("review_count"),
+            func.count(RankedLists.id_list).label("ranked_count"),
+        ).join(SongsOnList, SongsOnList.id_list == Lists.id_list, isouter=True) \
+        .join(LikedLists, LikedLists.id_list == Lists.id_list, isouter=True) \
+        .join(ReviewedLists, ReviewedLists.id_list == Lists.id_list, isouter=True) \
+        .join(RankedLists, RankedLists.id_list == Lists.id_list, isouter=True) \
+        .filter(Lists.id_user == user_id) \
+        .group_by(Lists.id_list) \
+        .order_by(
+            func.count(LikedLists.id_list).desc(),  # Ordenar por popularidad
+            func.count(ReviewedLists.id_list).desc(),
+            func.count(RankedLists.id_list).desc()
+        ) \
+        .limit(4) \
+        .all()
+
+        # Crear la lista de resultados con las 4 listas más populares
+        result = []
+        for list_item in top_lists:
+            # Obtener las últimas 4 canciones para cada lista
+            last_songs_query = db.query(SongsOnList.id_song).filter(SongsOnList.id_list == list_item.id_list) \
+                .order_by(SongsOnList.date.desc()).limit(4).all()
+
+            # Obtener las fotos de las canciones
+            last_4_songs_photos = [db.query(Song.photo).filter(Song.id_song == song.id_song).scalar() for song in last_songs_query]
+
+            # Formatear el resultado como un diccionario
+            result.append({
+                "id_list": list_item.id_list,
+                "name": list_item.name,
+                "song_count": list_item.song_count,
+                "like_count": list_item.like_count,
+                "review_count": list_item.review_count,
+                "ranked_count": list_item.ranked_count,
+                "last_4_songs_photos": last_4_songs_photos
+            })
+
+        if not result:
+            raise HTTPException(status_code=404, detail="No top lists found for the user")
+
+        return {"top_lists": result}
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

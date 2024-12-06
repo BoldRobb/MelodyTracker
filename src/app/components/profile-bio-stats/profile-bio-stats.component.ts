@@ -16,6 +16,7 @@ export class ProfileBioStatsComponent implements OnInit {
   totalRanked: number = 0;
   totalReview: number = 0;
   isEditMode: boolean = false; // Indica si estamos en modo edición
+  idProfile: number | null = null;
 
   errorMessage: string | null = null;
 
@@ -30,13 +31,17 @@ export class ProfileBioStatsComponent implements OnInit {
     this.isEditMode = this.router.url.startsWith('/editProfile/');
 
     this.route.params.subscribe(params => {
-      const idProfile = +params['id'];
-      if (idProfile && !isNaN(idProfile)) {
-        this.loadUserStats(idProfile);
+      this.idProfile = +params['id'];
+      if (this.idProfile && !isNaN(this.idProfile)) {
+        this.loadUserStats(this.idProfile);
       } else {
         this.errorMessage = 'ID de perfil no válido.';
       }
     });
+
+    if (this.idProfile !== null) {
+      this.getStatsTotalUser(this.idProfile);
+    }
   }
 
   onBioChange(event: Event): void {
@@ -48,8 +53,6 @@ export class ProfileBioStatsComponent implements OnInit {
     this.userService.getProfileBioStats(idProfile).subscribe({
       next: stats => {
         this.bio = stats.bio || 'Sin biografía disponible.';
-        this.totalRanked = stats.total_ranked_songs_albums || 0;
-        this.totalReview = stats.total_reviews_songs_albums || 0;
       },
       error: err => {
         console.error('Error fetching user stats:', err);
@@ -57,4 +60,19 @@ export class ProfileBioStatsComponent implements OnInit {
       }
     });
   }
+
+  getStatsTotalUser(idProfile: number): void {
+    this.userService.getUserTotals(idProfile).subscribe({
+      next: response => {
+        this.totalRanked = response.total_ranked;
+        this.totalReview = response.total_reviews;
+      },
+      error: error => {
+        console.error('Error fetching user stats:', error);
+      }
+    });
+
+  }
+
+
 }

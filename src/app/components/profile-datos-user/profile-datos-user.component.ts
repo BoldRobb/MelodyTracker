@@ -25,6 +25,8 @@ export class ProfileDatosUserComponent implements OnInit {
   idProfile: number | null = null;
   isProfilePage = false; // Verifica si estamos en /profile/:id
 
+  totalListened = 0;
+
   constructor(
     private userService: UsersService,
     private route: ActivatedRoute,
@@ -53,6 +55,10 @@ export class ProfileDatosUserComponent implements OnInit {
         this.router.navigate(['/404']); // Redirigir a 404 si el ID no es válido
       }
     });
+
+    if (this.idProfile !== null) {
+      this.getStatsTotalUser(this.idProfile);
+    }
   }
 
 
@@ -133,12 +139,31 @@ export class ProfileDatosUserComponent implements OnInit {
           return;
         }
         this.userProfile = profile;
+  
+        // Si es el perfil del usuario logueado, ya tenemos los valores de followers y following
+        if (this.idProfile === this.idUser) {
+          this.userProfile.total_followers = profile.total_followers;
+          this.userProfile.total_following = profile.total_following;
+        }
       },
       error: error => {
         console.error('Error fetching user profile:', error);
         this.router.navigate(['/404']);
       }
     });
+  }
+  
+
+  getStatsTotalUser(idProfile: number): void {
+    this.userService.getUserTotals(idProfile).subscribe({
+      next: response => {
+        this.totalListened = response.total_listened;
+      },
+      error: error => {
+        console.error('Error fetching user stats:', error);
+      }
+    });
+
   }
 
   private getUserIdFromToken(): number | null {

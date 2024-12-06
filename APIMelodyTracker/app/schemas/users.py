@@ -50,3 +50,16 @@ class BioUpdateRequest(BaseModel):
 
 class UsernameUpdateRequest(BaseModel):
     new_username: str
+
+class ListDetailsResponse(BaseModel):
+    id_list: int
+    name: str
+    song_count: int
+    like_count: int
+    review_count: int
+    ranked_count: int
+    last_4_songs: List[str]  # Lista de nombres de canciones
+
+    # Puedes agregar configuraciones adicionales si es necesario
+    class Config:
+        orm_mode = True  # Permite que FastAPI use objetos ORM como modelos Pydantic

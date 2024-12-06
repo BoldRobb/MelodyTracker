@@ -388,9 +388,27 @@ export class UsersService {
   }
 
 
+  getUserTotals(id_user: number): Observable<any> {
+    this.spinnerService.show();  // Muestra el spinner mientras se hace la solicitud
+    return this.http.get<any>(`${this.apiUrl}/users/total_listened_rankeds_reviews/${id_user}`).pipe(
+      finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termine
+    );
+  }
   
+  // Método para obtener la lista de seguidores de un usuario
+  getUserFollowStats(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/user_follow_stats/${userId}`);
+  }
 
 
+
+  // Método para obtener las 4 listas más populares del usuario
+  getTop4ListsOfUser(userId: number): Observable<any> {
+    this.spinnerService.show(); // Muestra el spinner mientras se hace la solicitud
+    return this.http.get<any>(`${this.apiUrl}/users/top_lists/${userId}`).pipe(
+      finalize(() => this.spinnerService.hide()) // Esconde el spinner cuando la solicitud termine
+    );
+  }
 
 
 }
