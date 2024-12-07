@@ -1,5 +1,5 @@
 <div class="contenedor_principal">
-  <div *ngFor="let review of combinedReviews" class="contenedor_foto_review">
+  <div *ngFor="let review of combinedReviews" class="contenedor_foto_review" [routerLink]="getReviewLink(review)">
     <img class="foto_review" [src]="review.photo" alt="Imagen de la reseña">
 
     <div class="datos_review">
@@ -9,13 +9,13 @@
       </div>
 
       <!-- Mostrar 'Creator:' si es una lista, caso contrario mostrar 'Artist:' -->
-      <p class="nombre_artist" *ngIf="review.user_creator; else artist">
-        <span class="text_creator">List Creator: </span> {{ review.user_creator }} <!-- Mostrar el creador de la lista -->
+      <p [routerLink]="['/profile', review.id_user_creator]" routerLinkActive="router-link-active" class="nombre_artist" *ngIf="review.user_creator; else artist">
+        <span class="text_creator">List Creator: </span > {{ review.user_creator }} <!-- Mostrar el creador de la lista -->
       </p>
 
       <!-- En caso contrario, mostrar el nombre del artista -->
       <ng-template #artist>
-        <p class="nombre_artist">{{ review.artist }}</p>
+        <p [routerLink]="['/artist', review.id_artist]" routerLinkActive="router-link-active" class="nombre_artist">{{ review.artist }}</p>
       </ng-template>
 
       <!-- Verificar si hay puntuación -->

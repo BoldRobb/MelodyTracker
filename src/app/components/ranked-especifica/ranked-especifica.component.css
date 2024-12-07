@@ -70,6 +70,7 @@
 }
 
 .contenedor_foto_ranked {
+    cursor: pointer;
     display: flex;
     padding: 1rem 0rem 1rem 1.5rem;
     gap: 2rem;

@@ -1,10 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { finalize } from 'rxjs';
 import { UsersService } from '../../services/users/backend/users.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-follows',
   standalone: true,
+  imports: [RouterModule],
   templateUrl: './follows.component.html',
   styleUrls: ['./follows.component.css']
 })

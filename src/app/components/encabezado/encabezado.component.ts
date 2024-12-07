@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UsersService } from '../../services/users/backend/users.service'; 
 import { Observable } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-encabezado',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './encabezado.component.html',
   styleUrls: ['./encabezado.component.css']
 })
@@ -29,6 +30,8 @@ export class EncabezadoComponent implements OnInit {
   isWatchFollowing = false;
   isWatchFollowers = false;
 
+id_user: number | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private usersService: UsersService
@@ -45,9 +48,9 @@ export class EncabezadoComponent implements OnInit {
       this.isWatchFollowers = segments[0].path === 'followers';
   
       // Extraer el ID del usuario desde la ruta
-      const id_user = segments.length > 1 ? +segments[1].path : null;
-      if (id_user) {
-        this.getUserDetails(id_user, segments);
+      this.id_user = segments.length > 1 ? +segments[1].path : null;
+      if (this.id_user) {
+        this.getUserDetails(this.id_user, segments);
       }
     });
   }

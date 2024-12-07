@@ -8,11 +8,12 @@ import { EncabezadoComponent } from "../encabezado/encabezado.component";
 import { BtnViewMoreComponent } from "../btn-view-more/btn-view-more.component";
 import { CommonModule } from '@angular/common';  // Importa CommonModule
 import { catchError, of } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-ranked-especifica',
   standalone: true,
-  imports: [EncabezadoComponent, BtnViewMoreComponent, CommonModule],  // Agrega CommonModule
+  imports: [EncabezadoComponent, BtnViewMoreComponent, CommonModule, RouterModule],  // Agrega CommonModule
   templateUrl: './ranked-especifica.component.html',
   styleUrls: ['./ranked-especifica.component.css']
 })
@@ -72,5 +73,35 @@ export class RankedEspecificaComponent implements OnInit {
     }
 
     return stars;
+  }
+
+  /**
+   * Devuelve la ruta para cada tipo de ranking.
+   * @param ranked Objeto del ranking.
+   * @returns Ruta correspondiente al tipo de ranking.
+   */
+  getRankedLink(ranked: any): string[] {
+    if (ranked.type === 'song') {
+      return ['/song', ranked.id_song]; // Ruta para canción
+    } else if (ranked.type === 'album') {
+      return ['/album', ranked.id_album]; // Ruta para álbum
+    } else if (ranked.type === 'list') {
+      return ['/list', ranked.id_list]; // Ruta para lista
+    } else {
+      return []; // Retorna un array vacío si no tiene un tipo reconocido
+    }
+  }
+
+  /**
+   * Devuelve la ruta del creador o artista según el tipo de ranking.
+   * @param ranked Objeto del ranking.
+   * @returns Ruta para el creador de la lista o el artista.
+   */
+  getCreatorLink(ranked: any): string[] {
+    if (ranked.type === 'list') {
+      return ['/profile', ranked.id_user_creator]; // Ruta para el creador de la lista
+    } else {
+      return ['/artist', ranked.id_artist]; // Ruta para el artista
+    }
   }
 }

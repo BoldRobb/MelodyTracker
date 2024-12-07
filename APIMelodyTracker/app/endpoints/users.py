@@ -295,8 +295,9 @@ def get_users_details(request: UserIdsRequest, db: Session = Depends(get_db)):
         # Obtener la cantidad de listas creadas por el usuario
         total_lists_created = db.query(Lists).filter(Lists.id_user == user_id).count()
 
-        # Crear el diccionario con la información que se necesita
+        # Crear el diccionario con la información que se necesita, incluyendo el id_user
         user_info = {
+            "id_user": user.id_user,  # Agregar el id_user al diccionario
             "username": user.username,
             "photo": profile.photo if profile else None,  # Si no tiene perfil, se asigna None
             "total_listened": total_listened,
@@ -308,6 +309,7 @@ def get_users_details(request: UserIdsRequest, db: Session = Depends(get_db)):
         users_details.append(user_info)
 
     return users_details
+
 
 
 @router.get("/total_listened_rankeds_reviews/{user_id}", response_model=dict)
@@ -711,11 +713,11 @@ async def get_recent_activities(id_user: int, db: Session = Depends(get_db)):
 # 
 @router.get("/reviews_history/{id_user}")
 async def get_reviews_history(id_user: int, db: Session = Depends(get_db)):
-    # Obtener datos de canciones revisadas junto con los datos de ranking (score y date)
     reviewed_songs = (
         db.query(
             Song.id_song.label("id_song"),
-            Song.name.label("name"),  # Agregar el nombre de la canción
+            Song.name.label("name"),
+            Artist.id_artist.label("id_artist"),  # Agregar id_artist
             Artist.name.label("artist"),
             Song.photo.label("photo"),
             Song.released.label("released"),
@@ -729,21 +731,20 @@ async def get_reviews_history(id_user: int, db: Session = Depends(get_db)):
         .outerjoin(
             RankedSongs,
             (RankedSongs.id_song == Song.id_song) & (RankedSongs.id_user == id_user),
-        )  # Outer join para incluir datos de ranking si existen
+        )
         .filter(ReviewedSongs.id_user == id_user)
-        .order_by(ReviewedSongs.date.desc())  # Ordenar por fecha de review (más reciente primero)
+        .order_by(ReviewedSongs.date.desc())
         .all()
     )
 
-    # Si no hay resultados, devolver una lista vacía con un 200
     if not reviewed_songs:
         return {"reviews_history": []}
 
-    # Formatear los resultados
     result = [
         {
             "id_song": song.id_song,
-            "name": song.name,  # Nombre de la canción
+            "name": song.name,
+            "id_artist": song.id_artist,  # Incluir id_artist
             "artist": song.artist,
             "photo": song.photo,
             "released": song.released,
@@ -751,7 +752,7 @@ async def get_reviews_history(id_user: int, db: Session = Depends(get_db)):
             "date_review": song.date_review,
             "score": song.score,
             "date_score": song.date_score,
-            "type": "song",  # Tipo específico: "song"
+            "type": "song",
         }
         for song in reviewed_songs
     ]
@@ -760,13 +761,14 @@ async def get_reviews_history(id_user: int, db: Session = Depends(get_db)):
 
 
 
+
 @router.get("/reviews_history_albums/{id_user}")
 async def get_reviews_history_albums(id_user: int, db: Session = Depends(get_db)):
-    # Obtener datos de álbumes revisados junto con datos de ranking (score y date)
     reviewed_albums = (
         db.query(
             Album.id_album.label("id_album"),
             Album.name.label("name"),
+            Artist.id_artist.label("id_artist"),  # Agregar id_artist
             Artist.name.label("artist"),
             Album.photo.label("photo"),
             Album.released.label("released"),
@@ -780,21 +782,20 @@ async def get_reviews_history_albums(id_user: int, db: Session = Depends(get_db)
         .outerjoin(
             RankedAlbums,
             (RankedAlbums.id_album == Album.id_album) & (RankedAlbums.id_user == id_user),
-        )  # Outer join para incluir datos de ranking si existen
+        )
         .filter(ReviewedAlbums.id_user == id_user)
-        .order_by(ReviewedAlbums.date.desc())  # Ordenar por fecha de review (más reciente primero)
+        .order_by(ReviewedAlbums.date.desc())
         .all()
     )
 
-    # Si no hay resultados, devolver una lista vacía con un 200
     if not reviewed_albums:
         return {"reviews_history_albums": []}
 
-    # Formatear los resultados
     result = [
         {
             "id_album": album.id_album,
-            "name": album.name,  # Nombre del álbum
+            "name": album.name,
+            "id_artist": album.id_artist,  # Incluir id_artist
             "artist": album.artist,
             "photo": album.photo,
             "released": album.released,
@@ -802,12 +803,13 @@ async def get_reviews_history_albums(id_user: int, db: Session = Depends(get_db)
             "date_review": album.date_review,
             "score": album.score,
             "date_score": album.date_score,
-            "type": "album",  # Tipo específico: "album"
+            "type": "album",
         }
         for album in reviewed_albums
     ]
 
     return {"reviews_history_albums": result}
+
 
 
 @router.get("/reviews_history_lists/{id_user}")
@@ -816,7 +818,7 @@ async def get_reviews_history_lists(id_user: int, db: Session = Depends(get_db))
     reviewed_lists = (
         db.query(
             Lists.id_list.label("id_list"),
-            User.id_user.label("id_user_creator"),
+            User.id_user.label("id_user_creator"),  # El id del creador de la lista
             User.username.label("user_creator"),
             Lists.photo.label("photo"),
             Lists.name.label("name"),
@@ -845,6 +847,7 @@ async def get_reviews_history_lists(id_user: int, db: Session = Depends(get_db))
     result = [
         {
             "id_list": list.id_list,
+            "id_user_creator": list.id_user_creator,  # Incluyendo el id del creador de la lista
             "user_creator": list.user_creator,
             "photo": list.photo,
             "name": list.name,
@@ -865,11 +868,11 @@ async def get_reviews_history_lists(id_user: int, db: Session = Depends(get_db))
 
 @router.get("/ranked_songs/{id_user}")
 async def get_ranked_songs(id_user: int, db: Session = Depends(get_db)):
-    # Obtener datos de canciones rankeadas junto con el puntaje y fecha
     ranked_songs = (
         db.query(
             Song.id_song.label("id_song"),
-            Song.name.label("name"),  # Agregar el nombre de la canción
+            Song.name.label("name"),
+            Artist.id_artist.label("id_artist"),  # Agregar id_artist
             Artist.name.label("artist"),
             Song.photo.label("photo"),
             Song.released.label("released"),
@@ -878,26 +881,25 @@ async def get_ranked_songs(id_user: int, db: Session = Depends(get_db)):
         )
         .join(Artist, Song.id_artist == Artist.id_artist)
         .join(RankedSongs, RankedSongs.id_song == Song.id_song)
-        .filter(RankedSongs.id_user == id_user)  # Filtrar por el id del usuario
-        .order_by(RankedSongs.date.desc())  # Ordenar por fecha del ranking (más reciente primero)
+        .filter(RankedSongs.id_user == id_user)
+        .order_by(RankedSongs.date.desc())
         .all()
     )
 
-    # Si no hay resultados, devolver una lista vacía con un 200
     if not ranked_songs:
         return {"ranked_songs": []}
 
-    # Formatear los resultados
     result = [
         {
             "id_song": song.id_song,
-            "name": song.name,  # Nombre de la canción
+            "name": song.name,
+            "id_artist": song.id_artist,  # Incluir id_artist
             "artist": song.artist,
             "photo": song.photo,
             "released": song.released,
             "score": song.score,
             "date_score": song.date_score,
-            "type": "song",  # Tipo específico: "song"
+            "type": "song",
         }
         for song in ranked_songs
     ]
@@ -909,13 +911,14 @@ async def get_ranked_songs(id_user: int, db: Session = Depends(get_db)):
 
 
 
+
 @router.get("/ranked_albums/{id_user}")
 async def get_ranked_albums(id_user: int, db: Session = Depends(get_db)):
-    # Obtener datos de álbumes rankeados junto con el puntaje y fecha
     ranked_albums = (
         db.query(
             Album.id_album.label("id_album"),
-            Album.name.label("name"),  # Agregar el nombre del álbum
+            Album.name.label("name"),
+            Artist.id_artist.label("id_artist"),  # Agregar id_artist
             Artist.name.label("artist"),
             Album.photo.label("photo"),
             Album.released.label("released"),
@@ -924,31 +927,31 @@ async def get_ranked_albums(id_user: int, db: Session = Depends(get_db)):
         )
         .join(Artist, Album.id_artist == Artist.id_artist)
         .join(RankedAlbums, RankedAlbums.id_album == Album.id_album)
-        .filter(RankedAlbums.id_user == id_user)  # Filtrar por el id del usuario
-        .order_by(RankedAlbums.date.desc())  # Ordenar por fecha del ranking (más reciente primero)
+        .filter(RankedAlbums.id_user == id_user)
+        .order_by(RankedAlbums.date.desc())
         .all()
     )
 
-    # Si no hay resultados, devolver una lista vacía con un 200
     if not ranked_albums:
         return {"ranked_albums": []}
 
-    # Formatear los resultados
     result = [
         {
             "id_album": album.id_album,
-            "name": album.name,  # Nombre del álbum
+            "name": album.name,
+            "id_artist": album.id_artist,  # Incluir id_artist
             "artist": album.artist,
             "photo": album.photo,
             "released": album.released,
             "score": album.score,
             "date_score": album.date_score,
-            "type": "album",  # Tipo específico: "album"
+            "type": "album",
         }
         for album in ranked_albums
     ]
 
     return {"ranked_albums": result}
+
 
 
 

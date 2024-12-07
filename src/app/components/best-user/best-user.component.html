@@ -1,24 +1,24 @@
 <div class="user">
     <div class="contenedor_imagen">
-        <img class="foto_user" [src]="photo" alt="foto_user">
+        <img [routerLink]="['/profile', id_user]" routerLinkActive="router-link-active"  class="foto_user" [src]="photo" alt="foto_user">
     </div>
-    <p class="nombre_user">{{ username }}</p>
+    <p class="nombre_user" [routerLink]="['/profile', id_user]" routerLinkActive="router-link-active">{{ username }}</p>
     <div class="user_stats">
-        <div class="contenedor_stat">
+        <div class="contenedor_stat" [routerLink]="['/songsListened', id_user]" routerLinkActive="router-link-active">
             <p class="nombre_stat">Listened</p>
             <div class="stat_cantidad">
                 <img class="imagen_stat" src="images/song_listened.png" alt="songs_listened">
                 <p class="cantidad">{{ songs }}</p>
             </div>
         </div>
-        <div class="contenedor_stat">
+        <div class="contenedor_stat" [routerLink]="['/rankedHistory', id_user]" routerLinkActive="router-link-active">
             <p class="nombre_stat">Rankeds</p>
             <div class="stat_cantidad">
                 <img class="imagen_stat" src="images/ranked.png" alt="songs_listened">
                 <p class="cantidad">{{ rankeds }}</p>
             </div>
         </div>
-        <div class="contenedor_stat">
+        <div class="contenedor_stat" [routerLink]="['/reviewHistory', id_user]" routerLinkActive="router-link-active">
             <p class="nombre_stat">Reviews</p>
             <div class="stat_cantidad">
                 <img class="imagen_stat" src="images/comment.png" alt="songs_listened">

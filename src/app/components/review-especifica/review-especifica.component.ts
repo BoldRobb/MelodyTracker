@@ -6,11 +6,12 @@ import { Observable, forkJoin } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common'; // Importa CommonModule
 import { catchError, of } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-review-especifica',
   standalone: true,
-  imports: [CommonModule], // Agrega CommonModule aquí
+  imports: [CommonModule, RouterModule], // Agrega CommonModule aquí
   templateUrl: './review-especifica.component.html',
   styleUrls: ['./review-especifica.component.css']
 })
@@ -73,4 +74,23 @@ export class ReviewEspecificaComponent implements OnInit {
 
     return stars;
   }
+
+  /**
+   * Devuelve la ruta para cada tipo de revisión.
+   * @param review Objeto de la revisión.
+   * @returns Ruta correspondiente al tipo de revisión.
+   */
+  getReviewLink(review: any): string[] {
+    if (review.id_song) {
+      return ['/song', review.id_song]; // Ruta para canción
+    } else if (review.id_album) {
+      return ['/album', review.id_album]; // Ruta para álbum
+    } else if (review.id_list) {
+      return ['/list', review.id_list]; // Ruta para lista
+    } else {
+      return []; // Retorna un array vacío si no tiene un tipo reconocido
+    }
+  }
+
+  
 }

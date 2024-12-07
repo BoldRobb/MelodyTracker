@@ -23,6 +23,7 @@
 }
 
 .foto_user{
+    cursor: pointer;
     width: 17.5rem;
     height: 17.5rem;
     border-radius: 50%;
@@ -31,6 +32,7 @@
 }
 
 .nombre_user{
+    cursor: pointer;
     font-size: 4rem;
     margin: 0;
     margin-bottom: 1rem;
@@ -47,6 +49,7 @@
 }
 
 .contenedor_stat{
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     width: 8.5rem;

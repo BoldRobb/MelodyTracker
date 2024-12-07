@@ -2,27 +2,27 @@
     <div class="contenedor_encabezado">
         <div class="lado_izquierdo">
             @if (isWatchlistSongs) {
-                <img class="foto_user" [src]="userDetails?.photo" alt="Photo">
+                <img class="foto_user" [src]="userDetails?.photo" alt="Photo" [routerLink]="['/profile', id_user]" routerLinkActive="router-link-active" >
                 <p>{{ userDetails?.username }} wants to listen to {{ userDetails?.watchlist_count }} songs</p>
             }
             @if (isWatchlistAlbums) {
-                <img class="foto_user" [src]="userDetails?.photo" alt="Photo">
+                <img class="foto_user" [src]="userDetails?.photo" alt="Photo" [routerLink]="['/profile', id_user]" routerLinkActive="router-link-active" >
                 <p>{{ userDetails?.username }} wants to listen to {{ userDetails?.watchlist_album_count }} albums</p>
             }
             @if (isWatchsongsListened) {
-                <img class="foto_user" [src]="userDetails?.photo" alt="Photo">
+                <img class="foto_user" [src]="userDetails?.photo" alt="Photo" [routerLink]="['/profile', id_user]" routerLinkActive="router-link-active" >
                 <p>{{ userDetails?.username }} has listened to {{ userDetails?.listened_songs_count }} songs</p>
             }
             @if (isWatchalbumsListened) {
-                <img class="foto_user" [src]="userDetails?.photo" alt="Photo">
+                <img class="foto_user" [src]="userDetails?.photo" alt="Photo" [routerLink]="['/profile', id_user]" routerLinkActive="router-link-active" >
                 <p>{{ userDetails?.username }} has listened to {{ userDetails?.listened_albums_count }} albums</p>
             }
             @if (isWatchFollowing) {
-                <img class="foto_user" [src]="userDetails?.photo" alt="Photo">
+                <img class="foto_user" [src]="userDetails?.photo" alt="Photo" [routerLink]="['/profile', id_user]" routerLinkActive="router-link-active" >
                 <p>{{ userDetails?.username }} follows {{ userDetails?.total_following }} people</p>
             }
             @if (isWatchFollowers) {
-                <img class="foto_user" [src]="userDetails?.photo" alt="Photo">
+                <img class="foto_user" [src]="userDetails?.photo" alt="Photo" [routerLink]="['/profile', id_user]" routerLinkActive="router-link-active" >
                 <p>{{ userDetails?.username }} has {{ userDetails?.total_followers }} followers</p>
             }
         </div>

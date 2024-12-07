@@ -4,6 +4,7 @@
       <!-- Recorremos los top users y pasamos los parámetros necesarios a app-best-user -->
        @for (user of getTop8Users(); track $index) {
         <app-best-user
+            [id_user]="user.id_user"
             [username]="user.username"
             [photo]="user.photo"
             [songs]="user.total_listened"

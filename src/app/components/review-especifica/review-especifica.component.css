@@ -12,6 +12,7 @@
 }
 
 .contenedor_foto_review {
+    cursor: pointer;
     display: flex;
     gap: 2rem;
     width: 100%;
