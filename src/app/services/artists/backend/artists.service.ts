@@ -26,9 +26,9 @@ export class ArtistsService {
   
   
   //Obtener las canciones de un artista
-  getArtistSongs(id_artist: number): Observable<{ id_song: number, photo: string }[]> {
+  getArtistSongs(id_artist: number): Observable<{ id_song: number, name: string, photo: string }[]> {
     this.spinnerService.show();  // Mostrar el spinner mientras se carga
-    return this.http.get<{ id_song: number, photo: string }[]>(
+    return this.http.get<{ id_song: number, name: string, photo: string }[]>(
       `${this.apiUrl}/artists/artist_songs/${id_artist}`
     ).pipe(
       finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina
@@ -36,9 +36,9 @@ export class ArtistsService {
   }
 
   //Obtener los álbumes de un artista
-  getArtistAlbums(id_artist: number): Observable<{ id_album: number, photo: string }[]> {
+  getArtistAlbums(id_artist: number): Observable<{ id_album: number, name: string, photo: string }[]> {
     this.spinnerService.show();  // Mostrar el spinner mientras se carga
-    return this.http.get<{ id_album: number, photo: string }[]>(
+    return this.http.get<{ id_album: number, name: string, photo: string }[]>(
       `${this.apiUrl}/artists/artist_albums/${id_artist}`
     ).pipe(
       finalize(() => this.spinnerService.hide())  // Esconde el spinner cuando la solicitud termina

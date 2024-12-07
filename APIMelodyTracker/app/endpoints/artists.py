@@ -120,7 +120,7 @@ def get_artist_songs(id_artist: int, db: Session = Depends(get_db)):
     if not songs:
         raise HTTPException(status_code=404, detail="No songs found for this artist")
 
-    # Retorna las canciones en formato JSON
+    # Devuelve las canciones como una lista de respuestas
     return songs
 
 
@@ -135,9 +135,8 @@ def get_artist_albums(id_artist: int, db: Session = Depends(get_db)):
     if not albums:
         raise HTTPException(status_code=404, detail="No albums found for this artist")
 
-    # Retorna los álbumes en formato JSON
+    # Devuelve los álbumes como una lista de respuestas
     return albums
-
 
 
 

@@ -41,9 +41,11 @@ class AlbumResponse(BaseModel):
 
 class SongsArtistResponse(BaseModel):
     id_song: int
+    name: str 
     photo: str
 
 
 class AlbumsArtistResponse(BaseModel):
     id_album: int
+    name: str  # Nombre de la canción
     photo: str

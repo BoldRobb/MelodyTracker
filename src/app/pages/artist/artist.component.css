@@ -3,7 +3,7 @@
     display: flex;
     gap: 8rem;
     margin: 3rem auto 0 auto;
-    width: 138rem; /* Asegúrate de definir un ancho */
+    width: 138rem;
 }
 
 .contenedor_imagen_biografia {
@@ -15,28 +15,28 @@
     padding: 1.5rem;
     align-items: center;
     position: sticky;
-    top: 5rem; /* Ajusta la distancia desde la parte superior */
+    top: 5rem;
 }
 
-.foto_artista{
+.foto_artista {
     width: 30rem;
     border-radius: 1.2rem;
 }
 
-.nombre_artista{
+.nombre_artista {
     font-size: 6rem;
     margin: 0;
     margin-top: 1rem;
 }
 
-.texto_biografia{
+.texto_biografia {
     width: 30rem;
     font-size: 2rem;
     opacity: 70%;
     margin: 0;
 }
 
-.contenedor_songs_albums{
+.contenedor_songs_albums {
     width: 90rem;
     border-radius: 2rem;
     background-color: #0D0B29;
@@ -44,22 +44,61 @@
     margin-bottom: 3rem;
 }
 
-.texto_songs_albums{
+.texto_songs_albums {
     font-size: 6rem;
     color: #C6FF41;
     margin: 0;
     margin-left: 2rem;
 }
 
-.contenedor_fotos{
+.contenedor_fotos {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     column-gap: 2rem;
     row-gap: 1.5rem;
 }
 
-.foto_song_album{
+.foto_song_album {
     width: 20rem;
     height: 20rem;
     border-radius: 1.2rem;
+    transition: transform 0.3s ease-in-out;
+}
+
+.image-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.song-name {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 3rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.song-name p {
+    margin: 0;
+}
+
+.image-wrapper:hover .foto_song_album {
+    transform: scale(1.05);  /* Efecto de zoom */
+}
+
+.image-wrapper:hover .song-name {
+    opacity: 1;  /* Mostrar el nombre de la canción o álbum al hacer hover */
+}
+
+a {
+    text-decoration: none;
+    display: block;
 }
