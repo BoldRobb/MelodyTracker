@@ -3,11 +3,12 @@ import { UsersService } from '../../services/users/backend/users.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-profile-bio-stats',
   standalone: true,
-  imports: [CommonModule, FormsModule], // Importar FormsModule
+  imports: [CommonModule, FormsModule, RouterModule], // Importar FormsModule
   templateUrl: './profile-bio-stats.component.html',
   styleUrls: ['./profile-bio-stats.component.css']
 })

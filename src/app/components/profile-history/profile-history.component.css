@@ -231,7 +231,7 @@ p{
 
 .imagenesx4 {
     position: relative;
-    width: 49.5rem; /* Ajusta el ancho para contener las imágenes solapadas */
+    width: 100%; /* Ajusta el ancho para contener las imágenes solapadas */
     height: 10rem; /* Asegura que la altura es suficiente para mostrar las imágenes */
     margin: 0 auto; /* Centra el contenedor de las imágenes */
 }
@@ -247,27 +247,27 @@ p{
 }
 
 .imagenx4:nth-child(1) {
-    left: 5%;
+    left: 10%;
 
 }
 
 .imagenx4:nth-child(2) {
-    left: 15%; 
+    left: 25%; 
 
 }
 
 .imagenx4:nth-child(3) {
-    left: 25%;
+    left: 40%;
 
 }
 
 .imagenx4:nth-child(4) {
-    left: 35%;
+    left: 53%;
 
 }
 
 .imagenx4:nth-child(5) {
-    left: 45%;
+    left: 65%;
 }
 
 
@@ -373,3 +373,6 @@ p{
     opacity: 60%;
 }
 
+.contenedorx4{
+    cursor: pointer;
+}

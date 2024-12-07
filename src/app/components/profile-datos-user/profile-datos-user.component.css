@@ -79,6 +79,15 @@ p {
     border-radius: 2rem;
 }
 
+.nombre_user[readonly] {
+    pointer-events: none; /* Deshabilita cualquier interacción con el textarea */
+}
+  
+.nombre_user[readonly]::-webkit-scrollbar {
+    display: none; /* Oculta la barra de desplazamiento en los navegadores basados en WebKit */
+}
+  
+
 .contenedor_stats_user {
     background-color: #0A0824;
     display: flex;

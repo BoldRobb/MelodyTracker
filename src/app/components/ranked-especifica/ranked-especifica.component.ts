@@ -7,6 +7,7 @@ import { finalize } from 'rxjs/operators';
 import { EncabezadoComponent } from "../encabezado/encabezado.component";
 import { BtnViewMoreComponent } from "../btn-view-more/btn-view-more.component";
 import { CommonModule } from '@angular/common';  // Importa CommonModule
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-ranked-especifica',
@@ -27,34 +28,24 @@ export class RankedEspecificaComponent implements OnInit {
 
   ngOnInit(): void {
     this.idUser = +this.activatedRoute.snapshot.paramMap.get('id')!;
-    
-    // Realiza las llamadas para obtener las canciones, álbumes y listas rankeadas
+  
     forkJoin([
-      this.usersService.getRankedSongs(this.idUser),
-      this.usersService.getRankedAlbums(this.idUser),
-      this.usersService.getRankedLists(this.idUser)
-    ]).pipe(
-      finalize(() => this.spinnerService.hide())
-    ).subscribe(
-      ([songs, albums, lists]) => {
-        // Combina las canciones, álbumes y listas rankeadas, agregando un tipo
-        this.rankedData = [
-          ...songs.ranked_songs.map((song: any) => ({ ...song, type: 'song' })),
-          ...albums.ranked_albums.map((album: any) => ({ ...album, type: 'album' })),
-          ...lists.ranked_lists.map((list: any) => ({ ...list, type: 'list' }))
-        ];
-    
-        // Ordena rankedData por la fecha (rankedDate)
-        this.rankedData.sort((a, b) => {
-          const dateA = new Date(a.date_score).getTime();
-          const dateB = new Date(b.date_score).getTime();
-          return dateB - dateA; // Orden descendente
-        });
-      },
-      error => {
-        console.error('Error al obtener datos rankeados:', error);
-      }
-    );
+      this.usersService.getRankedSongs(this.idUser).pipe(catchError(() => of({ ranked_songs: [] }))),
+      this.usersService.getRankedAlbums(this.idUser).pipe(catchError(() => of({ ranked_albums: [] }))),
+      this.usersService.getRankedLists(this.idUser).pipe(catchError(() => of({ ranked_lists: [] }))),
+    ])
+      .pipe(finalize(() => this.spinnerService.hide()))
+      .subscribe(
+        ([songs, albums, lists]) => {
+          this.rankedData = [
+            ...(songs?.ranked_songs || []).map((song: any) => ({ ...song, type: 'song' })),
+            ...(albums?.ranked_albums || []).map((album: any) => ({ ...album, type: 'album' })),
+            ...(lists?.ranked_lists || []).map((list: any) => ({ ...list, type: 'list' })),
+          ];
+          this.rankedData.sort((a, b) => new Date(b.date_score).getTime() - new Date(a.date_score).getTime());
+        },
+        error => console.error('Error al obtener datos rankeados:', error)
+      );
   }
   
 

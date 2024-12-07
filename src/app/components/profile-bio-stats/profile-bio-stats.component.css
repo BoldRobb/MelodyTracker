@@ -19,7 +19,12 @@ p {
     border: none;
     resize: none; /* Para que no se pueda redimensionar */
     outline: none;
-  }
+}
+
+.texto_bio[readonly] {
+    pointer-events: none; /* Deshabilita cualquier interacción con el textarea */
+}
+  
 
 .titulo_descripcion{
     font-size: 1.5rem;

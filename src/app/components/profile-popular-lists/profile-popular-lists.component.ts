@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'; // Importa ActivatedRoute
 import { UsersService } from '../../services/users/backend/users.service'; // Importa el servicio
 import { CommonModule } from '@angular/common'; // Importa CommonModule
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-profile-popular-lists',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule ],
   templateUrl: './profile-popular-lists.component.html',
   styleUrls: ['./profile-popular-lists.component.css']
 })
@@ -38,5 +39,4 @@ export class ProfilePopularListsComponent implements OnInit {
       }
     );
   }
-  
 }

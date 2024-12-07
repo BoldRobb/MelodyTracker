@@ -21,15 +21,15 @@
         <textarea class="nombre_user" maxlength="14" minlength="3" [value]="userProfile.username" spellcheck="false" [readonly]="isProfilePage"></textarea>
       </div>
     <div class="contenedor_stats_user">
-      <div>
+      <div style="cursor: pointer;" [routerLink]="['/songsListened', idProfile]" routerLinkActive="router-link-active" >
         <p class="valor_stats">{{ totalListened }}</p>
         <p class="titulo_stats">Listened</p>
       </div>
-      <div>
+      <div style="cursor: pointer;" [routerLink]="['/following', idProfile]" routerLinkActive="router-link-active" >
         <p class="valor_stats">{{ userProfile.total_following }}</p>
         <p class="titulo_stats">Following</p>
       </div>
-      <div>
+      <div style="cursor: pointer;" [routerLink]="['/followers', idProfile]" routerLinkActive="router-link-active" >
         <p class="valor_stats">{{ userProfile.total_followers }}</p>
         <p class="titulo_stats">Followers</p>
       </div>

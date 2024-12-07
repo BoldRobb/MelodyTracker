@@ -3,11 +3,12 @@ import { UsersService } from '../../services/users/backend/users.service'; // As
 import { SpinnerService } from '../../services/others/spinner.service'; // Asegúrate de importar el spinner service
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-profile-history',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './profile-history.component.html',
   styleUrls: ['./profile-history.component.css']
 })

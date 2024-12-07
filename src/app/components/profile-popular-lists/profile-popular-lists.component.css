@@ -291,6 +291,7 @@ p{
 }
 
 .popular_list{
+    cursor: pointer;
     position: relative;
     width: 43rem;
     min-height: 10rem;
@@ -341,8 +342,7 @@ p{
     display: flex;
     gap: 1rem;
     width: 21.8rem; /* Define el ancho deseado */
-    margin-left: 15rem; /* Empuja el contenido hacia la derecha */
-
+    margin-left: 14.5rem; /* Empuja el contenido hacia la derecha */
     font-size: 2rem;
 }
 

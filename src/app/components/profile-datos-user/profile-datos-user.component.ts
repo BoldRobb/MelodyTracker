@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../../services/users/backend/users.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-profile-datos-user',
   standalone: true,
-  imports: [],
+  imports: [ RouterModule ],
   templateUrl: './profile-datos-user.component.html',
   styleUrls: ['./profile-datos-user.component.css']
 })

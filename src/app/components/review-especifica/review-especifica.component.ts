@@ -5,6 +5,7 @@ import { UsersService } from '../../services/users/backend/users.service';
 import { Observable, forkJoin } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common'; // Importa CommonModule
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-review-especifica',
@@ -25,24 +26,21 @@ export class ReviewEspecificaComponent implements OnInit {
 
   ngOnInit(): void {
     this.idUser = +this.activatedRoute.snapshot.paramMap.get('id')!;
-
-    // Realiza las llamadas para obtener las reseñas
+  
     forkJoin([
-      this.usersService.getReviewsHistory(this.idUser),
-      this.usersService.getReviewsHistoryAlbums(this.idUser),
-      this.usersService.getReviewsHistoryLists(this.idUser) // Nueva llamada para obtener las listas
+      this.usersService.getReviewsHistory(this.idUser).pipe(catchError(() => of({ reviews_history: [] }))),
+      this.usersService.getReviewsHistoryAlbums(this.idUser).pipe(catchError(() => of({ reviews_history_albums: [] }))),
+      this.usersService.getReviewsHistoryLists(this.idUser).pipe(catchError(() => of({ reviews_history_lists: [] })))
     ]).pipe(
       finalize(() => this.spinnerService.hide())
     ).subscribe(
       ([songs, albums, lists]) => {
-        // Combina las reseñas de canciones, álbumes y listas
         this.combinedReviews = [
           ...songs.reviews_history,
           ...albums.reviews_history_albums,
           ...lists.reviews_history_lists
         ];
-
-        // Ordena las reseñas por fecha
+  
         this.combinedReviews.sort((a, b) => new Date(b.date_review).getTime() - new Date(a.date_review).getTime());
       },
       error => {
