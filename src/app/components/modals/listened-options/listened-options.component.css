@@ -1,0 +1,44 @@
+.contenedor_principal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 14rem;
+    width: 90rem;
+    margin: 0 auto;
+    padding: 3rem 0;
+    border-radius: 2rem;
+    background-color: #0D0B29;
+    z-index: 1001;
+    position: relative;
+}
+
+.contenedor_option{
+    text-align: center;
+}
+
+.imagen{
+    width: 30rem;
+    cursor: pointer;
+}
+
+.texto{
+    cursor: pointer;
+    font-family: 'jockey one', sans-serif;
+    font-weight: bold;
+    font-size: 4rem;
+    margin: 0;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: background-color 0.3s ease; /* Suaviza el cambio de color */
+  }
+  

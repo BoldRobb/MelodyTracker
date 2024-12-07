@@ -21,7 +21,7 @@
         <textarea class="nombre_user" maxlength="14" minlength="3" [value]="userProfile.username" spellcheck="false" [readonly]="isProfilePage"></textarea>
       </div>
     <div class="contenedor_stats_user">
-      <div style="cursor: pointer;" [routerLink]="['/songsListened', idProfile]" routerLinkActive="router-link-active" >
+      <div (click)="openModalListenedOptions()" style="cursor: pointer;">
         <p class="valor_stats">{{ totalListened }}</p>
         <p class="titulo_stats">Listened</p>
       </div>
@@ -35,3 +35,5 @@
       </div>
     </div>
   </div>
+
+<app-listened-options [id_user]="idProfile"></app-listened-options>

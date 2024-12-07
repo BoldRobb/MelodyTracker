@@ -2,11 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { finalize } from 'rxjs';
 import { UsersService } from '../../services/users/backend/users.service';
 import { RouterModule } from '@angular/router';
+import { ListenedOptionsComponent } from "../modals/listened-options/listened-options.component";
 
 @Component({
   selector: 'app-follows',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, ListenedOptionsComponent],
   templateUrl: './follows.component.html',
   styleUrls: ['./follows.component.css']
 })
@@ -36,5 +37,10 @@ export class FollowsComponent implements OnInit {
           console.error('Error al cargar detalles de usuarios:', err);
         }
       });
+  }
+
+  openModalListenedOptions(id_user: number): void {
+    this.followsService.openModalListenedOptions();
+    this.followsService.setCurrentUserId(id_user); // Configura el ID de usuario dinámicamente
   }
 }

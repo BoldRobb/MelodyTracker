@@ -4,6 +4,7 @@ import { FollowsComponent } from "../../components/follows/follows.component";
 import { EncabezadoComponent } from "../../components/encabezado/encabezado.component";
 import { BestUserComponent } from "../../components/best-user/best-user.component";
 import { BtnViewMoreComponent } from "../../components/btn-view-more/btn-view-more.component";
+import { ListenedOptionsComponent } from "../../components/modals/listened-options/listened-options.component";
 
 @Component({
   selector: 'app-best-users',
@@ -13,6 +14,7 @@ import { BtnViewMoreComponent } from "../../components/btn-view-more/btn-view-mo
     EncabezadoComponent,
     BestUserComponent,
     BtnViewMoreComponent,
+    ListenedOptionsComponent
   ],
   templateUrl: './best-users.component.html',
   styleUrls: ['./best-users.component.css'],
@@ -20,6 +22,7 @@ import { BtnViewMoreComponent } from "../../components/btn-view-more/btn-view-mo
 export class BestUsersComponent implements OnInit {
   topUsers: any[] = []; // Para almacenar los top users
   remainingUserIds: number[] = []; // IDs de los usuarios restantes
+  selectedUserId: number | null = null; // Guardará el id del usuario seleccionado para mostrar el modal
 
   constructor(private userService: UsersService) {}
 
@@ -48,5 +51,18 @@ export class BestUsersComponent implements OnInit {
   // Función para obtener los primeros 8 usuarios
   getTop8Users(): any[] {
     return this.topUsers.slice(0, 8);
+  }
+
+  // Abre el modal con el id del usuario seleccionado
+  openModalListenedOptions(id_user: number): void {
+    this.selectedUserId = id_user;
+    this.userService.openModalListenedOptions(); // Abrir el modal
+    this.userService.setCurrentUserId(id_user); // Establecer el id del usuario en el servicio
+  }
+
+  // Cierra el modal
+  closeModal(): void {
+    this.selectedUserId = null; // Resetear el id cuando se cierra el modal
+    this.userService.closeModalListenedOptions();
   }
 }

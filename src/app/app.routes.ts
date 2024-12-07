@@ -53,6 +53,7 @@ import { ArtistComponent } from './pages/artist/artist.component';
 import { ComentsOnReviewComponent } from './pages/coments-on-review/coments-on-review.component';
 import { ListComponent } from './pages/list/list.component';
 import { ListLikedByComponent } from './pages/list-liked-by/list-liked-by.component';
+import { ListenedOptionsComponent } from './components/modals/listened-options/listened-options.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -117,6 +118,8 @@ export const routes: Routes = [
     // { path: 'profileBioStats', component: ProfileBioStatsComponent},
     // { path: 'profileHistory', component: ProfileHistoryComponent},
     // { path: 'profilePopularLists', component: ProfilePopularListsComponent},
+    { path: 'listenedOptions', component: ListenedOptionsComponent},
+
     { path: '**', pathMatch: 'full', redirectTo: '404' }
 ];
 

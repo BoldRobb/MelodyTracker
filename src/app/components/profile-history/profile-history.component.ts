@@ -4,11 +4,12 @@ import { SpinnerService } from '../../services/others/spinner.service'; // Aseg√
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
+import { WatchlistOptionsComponent } from "../modals/watchlist-options/watchlist-options.component";
 
 @Component({
   selector: 'app-profile-history',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, WatchlistOptionsComponent],
   templateUrl: './profile-history.component.html',
   styleUrls: ['./profile-history.component.css']
 })
@@ -50,5 +51,10 @@ export class ProfileHistoryComponent implements OnInit {
         // Manejo de errores si es necesario
       }
     );
+  }
+
+  openModalWatchlist() {
+    // Llamar al servicio para abrir el modal
+    this.usersService.openModalWatchlist(); 
   }
 }

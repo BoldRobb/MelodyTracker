@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../../services/users/backend/users.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { ListenedOptionsComponent } from '../modals/listened-options/listened-options.component';
 
 
 @Component({
   selector: 'app-profile-datos-user',
   standalone: true,
-  imports: [ RouterModule ],
+  imports: [ RouterModule, ListenedOptionsComponent ],
   templateUrl: './profile-datos-user.component.html',
   styleUrls: ['./profile-datos-user.component.css']
 })
@@ -64,7 +65,9 @@ export class ProfileDatosUserComponent implements OnInit {
   }
 
 
-  
+  openModalListenedOptions(){
+    this.userService.openModalListenedOptions();
+  }
 
   checkIfUserIsFollowed(idProfile: number, idUser: number): void {
     this.userService.isUserFollowing(idProfile, idUser).subscribe({

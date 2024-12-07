@@ -13,6 +13,43 @@ export class UsersService {
 
   constructor(private http: HttpClient, private spinnerService: SpinnerService) {}
 
+  //Observable Para el Modal ListenedOptions
+  private isModalOpen = new BehaviorSubject<boolean>(false);
+
+  modalState$ = this.isModalOpen.asObservable();
+
+  openModalListenedOptions() {
+    this.isModalOpen.next(true);
+  }
+
+  closeModalListenedOptions() {
+    this.isModalOpen.next(false);
+  }
+
+
+  // Servicio UsersService
+  private currentUserId = new BehaviorSubject<number | null>(null);
+  currentUserId$ = this.currentUserId.asObservable();
+
+  setCurrentUserId(id: number) {
+    this.currentUserId.next(id);
+  }
+
+  getCurrentUserId() {
+    return this.currentUserId.value;
+  }
+
+  private isModalWatchlistOpen = new BehaviorSubject<boolean>(false);
+
+  isModalWatchlistOpen$ = this.isModalWatchlistOpen.asObservable();
+
+  openModalWatchlist() {
+    this.isModalWatchlistOpen.next(true);  // Aquí el nombre debe coincidir
+  }
+
+  closeModalWatchlist() {
+    this.isModalWatchlistOpen.next(false);  // Aquí también
+  }
 
   // Método para obtener el username y la photo del usuario
   getUsernameAndPhoto(id_user: number): Observable<{ username: string, photo: string }> {

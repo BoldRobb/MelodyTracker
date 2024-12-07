@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <div class="contenedorx4" [routerLink]="['/watchlist_songs', id_user]" routerLinkActive="router-link-active" >
+    <div class="contenedorx4" (click)="openModalWatchlist()">
         <p class="titulox4">Watch List</p>
         <!-- <p class="titulox4">Watch List <span class="cantidadx4">{{ recentActivities.recent_watchlist_songs.length }}</span></p> -->
         <div class="imagenesx4">
@@ -41,3 +41,5 @@
         </div>
     </div>
 </div>
+
+<app-watchlist-options [id_user]="id_user"></app-watchlist-options>

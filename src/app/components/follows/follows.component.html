@@ -1,6 +1,7 @@
 @if (usersDetails.length > 0) {
   <div class="contenedor_principal">
     @for (user of usersDetails; track $index) {
+      
       <div class="grid-item">
         <div class="contenedor_user">
           <div class="datos_user">
@@ -8,9 +9,10 @@
             <p class="nombre_user" [routerLink]="['/profile', user.id_user]" routerLinkActive="router-link-active">{{ user.username }}</p>
           </div>
           <div class="contenedor_stats">
-            <div class="stat_user" [routerLink]="['/songsListened', user.id_user]" routerLinkActive="router-link-active">
+            <div class="stat_user" (click)="openModalListenedOptions(user.id_user)">
               <img class="foto_stat" src="images/song_listened.png" alt="">
               <p class="cantidad_stat">{{ user.total_listened }}</p>
+              
             </div>
             <div class="stat_user" [routerLink]="['/reviewHistory', user.id_user]" routerLinkActive="router-link-active">
               <img class="foto_stat" src="images/comment.png" alt="">
@@ -27,7 +29,9 @@
           </div>
         </div>
       </div>
+      
     }
-  </div>
-  
+  </div> 
 }
+
+

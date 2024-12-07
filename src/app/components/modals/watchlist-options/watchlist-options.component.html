@@ -1,0 +1,17 @@
+<div 
+  *ngIf="isModalOpen" 
+  class="modal-overlay" 
+  (click)="closeModalWatchlist()" 
+  [ngStyle]="{'background-color': isBestUsers ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.7)'}"
+>
+  <div class="contenedor_principal" (click)="$event.stopPropagation()">
+    <div class="contenedor_option" [routerLink]="['/watchlist_songs', id_user]" routerLinkActive="router-link-active">
+      <img class="imagen" src="images/vynil.png" alt="photo_song">
+      <p class="texto">Songs</p>
+    </div>
+    <div class="contenedor_option" [routerLink]="['/watchlist_albums', id_user]" routerLinkActive="router-link-active">
+      <img class="imagen" src="images/album.png" alt="photo_album">
+      <p class="texto">Albums</p>
+    </div>
+  </div>
+</div>
