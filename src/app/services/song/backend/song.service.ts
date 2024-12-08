@@ -401,4 +401,29 @@ getTopReviews(song_id: number): Observable<any[]> {
     .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
 }
 
+
+ // Método para obtener los 3 reviews con más likes de un álbum
+ getTopReviewsAlbums(album_id: number): Observable<any[]> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .get<any[]>(`${this.apiUrl}/songs/${album_id}/top_reviews_albums`, {
+      headers: this.getAuthHeaders() // Incluye las cabeceras de autenticación si es necesario
+    })
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+// Método para obtener los 3 reviews con más likes de una lista
+getTopReviewsLists(list_id: number): Observable<any[]> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .get<any[]>(`${this.apiUrl}/songs/${list_id}/top_reviews_lists`, {
+      headers: this.getAuthHeaders() // Incluye las cabeceras de autenticación si es necesario
+    })
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
 }

@@ -844,3 +844,5 @@ def get_likes_count_album(id_reviewed_album: int, db: Session = Depends(get_db))
     likes_count = db.query(LikedReviewedAlbum).filter(LikedReviewedAlbum.id_reviewed_album == id_reviewed_album).count()
 
     return {"likes_count": likes_count}
+
+

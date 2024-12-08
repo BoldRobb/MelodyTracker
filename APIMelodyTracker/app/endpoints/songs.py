@@ -1,7 +1,9 @@
 # app/endpoints/songs.py
 
+from operator import and_
 from sqlite3 import IntegrityError
 from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from datetime import date, datetime
@@ -10,9 +12,10 @@ from datetime import date, datetime
 from app.models.users import User, Profile
 from app.models.songs import LikedReviewsSongs, RankedSongs, ReviewedSongs, Song, WatchlistSongs, ListenedSongs, FavoriteSongsOfUser, LikedSongs
 from app.models.artists import Artist
-from app.models.lists import SongsOnList
+from app.models.lists import LikedReviewedList, RankedLists, ReviewedLists, SongsOnList
+from app.models.albums import LikedAlbums, LikedReviewedAlbum, RankedAlbums, ReviewedAlbums
 
-from app.schemas.Schemasongs import CreateSong, RankSongRequest, ReviewSongSchema, ReviewWithLikes, UpdateSong, SongListened, WatchlistSongRequest, LikeSongRequest, SongResponse, FavoriteSongCreate
+from app.schemas.Schemasongs import CreateSong, RankSongRequest, ReviewSongSchema, ReviewWithLikes, ReviewWithLikesAlbums, ReviewWithLikesLists, UpdateSong, SongListened, WatchlistSongRequest, LikeSongRequest, SongResponse, FavoriteSongCreate
 
 
 from app.jwt.auth import get_current_user
@@ -1013,10 +1016,6 @@ def get_likes_count(id_reviewed_song: int, db: Session = Depends(get_db)):
 # Endpoint para obtener los 3 reviews con más likes de una canción
 @router.get("/{song_id}/top_reviews", response_model=List[ReviewWithLikes])
 async def get_top_reviews(song_id: int, db: Session = Depends(get_db)):
-    """
-    Obtiene los 3 reviews con más 'likes' de una canción específica.
-    """
-    # Obtener los 3 reviews con más likes para una canción específica
     top_reviews = (
         db.query(
             ReviewedSongs,
@@ -1029,7 +1028,7 @@ async def get_top_reviews(song_id: int, db: Session = Depends(get_db)):
         .join(LikedReviewsSongs, LikedReviewsSongs.id_reviewed_song == ReviewedSongs.id_reviewed_songs, isouter=True)
         .join(User, User.id_user == ReviewedSongs.id_user)
         .join(Profile, Profile.id_user == User.id_user, isouter=True)
-        .join(RankedSongs, RankedSongs.id_user == User.id_user & RankedSongs.id_song == song_id, isouter=True)
+        .join(RankedSongs, and_(RankedSongs.id_user == User.id_user, RankedSongs.id_song == song_id), isouter=True)  # Corregido el join
         .filter(ReviewedSongs.id_song == song_id)
         .group_by(ReviewedSongs.id_reviewed_songs, User.id_user, Profile.photo, User.username, RankedSongs.score)
         .order_by(func.count(LikedReviewsSongs.id_reviewed_song).desc())
@@ -1054,3 +1053,114 @@ async def get_top_reviews(song_id: int, db: Session = Depends(get_db)):
         })
 
     return result
+
+@router.get("/{album_id}/top_reviews_albums", response_model=List[ReviewWithLikesAlbums])
+async def get_top_reviews(album_id: int, db: Session = Depends(get_db)):
+    """
+    Obtiene los 3 reviews con más 'likes' de un álbum específico.
+    """
+    # Obtener los 3 reviews con más likes para un álbum específico
+    top_reviews = (
+        db.query(
+            ReviewedAlbums,
+            func.count(LikedReviewedAlbum.id_reviewed_album).label('likes_count'),
+            User.id_user,
+            User.username,
+            Profile.photo,
+            RankedAlbums.score
+        )
+        .join(LikedReviewedAlbum, LikedReviewedAlbum.id_reviewed_album == ReviewedAlbums.id_reviewed_albums, isouter=True)
+        .join(User, User.id_user == ReviewedAlbums.id_user)
+        .join(Profile, Profile.id_user == User.id_user, isouter=True)
+        .join(RankedAlbums, and_(RankedAlbums.id_user == User.id_user, RankedAlbums.id_album == album_id), isouter=True)  # Corregido el join
+        .filter(ReviewedAlbums.id_album == album_id)
+        .group_by(ReviewedAlbums.id_reviewed_albums, User.id_user, Profile.photo, User.username, RankedAlbums.score)
+        .order_by(func.count(LikedReviewedAlbum.id_reviewed_album).desc())
+        .limit(3)
+        .all()
+    )
+
+    if not top_reviews:
+        raise HTTPException(status_code=404, detail="No reviews found for this album")
+
+    # Formatear los resultados para la respuesta
+    result = []
+    for review, likes_count, id_user, username, photo, score in top_reviews:
+        result.append({
+            "id_reviewed_albums": review.id_reviewed_albums,
+            "id_user": id_user,
+            "username": username,
+            "photo_user": photo,
+            "comment": review.comment,
+            "likes_count": likes_count,
+            "score": score
+        })
+
+    return result
+
+
+@router.get("/{list_id}/top_reviews_lists", response_model=List[ReviewWithLikesLists])
+async def get_top_reviews(list_id: int, db: Session = Depends(get_db)):
+    """
+    Obtiene los 3 reviews con más 'likes' de una lista específica.
+    """
+    # Obtener los 3 reviews con más likes para una lista específica
+    top_reviews = (
+        db.query(
+            ReviewedLists,
+            func.count(LikedReviewedList.id_reviewed_list).label('likes_count'),
+            User.id_user,
+            User.username,
+            Profile.photo,
+            RankedLists.score
+        )
+        .join(LikedReviewedList, LikedReviewedList.id_reviewed_list == ReviewedLists.id_reviewed_lists, isouter=True)
+        .join(User, User.id_user == ReviewedLists.id_user)
+        .join(Profile, Profile.id_user == User.id_user, isouter=True)
+        .join(RankedLists, and_(RankedLists.id_user == User.id_user, RankedLists.id_list == list_id), isouter=True)  # Corregido el join
+        .filter(ReviewedLists.id_list == list_id)
+        .group_by(ReviewedLists.id_reviewed_lists, User.id_user, Profile.photo, User.username, RankedLists.score)
+        .order_by(func.count(LikedReviewedList.id_reviewed_list).desc())
+        .limit(3)
+        .all()
+    )
+
+    if not top_reviews:
+        raise HTTPException(status_code=404, detail="No reviews found for this list")
+
+    # Formatear los resultados para la respuesta
+    result = []
+    for review, likes_count, id_user, username, photo, score in top_reviews:
+        result.append({
+            "id_reviewed_lists": review.id_reviewed_lists,
+            "id_user": id_user,
+            "username": username,
+            "photo_user": photo,
+            "comment": review.comment,
+            "likes_count": likes_count,
+            "score": score
+        })
+
+    return result
+
+
+@router.get("/has_rank_song/{id_user}/{id_song}")
+def has_rank_song(id_user: int, id_song: int, db: Session = Depends(get_db)):
+    # Buscar el ranking
+    existing_rank = db.query(RankedSongs).filter(
+        RankedSongs.id_user == id_user, RankedSongs.id_song == id_song
+    ).first()
+
+    # Verificar si el ranking existe
+    if existing_rank:
+        return {
+            "has_rank": True,
+            "score": existing_rank.score,
+            "date": existing_rank.date
+        }
+    else:
+        return {
+            "has_rank": False,
+            "score": None,
+            "date": None
+        }

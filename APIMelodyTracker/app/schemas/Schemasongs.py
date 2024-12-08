@@ -67,3 +67,22 @@ class ReviewWithLikes(BaseModel):
     comment: str
     likes_count: int
     score: float
+
+
+class ReviewWithLikesAlbums(BaseModel):
+    id_reviewed_albums: int
+    id_user: int
+    username: str
+    photo_user: Optional[str] = None
+    comment: str
+    likes_count: int
+    score: Optional[float] = 0.0  # Si score es None, se devuelve 0.0
+
+class ReviewWithLikesLists(BaseModel):
+    id_reviewed_lists: int
+    id_user: int
+    username: str
+    photo_user: Optional[str]  # La foto del usuario puede ser opcional
+    comment: str
+    likes_count: int
+    score: Optional[float]  # La puntuación de la lista puede ser opcional

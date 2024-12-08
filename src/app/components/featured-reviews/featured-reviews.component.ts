@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SpinnerService } from '../../services/others/spinner.service'; // Asegúrate de importar el servicio spinner
-import { SongService } from '../../services/song/backend/song.service'; // Asegúrate de importar tu servicio de reviews
+import { SpinnerService } from '../../services/others/spinner.service';
+import { SongService } from '../../services/song/backend/song.service';
 import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 
@@ -23,41 +23,84 @@ export class FeaturedReviewsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private songService: SongService,  // Inyectamos el servicio
-    private spinnerService: SpinnerService // Inyectamos el servicio de spinner
+    private songService: SongService,
+    private spinnerService: SpinnerService
   ) {}
 
   ngOnInit(): void {
-    // Obtener la URL y verificar qué tipo de ruta es
     const currentUrl = this.route.snapshot.url.join('/');
-
-    // Asignar el valor de las variables según la URL
     this.isSong = currentUrl.includes('song');
     this.isAlbum = currentUrl.includes('album');
     this.isList = currentUrl.includes('list');
 
-    // Si estamos en la página de canción, obtener el ID de la canción desde la URL
     if (this.isSong) {
       this.route.params.subscribe(params => {
-        const songId = +params['id'];  // Usamos '+' para convertir el parámetro de cadena a número
-        this.getTopReviews(songId); // Llamamos al método para obtener los reviews con el songId
+        const songId = +params['id'];
+        this.getTopReviews(songId);
+      });
+    } else if (this.isAlbum) {
+      this.route.params.subscribe(params => {
+        const albumId = +params['id'];
+        this.getTopReviewsForAlbum(albumId);
+      });
+    } else if (this.isList) {
+      this.route.params.subscribe(params => {
+        const listId = +params['id'];
+        this.getTopReviewsForList(listId);
       });
     }
   }
 
-  // Método para obtener los 3 reviews con más likes
   getTopReviews(songId: number): void {
-    this.spinnerService.show(); // Mostrar el spinner mientras se realiza la solicitud
-
+    this.spinnerService.show();
     this.songService.getTopReviews(songId)
-      .pipe(finalize(() => this.spinnerService.hide())) // Ocultar el spinner al finalizar
+      .pipe(finalize(() => this.spinnerService.hide()))
       .subscribe(
         (reviews) => {
-          this.topReviews = reviews; // Asignar los reviews a la variable topReviews
+          this.topReviews = reviews;
         },
         (error) => {
           console.error('Error al obtener los reviews:', error);
         }
       );
+  }
+
+  getTopReviewsForAlbum(albumId: number): void {
+    this.spinnerService.show();
+    this.songService.getTopReviewsAlbums(albumId)
+      .pipe(finalize(() => this.spinnerService.hide()))
+      .subscribe(
+        (reviews) => {
+          this.topReviews = reviews;
+        },
+        (error) => {
+          console.error('Error al obtener los reviews del álbum:', error);
+        }
+      );
+  }
+
+  getTopReviewsForList(listId: number): void {
+    this.spinnerService.show();
+    this.songService.getTopReviewsLists(listId)
+      .pipe(finalize(() => this.spinnerService.hide()))
+      .subscribe(
+        (reviews) => {
+          this.topReviews = reviews;
+        },
+        (error) => {
+          console.error('Error al obtener los reviews de la lista:', error);
+        }
+      );
+  }
+
+  // Método para obtener las estrellas completas según el score
+  getFullStars(score: number): number[] {
+    const fullStars = Math.floor(score);
+    return new Array(fullStars).fill(1);
+  }
+
+  // Método para obtener las estrellas medias según el score
+  getHalfStar(score: number): boolean {
+    return score % 1 !== 0;
   }
 }

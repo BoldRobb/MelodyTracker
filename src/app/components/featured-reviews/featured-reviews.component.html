@@ -1,17 +1,19 @@
 <div class="contenedor_principal">
-    <div *ngFor="let review of topReviews" class="featured_review">
-      <img class="foto_user" [src]="review.photo_user || 'images/default-user.png'" alt="User Photo">
-      <div class="contenedor_datos">
-        <p class="nombre_user">{{ review.username }}</p>
-        <div class="contenedor_estrellas">
-          <img *ngFor="let star of [].constructor(5); let i = index" class="imagen_estrella" src="images/star.png" alt="Star">
-        </div>
-        <p class="comment">{{ review.comment }}</p>
-        <div class="contenedor_likes">
-            <img class="foto_corazon" src="images/heart.png" alt="">
-            <p class="total_likes"> {{review.likes_count}} likes</p>
-        </div>
+  <div *ngFor="let review of topReviews" class="featured_review">
+    <img class="foto_user" [src]="review.photo_user || 'images/default-user.png'" alt="User Photo">
+    <div class="contenedor_datos">
+      <p class="nombre_user">{{ review.username }}</p>
+      <div class="contenedor_estrellas">
+        <!-- Estrellas completas -->
+        <img *ngFor="let star of getFullStars(review.score)" class="imagen_estrella" src="images/star.png" alt="Star">
+        <!-- Estrella media -->
+        <img *ngIf="getHalfStar(review.score)" class="imagen_estrella" src="images/star-half.png" alt="Half Star">
+      </div>
+      <p class="comment">{{ review.comment }} </p>
+      <div class="contenedor_likes">
+        <img class="foto_corazon" src="images/heart.png" alt="">
+        <p class="total_likes"> {{ review.likes_count }} likes</p>
       </div>
     </div>
   </div>
-  
+</div>
