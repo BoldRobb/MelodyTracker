@@ -1,44 +1,17 @@
 <div class="contenedor_principal">
-    <div class="featured_review">
-        <img class="foto_user" src="images/steve.png" alt="">
-        <div class="contenedor_datos">
-            <p class="nombre_user">Steve</p>
-            <div class="contenedor_estrellas">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-            </div>
-            <p class="comment">“This song makes me travel to the beach thinking about my other half”</p>
+    <div *ngFor="let review of topReviews" class="featured_review">
+      <img class="foto_user" [src]="review.photo_user || 'images/default-user.png'" alt="User Photo">
+      <div class="contenedor_datos">
+        <p class="nombre_user">{{ review.username }}</p>
+        <div class="contenedor_estrellas">
+          <img *ngFor="let star of [].constructor(5); let i = index" class="imagen_estrella" src="images/star.png" alt="Star">
         </div>
-    </div>
-    <div class="featured_review">
-        <img class="foto_user" src="images/steve.png" alt="">
-        <div class="contenedor_datos">
-            <p class="nombre_user">Steve</p>
-            <div class="contenedor_estrellas">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-            </div>
-            <p class="comment">“This song makes me travel to the beach thinking about my other half”</p>
+        <p class="comment">{{ review.comment }}</p>
+        <div class="contenedor_likes">
+            <img class="foto_corazon" src="images/heart.png" alt="">
+            <p class="total_likes"> {{review.likes_count}} likes</p>
         </div>
+      </div>
     </div>
-    <div class="featured_review">
-        <img class="foto_user" src="images/steve.png" alt="">
-        <div class="contenedor_datos">
-            <p class="nombre_user">Steve</p>
-            <div class="contenedor_estrellas">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-                <img class="imagen_estrella" src="images/star.png" alt="">
-            </div>
-            <p class="comment">“This song makes me travel to the beach thinking about my other half”</p>
-        </div>
-    </div>
-</div>
+  </div>
+  

@@ -388,4 +388,17 @@ getLikesCount(id_reviewed_song: number): Observable<{ likes_count: number }> {
 }
 
 
+
+// Obtener los 3 reviews con más likes de una canción
+getTopReviews(song_id: number): Observable<any[]> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .get<any[]>(
+      `${this.apiUrl}/songs/${song_id}/top_reviews`,
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
 }

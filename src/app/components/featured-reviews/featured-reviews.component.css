@@ -4,21 +4,22 @@
     display: flex;
     column-gap: 1.5rem;
     align-items: center;
-    justify-content: center;
-    width: 86rem;
-    height: 24rem;
+    max-width: 90rem;
     background-color: #0D0B29;
     border-radius: 2rem;
+    padding: 2rem;
+    overflow-x: auto; /* Añadir scroll horizontal si es necesario */
 }
 
 .featured_review{
     display: flex;
-    width: 26.4rem;
-    height: 20.07rem;
+    width: 36.4rem;
+    max-height: 26rem;
     background-color: #040317;
     border-radius: 2rem;
     gap: 1rem;
     padding: 1.5rem;
+    overflow-y: auto; /* Añadir scroll vertical si el contenido es mayor que la altura definida */
 }
 
 .foto_user{
@@ -35,9 +36,8 @@
 .nombre_user{
     font-size: 2.5rem;
     margin: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
-
 
 .contenedor_estrellas{
     display: flex;
@@ -51,4 +51,24 @@
 .comment{
     font-size: 1.5rem;
     opacity: 75%;
+    margin: 1rem 0;
+    max-height: 10rem; /* Aumentar la altura máxima del comentario */
+    overflow-y: auto; /* Añadir scroll vertical solo cuando el contenido sea mayor que la altura definida */
+    overflow-x: hidden; /* Evitar desplazamiento horizontal */
+}
+
+.foto_corazon{
+    width: 2rem;
+    height: 2rem;
+}
+
+.contenedor_likes{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.total_likes{
+    font-size: 1.5rem;
+    margin: 0;
 }

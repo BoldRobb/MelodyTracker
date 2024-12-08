@@ -12,7 +12,7 @@ from app.models.songs import LikedReviewsSongs, RankedSongs, ReviewedSongs, Song
 from app.models.artists import Artist
 from app.models.lists import SongsOnList
 
-from app.schemas.Schemasongs import CreateSong, RankSongRequest, ReviewSongSchema, UpdateSong, SongListened, WatchlistSongRequest, LikeSongRequest, SongResponse, FavoriteSongCreate
+from app.schemas.Schemasongs import CreateSong, RankSongRequest, ReviewSongSchema, ReviewWithLikes, UpdateSong, SongListened, WatchlistSongRequest, LikeSongRequest, SongResponse, FavoriteSongCreate
 
 
 from app.jwt.auth import get_current_user
@@ -1007,3 +1007,50 @@ def get_likes_count(id_reviewed_song: int, db: Session = Depends(get_db)):
     likes_count = db.query(LikedReviewsSongs).filter(LikedReviewsSongs.id_reviewed_song == id_reviewed_song).count()
 
     return {"likes_count": likes_count}
+
+
+
+# Endpoint para obtener los 3 reviews con más likes de una canción
+@router.get("/{song_id}/top_reviews", response_model=List[ReviewWithLikes])
+async def get_top_reviews(song_id: int, db: Session = Depends(get_db)):
+    """
+    Obtiene los 3 reviews con más 'likes' de una canción específica.
+    """
+    # Obtener los 3 reviews con más likes para una canción específica
+    top_reviews = (
+        db.query(
+            ReviewedSongs,
+            func.count(LikedReviewsSongs.id_reviewed_song).label('likes_count'),
+            User.id_user,
+            User.username,
+            Profile.photo,
+            RankedSongs.score
+        )
+        .join(LikedReviewsSongs, LikedReviewsSongs.id_reviewed_song == ReviewedSongs.id_reviewed_songs, isouter=True)
+        .join(User, User.id_user == ReviewedSongs.id_user)
+        .join(Profile, Profile.id_user == User.id_user, isouter=True)
+        .join(RankedSongs, RankedSongs.id_user == User.id_user & RankedSongs.id_song == song_id, isouter=True)
+        .filter(ReviewedSongs.id_song == song_id)
+        .group_by(ReviewedSongs.id_reviewed_songs, User.id_user, Profile.photo, User.username, RankedSongs.score)
+        .order_by(func.count(LikedReviewsSongs.id_reviewed_song).desc())
+        .limit(3)
+        .all()
+    )
+
+    if not top_reviews:
+        raise HTTPException(status_code=404, detail="No reviews found for this song")
+
+    # Formatear los resultados para la respuesta
+    result = []
+    for review, likes_count, id_user, username, photo, score in top_reviews:
+        result.append({
+            "id_reviewed_songs": review.id_reviewed_songs,
+            "id_user": id_user,
+            "username": username,
+            "photo_user": photo,
+            "comment": review.comment,
+            "likes_count": likes_count,
+            "score": score
+        })
+
+    return result

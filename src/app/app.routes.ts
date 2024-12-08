@@ -107,7 +107,7 @@ export const routes: Routes = [
     // { path: 'modalCreateReview', component: CreateReviewComponent},
     // { path: 'spinner', component: SpinnerComponent},
     // { path: 'yourRating', component: YourRatingComponent},
-    // { path: 'featuredReviews', component: FeaturedReviewsComponent},
+    { path: 'bestReviews', component: FeaturedReviewsComponent},
     // { path: 'comment', component: CommentComponent},
     // { path: 'listsOfUser', component: ListsOfUserComponent},
     // { path: 'statTotal', component: StatTotalComponent},

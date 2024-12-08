@@ -193,7 +193,7 @@ export class YourRatingComponent implements OnInit {
       this.entityType === 'album' ? this.albumService.deleteRankedAlbum :
       this.entityType === 'song' ? this.songService.deleteRankedSong :
       this.listsService.deleteRankedList; // Manejar listas
-  
+    
     service.call(
       this.entityType === 'album' ? this.albumService :
       this.entityType === 'song' ? this.songService :
@@ -201,15 +201,19 @@ export class YourRatingComponent implements OnInit {
       this.id_user,
       this.id_entity
     )
-    .pipe(finalize(() => {
-      this.selectedRating = 0;
-      this.fillStars(0);
-    }))
+    .pipe(
+      finalize(() => {
+        this.selectedRating = 0;
+        this.fillStars(0);
+        this.albumService.updateComments(); // Emitir la señal de que los comentarios se han actualizado
+      })
+    )
     .subscribe(
       () => console.log(`Calificación eliminada para ${this.entityType}`),
       (error) => console.error(`Error al eliminar la calificación de ${this.entityType}`, error)
     );
   }
+  
   
 
   private fillStars(score: number): void {

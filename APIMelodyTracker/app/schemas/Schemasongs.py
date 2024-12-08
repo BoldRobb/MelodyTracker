@@ -59,3 +59,11 @@ class RankSongRequest(BaseModel):
     id_song: int
     score: float
 
+class ReviewWithLikes(BaseModel):
+    id_reviewed_songs: int
+    id_user: int
+    username: str
+    photo_user: str
+    comment: str
+    likes_count: int
+    score: float
