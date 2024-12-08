@@ -4,7 +4,7 @@
     width: 140rem;
     background-color: #0D0B29;
     border-radius: 2rem;
-    padding: 2rem 3rem 3rem 3rem;
+    padding: 1rem 3rem 1rem 3rem;
     margin: 2rem auto;
 }
 
@@ -55,7 +55,33 @@
 .comment{
     margin: 0;
     font-size: 1.8rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
     opacity: 70%;
     line-height: 1.4;
+}
+
+.like_review{
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    
+}
+
+
+.grayscale {
+    filter: grayscale(100%); /* Aplica el filtro para poner la imagen en escala de grises */
+  }
+  
+
+.contenedor_likes{
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.total_likes{
+    margin: 0;
+    font-size: 1.5rem;
+    margin-top: 0.3rem;
 }

@@ -9,7 +9,7 @@ from app.database.database import get_db
 from datetime import datetime
 
 from app.models.users import User, Profile
-from app.models.albums import Album, RankedAlbums, ListenedAlbums, FavoriteAlbumsOfUser, LikedAlbums, ReviewedAlbums, SongsOnAlbum, WatchlistAlbums
+from app.models.albums import Album, LikedReviewedAlbum, RankedAlbums, ListenedAlbums, FavoriteAlbumsOfUser, LikedAlbums, ReviewedAlbums, SongsOnAlbum, WatchlistAlbums
 from app.models.artists import Artist
 from app.models.songs import Song
 from sqlalchemy.orm import aliased
@@ -765,3 +765,82 @@ def get_users_liked(id_album: int, db: Session = Depends(get_db)):
     user_ids = [user.id_user for user in users_liked]
 
     return user_ids
+
+
+# Dar like a una review de un álbum
+@router.post("/like_review_album/{id_user}/{id_reviewed_album}")
+def like_review_album(id_user: int, id_reviewed_album: int, db: Session = Depends(get_db)):
+    # Verificar si el like ya existe
+    existing_like = (
+        db.query(LikedReviewedAlbum)
+        .filter(LikedReviewedAlbum.id_user == id_user, LikedReviewedAlbum.id_reviewed_album == id_reviewed_album)
+        .first()
+    )
+
+    if existing_like:
+        raise HTTPException(status_code=400, detail="El usuario ya ha dado like a esta review del álbum.")
+
+    # Crear un nuevo like
+    new_like = LikedReviewedAlbum(id_user=id_user, id_reviewed_album=id_reviewed_album)
+    db.add(new_like)
+
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=f"Error al procesar el like: {str(e)}")
+
+    return {"message": "Like registrado exitosamente"}
+
+
+# Quitar like a una review de un álbum
+@router.delete("/unlike_review_album/{id_user}/{id_reviewed_album}")
+def unlike_review_album(id_user: int, id_reviewed_album: int, db: Session = Depends(get_db)):
+    # Verificar si el like existe
+    existing_like = (
+        db.query(LikedReviewedAlbum)
+        .filter(LikedReviewedAlbum.id_user == id_user, LikedReviewedAlbum.id_reviewed_album == id_reviewed_album)
+        .first()
+    )
+
+    if not existing_like:
+        raise HTTPException(status_code=404, detail="El like no existe.")
+
+    # Eliminar el like
+    try:
+        db.delete(existing_like)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=f"Error al eliminar el like: {str(e)}")
+
+    return {"message": "Like eliminado exitosamente"}
+
+
+# Verificar si un usuario ya ha dado like a una review de un álbum
+@router.get("/has_liked_review_album/{id_user}/{id_reviewed_album}")
+def has_liked_review_album(id_user: int, id_reviewed_album: int, db: Session = Depends(get_db)):
+    """
+    Verifica si un usuario ya ha dado "like" a una review de un álbum específico.
+    """
+    # Consultar si existe el like
+    existing_like = (
+        db.query(LikedReviewedAlbum)
+        .filter(LikedReviewedAlbum.id_user == id_user, LikedReviewedAlbum.id_reviewed_album == id_reviewed_album)
+        .first()
+    )
+
+    # Devolver True si existe, False si no
+    if existing_like:
+        return {"has_liked": True}
+    else:
+        return {"has_liked": False}
+
+
+# Obtener la cantidad de likes de una review de un álbum
+@router.get("/get_likes_count_review_album/{id_reviewed_album}")
+def get_likes_count_album(id_reviewed_album: int, db: Session = Depends(get_db)):
+    # Contar la cantidad de likes de la review del álbum especificado
+    likes_count = db.query(LikedReviewedAlbum).filter(LikedReviewedAlbum.id_reviewed_album == id_reviewed_album).count()
+
+    return {"likes_count": likes_count}

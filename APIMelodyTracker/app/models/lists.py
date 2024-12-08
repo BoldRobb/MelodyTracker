@@ -63,3 +63,14 @@ class ReviewedLists(Base):
     id_list = Column(BigInteger, ForeignKey('list.id_list'), nullable=False)
     comment = Column(Text, nullable=False)
     date = Column(Date, nullable=False)
+
+
+class LikedReviewedList(Base):
+    __tablename__ = "liked_reviewed_list"
+
+    id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
+    id_reviewed_list = Column(BigInteger, ForeignKey('reviewed_lists.id_reviewed_lists'), nullable=False)
+
+    __table_args__ = (
+        PrimaryKeyConstraint('id_user', 'id_reviewed_list'),  # Clave primaria compuesta
+    )

@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'; // Para obtener el id y el tipo desde la URL
-import { SongService } from '../../services/song/backend/song.service'; // Servicio para las canciones
+import { ActivatedRoute } from '@angular/router';
+import { SongService } from '../../services/song/backend/song.service';
 import { AlbumService } from '../../services/album/backend/album-service.service'; // Servicio para los álbumes
-import { ListsService } from '../../services/lists/backend/lists.service';
-import { SpinnerService } from '../../services/others/spinner.service'; // Servicio para el spinner
+import { ListsService } from '../../services/lists/backend/lists.service'; // Servicio para las listas
+import { SpinnerService } from '../../services/others/spinner.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router'; // Para la navegación
+import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-comment',
@@ -14,42 +15,47 @@ import { Router } from '@angular/router'; // Para la navegación
   imports: [CommonModule],
   styleUrls: ['./comment.component.css'],
 })
-
-
-
-
 export class CommentComponent implements OnInit {
-
-  constructor(
-    private songService: SongService, 
-    private albumService: AlbumService, 
-    private spinnerService: SpinnerService,
-    private router: Router,
-    private route: ActivatedRoute, // Para obtener parámetros de la URL
-    private listsService: ListsService // Inyectar el servicio
-  ) {}
-
-  
   comments: any[] = [];
   isLoading = true;
-  userId: number | undefined; // Variable para almacenar el id_user
-  isAlbum: boolean = false; // Determina si es álbum o canción
-  isSong: boolean = false; // Determina si es una canción
-  isList: boolean = false; // Determina si es una lista
+  userId: number | undefined;
+  id_user: number | undefined;
+  isAlbum: boolean = false;
+  isSong: boolean = false;
+  isList: boolean = false;
 
-  
+  constructor(
+    private songService: SongService,
+    private albumService: AlbumService,
+    private spinnerService: SpinnerService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private listsService: ListsService
+  ) {}
 
   ngOnInit() {
+    this.id_user = this.getUserIdFromToken();
     this.albumService.commentUpdated$.subscribe(() => {
-      console.log('Comentarios actualizados');
-      this.loadComments();  // Recargar los comentarios
+      this.loadComments();
     });
-  
+
     this.checkIfAlbumSongList();
-    this.loadComments();  // Cargar los comentarios inicialmente
+    this.loadComments(); // Cargar los comentarios inicialmente
   }
 
-  // Método para verificar si es un álbum o una canción
+  getUserIdFromToken(): number | undefined {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      console.error('No se encontró el access_token en el localStorage');
+      return undefined;
+    }
+
+    const payload = token.split('.')[1];
+    const decodedPayload = atob(payload);
+    const payloadObj = JSON.parse(decodedPayload);
+    return payloadObj?.id_user;
+  }
+
   checkIfAlbumSongList() {
     const url = window.location.pathname;
     this.isAlbum = url.includes('/album/');
@@ -57,10 +63,8 @@ export class CommentComponent implements OnInit {
     this.isList = url.includes('/list/');
   }
 
-  // Método para cargar los comentarios
   loadComments() {
-    const id = this.getIdFromUrl(); // Obtén el ID desde la URL
-
+    const id = this.getIdFromUrl();
     if (this.isAlbum) {
       this.albumService.getAlbumComments(id).subscribe(
         (comments) => this.handleComments(comments),
@@ -79,48 +83,143 @@ export class CommentComponent implements OnInit {
     }
   }
 
-  // Método para manejar los comentarios obtenidos
   handleComments(comments: any[]) {
-    console.log('Comentarios recibidos:', comments);
     if (Array.isArray(comments) && comments.length > 0) {
       this.comments = comments;
       this.userId = comments[0].id_user;
+      this.checkLikesForComments();
     } else {
       console.error('No se recibieron comentarios válidos');
     }
     this.isLoading = false;
   }
 
-
-  // Método para manejar errores al cargar los comentarios
   handleError(error: any) {
     console.error('Error al cargar los comentarios: ', error);
     this.isLoading = false;
   }
 
-  // Método para obtener el ID desde la URL
   getIdFromUrl(): number {
     const urlParts = window.location.pathname.split('/');
-    return +urlParts[urlParts.length - 1]; // Suponiendo que la URL termina con el ID
+    return +urlParts[urlParts.length - 1];
   }
 
-  // Método para obtener el número de estrellas
   getStars(score: number): number[] {
-    score = Number(score); // Convertir el valor a número explícitamente
-    const fullStars = Math.floor(score); // Estrellas completas
-    const halfStars = score % 1 >= 0.5 ? 1 : 0; // Media estrella si el decimal es >= 0.5
+    score = Number(score);
+    const fullStars = Math.floor(score);
+    const halfStars = score % 1 >= 0.5 ? 1 : 0;
     return [
-      ...new Array(fullStars).fill(1), // Estrellas completas
-      ...new Array(halfStars).fill(0.5), // Estrella media
+      ...new Array(fullStars).fill(1),
+      ...new Array(halfStars).fill(0.5),
     ];
   }
 
-  // Método para navegar al perfil de un usuario
   navigateToProfile(userId: number): void {
     if (userId) {
-      this.router.navigate(['/profile', userId]); // Navega a la página del perfil
+      this.router.navigate(['/profile', userId]);
     } else {
       console.error('El userId es inválido o no está definido');
+    }
+  }
+
+  // Verificar si el usuario ha dado like a cada comentario (para canciones, álbumes o listas)
+  checkLikesForComments() {
+    if (this.id_user !== undefined) {
+      this.comments.forEach((comment) => {
+        if (this.isSong) {
+          this.songService
+            .hasLikedReview(this.id_user!, comment.id_reviewed_songs)
+            .pipe(finalize(() => this.spinnerService.hide()))
+            .subscribe({
+              next: (response) => {
+                comment.isLiked = response.has_liked;
+                this.getLikesCountForComment(comment, 'song');
+              },
+              error: (error) => {
+                comment.isLiked = false;
+              },
+            });
+        } else if (this.isAlbum) {
+          this.albumService
+            .hasLikedReviewAlbum(this.id_user!, comment.id_reviewed_albums)
+            .pipe(finalize(() => this.spinnerService.hide()))
+            .subscribe({
+              next: (response) => {
+                comment.isLiked = response.has_liked;
+                this.getLikesCountForComment(comment, 'album');
+              },
+              error: (error) => {
+                comment.isLiked = false;
+              },
+            });
+        } else if (this.isList) {
+          this.listsService
+            .hasLikedReviewList(this.id_user!, comment.id_reviewed_lists)
+            .pipe(finalize(() => this.spinnerService.hide()))
+            .subscribe({
+              next: (response) => {
+                comment.isLiked = response.has_liked;
+                this.getLikesCountForComment(comment, 'list');
+              },
+              error: (error) => {
+                comment.isLiked = false;
+              },
+            });
+        }
+      });
+    }
+  }
+
+  // Obtener el número de likes para un comentario específico (canción, álbum o lista)
+  getLikesCountForComment(comment: any, type: 'song' | 'album' | 'list') {
+    const getLikesCount$ =
+      type === 'song'
+        ? this.songService.getLikesCount(comment.id_reviewed_songs)
+        : type === 'album'
+        ? this.albumService.getLikesCountAlbum(comment.id_reviewed_albums)
+        : this.listsService.getLikesCountList(comment.id_reviewed_lists);
+
+    getLikesCount$.subscribe({
+      next: (response) => {
+        comment.likesCount = response.likes_count;
+      },
+      error: () => {
+        comment.likesCount = 0;
+      },
+    });
+  }
+
+  // Alternar el like para un comentario (canción, álbum o lista)
+  toggleLike(comment: any): void {
+    if (this.id_user) {
+      let like$;
+      if (this.isSong) {
+        like$ = comment.isLiked
+          ? this.songService.unlikeReview(this.id_user!, comment.id_reviewed_songs)
+          : this.songService.likeReview(this.id_user!, comment.id_reviewed_songs);
+      } else if (this.isAlbum) {
+        like$ = comment.isLiked
+          ? this.albumService.unlikeReviewAlbum(this.id_user!, comment.id_reviewed_albums)
+          : this.albumService.likeReviewAlbum(this.id_user!, comment.id_reviewed_albums);
+      } else if (this.isList) {
+        like$ = comment.isLiked
+          ? this.listsService.unlikeReviewList(this.id_user!, comment.id_reviewed_lists)
+          : this.listsService.likeReviewList(this.id_user!, comment.id_reviewed_lists);
+      }
+
+      if (like$) {
+        this.spinnerService.show();
+        like$.pipe(finalize(() => this.spinnerService.hide())).subscribe({
+          next: (response) => {
+            comment.isLiked = !comment.isLiked;
+            comment.likesCount = comment.isLiked ? comment.likesCount + 1 : comment.likesCount - 1;
+            console.log(response.message);
+          },
+          error: (error) => {
+            console.error(`Error al alternar el like del comentario:`, error);
+          },
+        });
+      }
     }
   }
 }

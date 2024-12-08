@@ -32,6 +32,19 @@
               
                     <!-- Comentario del usuario -->
                     <p class="comment">{{ comment.comment }}</p>
+                    <div class="contenedor_likes">
+                      <img
+                        class="like_review"
+                        [ngClass]="{ 'grayscale': !comment.isLiked }" 
+                        [src]="'images/heart.png'"  
+                        alt="Heart icon"
+                        (click)="toggleLike(comment)"
+                      />
+                      <p class="total_likes">{{ comment.likesCount }} likes</p>
+                    </div>
+                    
+                    
+                   
                   </div>
                 </div>
             </div>

@@ -110,15 +110,15 @@ class CommentReviewedSong(Base):
     )
 
 
-class LikedReviewedSongs(Base):
-    __tablename__ = "liked_reviewed_songs"
+class LikedReviewsSongs(Base):
+    __tablename__ = "liked_reviews_songs"
 
     id_user = Column(BigInteger, ForeignKey('users.id_user'), nullable=False)
-    id_reviewed_album = Column(BigInteger, ForeignKey('reviewed_songs.id_reviewed_songs'), nullable=False)
+    id_reviewed_song = Column(BigInteger, ForeignKey('reviewed_songs.id_reviewed_songs'), nullable=False)
 
     # Definimos la clave primaria compuesta
     __table_args__ = (
-        PrimaryKeyConstraint('id_user', 'id_reviewed_album'),  # Clave primaria compuesta
+        PrimaryKeyConstraint('id_user', 'id_reviewed_song'),  # Clave primaria compuesta
     )
 
 

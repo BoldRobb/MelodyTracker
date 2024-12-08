@@ -5,8 +5,8 @@
     <div class="contenedor_datos">
       @if (isListRoute) {
         <div class="contenedor_datos_creator">
-          <img class="foto_creator" src="images/steve.png" alt="fotoUser">
-          <p class="text_creator">Jexbii created the list</p>
+          <img class="foto_creator" src={{creator_photo}} alt="fotoUser" [routerLink]="['/profile', id_user_creator]" routerLinkActive="router-link-active" >
+          <p class="text_creator" [routerLink]="['/profile', id_user_creator]" routerLinkActive="router-link-active" >{{creator_username}} created the list</p>
         </div>
       }
       <div class="contenedor_title_released">

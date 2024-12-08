@@ -338,4 +338,54 @@ getUsersLiked(id_song: number): Observable<number[]> {
   );
 }
 
+
+likeReview(id_user: number, id_reviewed_song: number): Observable<{ message: string }> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .post<{ message: string }>(
+      `${this.apiUrl}/songs/like_review_song/${id_user}/${id_reviewed_song}`, 
+      {},
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+unlikeReview(id_user: number, id_reviewed_song: number): Observable<{ message: string }> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .delete<{ message: string }>(
+      `${this.apiUrl}/songs/unlike_review_song/${id_user}/${id_reviewed_song}`,
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+hasLikedReview(id_user: number, id_reviewed_song: number): Observable<{ has_liked: boolean }> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .get<{ has_liked: boolean }>(
+      `${this.apiUrl}/songs/has_liked_review_song/${id_user}/${id_reviewed_song}`,
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+getLikesCount(id_reviewed_song: number): Observable<{ likes_count: number }> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .get<{ likes_count: number }>(
+      `${this.apiUrl}/songs/get_likes_count_review/${id_reviewed_song}`,
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
 }

@@ -326,4 +326,54 @@ getListsWithSong(idSong: number): Observable<any> {
     finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando la solicitud termine
   );
 }
+
+
+likeReviewList(id_user: number, id_reviewed_list: number): Observable<{ message: string }> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .post<{ message: string }>(
+      `${this.apiUrl}/lists/like_review_list/${id_user}/${id_reviewed_list}`,
+      {},
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+unlikeReviewList(id_user: number, id_reviewed_list: number): Observable<{ message: string }> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .delete<{ message: string }>(
+      `${this.apiUrl}/lists/unlike_review_list/${id_user}/${id_reviewed_list}`,
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+hasLikedReviewList(id_user: number, id_reviewed_list: number): Observable<{ has_liked: boolean }> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .get<{ has_liked: boolean }>(
+      `${this.apiUrl}/lists/has_liked_review_list/${id_user}/${id_reviewed_list}`,
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+getLikesCountList(id_reviewed_list: number): Observable<{ likes_count: number }> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .get<{ likes_count: number }>(
+      `${this.apiUrl}/lists/get_likes_count_review_list/${id_reviewed_list}`,
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+
+
 }

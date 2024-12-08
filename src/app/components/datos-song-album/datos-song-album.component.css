@@ -137,12 +137,14 @@
 }
 
 .foto_creator{
+    cursor: pointer;
     width: 5rem;
     height: 5rem;
     border-radius: 50%;
 }
 
 .text_creator{
+    cursor: pointer;
     font-family: 'jockey one', sans-serif;
     margin: 0;
     font-size: 2rem;

@@ -79,7 +79,7 @@ export const routes: Routes = [
     { path: 'myLists/:id', component: MyListsComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'songHeardBy/:id', component: SongHeardByComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
     { path: 'songLikedBy/:id', component: SongLikedByComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
-    { path: 'comentsOnReview/:type/:id', component: ComentsOnReviewComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
+    // { path: 'comentsOnReview/:type/:id', component: ComentsOnReviewComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
 
 
 

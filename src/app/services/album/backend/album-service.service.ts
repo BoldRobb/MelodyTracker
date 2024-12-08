@@ -377,4 +377,53 @@ getUsersLiked(id_album: number): Observable<number[]> {
 }
 
 
+likeReviewAlbum(id_user: number, id_reviewed_album: number): Observable<{ message: string }> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .post<{ message: string }>(
+      `${this.apiUrl}/albums/like_review_album/${id_user}/${id_reviewed_album}`,
+      {},
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+unlikeReviewAlbum(id_user: number, id_reviewed_album: number): Observable<{ message: string }> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .delete<{ message: string }>(
+      `${this.apiUrl}/albums/unlike_review_album/${id_user}/${id_reviewed_album}`,
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+hasLikedReviewAlbum(id_user: number, id_reviewed_album: number): Observable<{ has_liked: boolean }> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .get<{ has_liked: boolean }>(
+      `${this.apiUrl}/albums/has_liked_review_album/${id_user}/${id_reviewed_album}`,
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
+getLikesCountAlbum(id_reviewed_album: number): Observable<{ likes_count: number }> {
+  this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
+
+  return this.http
+    .get<{ likes_count: number }>(
+      `${this.apiUrl}/albums/get_likes_count_review_album/${id_reviewed_album}`,
+      { headers: this.getAuthHeaders() } // Incluir cabeceras de autenticación si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
 }

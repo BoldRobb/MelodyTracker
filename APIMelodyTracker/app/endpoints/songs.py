@@ -1,5 +1,6 @@
 # app/endpoints/songs.py
 
+from sqlite3 import IntegrityError
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
@@ -7,7 +8,7 @@ from datetime import date, datetime
 
 
 from app.models.users import User, Profile
-from app.models.songs import RankedSongs, ReviewedSongs, Song, WatchlistSongs, ListenedSongs, FavoriteSongsOfUser, LikedSongs
+from app.models.songs import LikedReviewsSongs, RankedSongs, ReviewedSongs, Song, WatchlistSongs, ListenedSongs, FavoriteSongsOfUser, LikedSongs
 from app.models.artists import Artist
 from app.models.lists import SongsOnList
 
@@ -895,55 +896,114 @@ def delete_ranked_song(id_user: int, id_song: int, db: Session = Depends(get_db)
 
 
 
-@router.get("/has_rank_song/{id_user}/{id_song}")
-def has_rank_song(id_user: int, id_song: int, db: Session = Depends(get_db)):
-    # Buscar el ranking
-    existing_rank = (
-        db.query(RankedSongs)
-        .filter(RankedSongs.id_user == id_user, RankedSongs.id_song == id_song)
+
+# Endpoint para dar "like" a una review
+@router.post("/like_review/{id_user}/{id_reviewed_song}")
+def like_review(id_user: int, id_reviewed_song: int, db: Session = Depends(get_db)):
+    """
+    Permite que un usuario le dé "like" a una review específica.
+    """
+    # Verificar si el like ya existe
+    existing_like = (
+        db.query(LikedReviewsSongs)
+        .filter(LikedReviewsSongs.id_user == id_user, LikedReviewsSongs.id_reviewed_song == id_reviewed_song)
         .first()
     )
 
-    if existing_rank:
-        return {
-            "has_rank": True,
-            "score": existing_rank.score,
-            "date": existing_rank.date
-        }
+    if existing_like:
+        raise HTTPException(status_code=400, detail="El usuario ya ha dado like a esta review.")
+
+    # Crear un nuevo like
+    new_like = LikedReviewsSongs(id_user=id_user, id_reviewed_song=id_reviewed_song)
+    db.add(new_like)
+
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=f"Error al procesar el like: {str(e)}")
+
+    return {"message": "Like registrado exitosamente"}
+
+
+
+#Dar Like a una Review Song
+
+
+# Endpoint para dar "like" a una review
+@router.post("/like_review_song/{id_user}/{id_reviewed_song}")
+def like_review(id_user: int, id_reviewed_song: int, db: Session = Depends(get_db)):
+    # Verificar si el like ya existe
+    existing_like = (
+        db.query(LikedReviewsSongs)
+        .filter(LikedReviewsSongs.id_user == id_user, LikedReviewsSongs.id_reviewed_song == id_reviewed_song)
+        .first()
+    )
+
+    if existing_like:
+        raise HTTPException(status_code=400, detail="El usuario ya ha dado like a esta review.")
+
+    # Crear un nuevo like
+    new_like = LikedReviewsSongs(id_user=id_user, id_reviewed_song=id_reviewed_song)
+    db.add(new_like)
+
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=f"Error al procesar el like: {str(e)}")
+
+    return {"message": "Like registrado exitosamente"}
+
+
+# Endpoint para eliminar un "like" de una review
+@router.delete("/unlike_review_song/{id_user}/{id_reviewed_song}")
+def unlike_review(id_user: int, id_reviewed_song: int, db: Session = Depends(get_db)):
+    # Verificar si el like existe
+    existing_like = (
+        db.query(LikedReviewsSongs)
+        .filter(LikedReviewsSongs.id_user == id_user, LikedReviewsSongs.id_reviewed_song == id_reviewed_song)
+        .first()
+    )
+
+    if not existing_like:
+        raise HTTPException(status_code=404, detail="El like no existe.")
+
+    # Eliminar el like
+    try:
+        db.delete(existing_like)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=f"Error al eliminar el like: {str(e)}")
+
+    return {"message": "Like eliminado exitosamente"}
+
+
+# Endpoint para verificar si un usuario ha dado "like" a una review
+@router.get("/has_liked_review_song/{id_user}/{id_reviewed_song}")
+def has_liked_review(id_user: int, id_reviewed_song: int, db: Session = Depends(get_db)):
+    """
+    Verifica si un usuario ya ha dado "like" a una review específica.
+    """
+    # Consultar si existe el like
+    existing_like = (
+        db.query(LikedReviewsSongs)
+        .filter(LikedReviewsSongs.id_user == id_user, LikedReviewsSongs.id_reviewed_song == id_reviewed_song)
+        .first()
+    )
+
+    # Devolver True si existe, False si no
+    if existing_like:
+        return {"has_liked": True}
     else:
-        return {
-            "has_rank": False,
-            "score": None,
-            "date": None
-        }
+        return {"has_liked": False}
 
 
+# Endpoint para obtener la cantidad de "likes" de una review
+@router.get("/get_likes_count_review/{id_reviewed_song}")
+def get_likes_count(id_reviewed_song: int, db: Session = Depends(get_db)):
+    # Contar la cantidad de likes de la review especificada
+    likes_count = db.query(LikedReviewsSongs).filter(LikedReviewsSongs.id_reviewed_song == id_reviewed_song).count()
 
-# Endpoint para Obtener que usuarios han escuchado tal canción
-@router.get("/{id_song}/users_listened")
-def get_users_listened(id_song: int, db: Session = Depends(get_db)):
-    # Verifica si la canción tiene usuarios relacionados
-    users_listened = db.query(ListenedSongs.id_user).filter(ListenedSongs.id_song == id_song).all()
-    
-    if not users_listened:
-        raise HTTPException(status_code=404, detail="No se encontraron usuarios para esta canción.")
-    
-    # Convierte la salida en una lista de IDs
-    user_ids = [user.id_user for user in users_listened]
-
-    return user_ids
-
-
-# Endpoint para obtener los usuarios que han dado "like" a una canción
-@router.get("/{id_song}/users_liked", response_model=List[int])
-def get_users_liked(id_song: int, db: Session = Depends(get_db)):
-    # Verifica si la canción tiene usuarios relacionados que le han dado "like"
-    users_liked = db.query(LikedSongs.id_user).filter(LikedSongs.id_song == id_song).all()
-
-    if not users_liked:
-        raise HTTPException(status_code=404, detail="No se encontraron usuarios que hayan dado like a esta canción.")
-
-    # Convierte la salida en una lista de IDs
-    user_ids = [user.id_user for user in users_liked]
-
-    return user_ids
+    return {"likes_count": likes_count}
