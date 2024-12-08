@@ -1,0 +1,37 @@
+<div class="contenedor_principal" [routerLink]="['/list', id_list]" routerLinkActive="router-link-active">
+    <div class="contenedor_datos_user">
+      <img class="foto_user" [src]="userPhoto" alt="fotoUser">
+      <p class="texto_username">{{ username }} created the list</p>
+    </div>
+  
+    <p class="titulo_lista">{{ listTitle }}</p>
+  
+    <div class="contenedor_fotos_songs">
+      <div *ngFor="let song of songPhotos">
+        <img class="foto_song" [src]="song.photo" alt="songoflist">
+      </div>
+    </div>
+  
+    <div class="contenedor_stats">
+      <p class="texto_stat total_songs">{{ totalSongsCount }} songs</p>
+  
+      <div class="contenedor_stat">
+        <img class="foto_stat" src="images/comment.png" alt="imagenreview">
+        <p class="texto_stat">{{ reviewsCount }}</p>
+      </div>
+  
+      <div class="contenedor_stat">
+        <img class="foto_stat" src="images/heart.png" alt="imagenheart">
+        <p class="texto_stat">{{ likesCount }}</p>
+      </div>
+  
+      <div class="contenedor_stat">
+        <img class="foto_star" src="images/star.png" alt="imagenstar">
+        <img class="foto_star" src="images/star.png" alt="imagenstar">
+        <img class="foto_star" src="images/star.png" alt="imagenstar">
+        <img class="foto_star" src="images/star.png" alt="imagenstar">
+        <img class="foto_star" src="images/star.png" alt="imagenstar">
+      </div>
+    </div>
+  </div>
+  

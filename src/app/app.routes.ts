@@ -54,6 +54,7 @@ import { ComentsOnReviewComponent } from './pages/coments-on-review/coments-on-r
 import { ListComponent } from './pages/list/list.component';
 import { ListLikedByComponent } from './pages/list-liked-by/list-liked-by.component';
 import { ListenedOptionsComponent } from './components/modals/listened-options/listened-options.component';
+import { ListsWithThisSongComponent } from './pages/lists-with-this-song/lists-with-this-song.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -86,6 +87,7 @@ export const routes: Routes = [
     { path: 'albumLikedBy/:id', component: AlbumLikedByComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
 
     { path: 'listLikedBy/:id', component: ListLikedByComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
+    { path: 'WithThisSong/:id', component: ListsWithThisSongComponent, pathMatch: 'full', data: { idPattern: '\\d+' } }, // Solo acepta números en :id
 
 
     /* COMPONENTES */
@@ -118,7 +120,7 @@ export const routes: Routes = [
     // { path: 'profileBioStats', component: ProfileBioStatsComponent},
     // { path: 'profileHistory', component: ProfileHistoryComponent},
     // { path: 'profilePopularLists', component: ProfilePopularListsComponent},
-    { path: 'listenedOptions', component: ListenedOptionsComponent},
+    // { path: 'listenedOptions', component: ListenedOptionsComponent},
 
     { path: '**', pathMatch: 'full', redirectTo: '404' }
 ];

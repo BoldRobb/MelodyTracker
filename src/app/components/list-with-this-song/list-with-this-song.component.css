@@ -1,0 +1,91 @@
+.contenedor_principal{
+    font-family: 'jockey one', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    width: 55rem;
+    background-color: #0D0B29;
+    border-radius: 1.4rem;
+    cursor: pointer;
+}
+
+.contenedor_datos_user{
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.foto_user{
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+}
+
+.texto_username{
+    font-size: 2.2rem;
+    opacity: 70%;
+    margin: 0;
+}
+
+.titulo_lista{
+    font-size: 2.8rem;
+    opacity: 90%;
+    margin: 0;
+    margin: 0.5rem 0;
+}
+
+.contenedor_fotos_songs {
+    display: flex;
+    margin: 1rem 0;
+}
+
+.contenedor_fotos_songs div:nth-child(2) .foto_song {
+    margin-left: -4.5rem;
+}
+
+.contenedor_fotos_songs div:nth-child(3) .foto_song {
+    margin-left: -4.5rem;
+}
+
+.contenedor_fotos_songs div:nth-child(4) .foto_song {
+    margin-left: -4.5rem;
+}
+
+.contenedor_fotos_songs div:nth-child(5) .foto_song {
+    margin-left: -4.5rem;
+}
+
+
+.foto_song{
+    width: 13rem;
+    height: 13rem;
+    border-radius: 1rem;
+}
+
+.contenedor_stats{
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.contenedor_stat{
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+.foto_stat{
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.texto_stat{
+    font-size: 2rem;
+    margin: 0.5rem 0;
+}
+
+.foto_star{
+    width: 2.5rem;
+    height: 2.5rem;
+}

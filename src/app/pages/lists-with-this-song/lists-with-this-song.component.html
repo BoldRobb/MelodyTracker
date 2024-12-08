@@ -1,0 +1,43 @@
+<div class="contenedor_principal">
+    <div class="lado_izquierdo">
+      <app-datos-song-album></app-datos-song-album>
+    </div>
+    <div class="lado_derecho">
+      <!-- El valor de 'total' es dinámico -->
+      <app-stat-total type_stat="list" [total]="totalLists"></app-stat-total>
+    </div>
+  </div>
+  
+  <div class="contenedor_texto_mensaje">
+    <p class="texto_mensaje">Lists With This Song: </p>
+  </div>
+  
+  <div class="contenedor_follows">
+    <div *ngIf="loading">Cargando...</div>
+
+<!-- Mostrar las listas cuando se obtengan los datos -->
+<div *ngIf="!loading && listsData.length">
+    <div class="contenedor_listas">
+        <app-list-with-this-song 
+            *ngFor="let list of listsData"
+            [id_list]="list.id_list"
+            [userPhoto]="list.photo_creator"
+            [username]="list.username"
+            [listTitle]="list.title"
+            [songPhotos]="list.songs_photos"
+            [totalSongsCount]="list.total_songs_count"
+            [reviewsCount]="list.total_reviews_count"
+            [likesCount]="list.total_like_count"
+            [rankedCount]="list.total_ranked_count"
+            [totalScore]="list.total_score">
+        </app-list-with-this-song>
+    </div>
+  
+</div>
+
+<!-- Si no hay datos disponibles -->
+<div *ngIf="!loading && listsData.length === 0">No se encontraron listas con esta canción.</div>
+
+  </div>
+
+<!-- Mostrar un spinner mientras se cargan los datos -->

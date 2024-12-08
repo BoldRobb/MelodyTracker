@@ -45,7 +45,7 @@
           <p class="cantidad_stat">{{ reviewCount || 0 }}</p>
         </div>
         @if (isSongRoute) {
-          <div class="stat">
+          <div class="stat" [routerLink]="['/WithThisSong', albumId]">
             <img class="imagen_stat" src="images/lists_created.png" alt="">
             <p class="cantidad_stat">{{ listsCreated || 0 }}</p>
           </div>

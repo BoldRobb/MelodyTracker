@@ -58,7 +58,7 @@ export class DatosSongAlbumComponent implements OnInit {
   isCommentOnReviewSong: boolean = false;
   isCommentOnReviewAlbum: boolean = false;
   
-  
+  isListsWithThisSong: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -87,6 +87,8 @@ export class DatosSongAlbumComponent implements OnInit {
 
     this.isCommentOnReviewSong = this.router.url.startsWith('/comentsOnReview/song');
     this.isCommentOnReviewAlbum = this.router.url.startsWith('/comentsOnReview/album');
+
+    this.isListsWithThisSong = this.router.url.startsWith('/WithThisSong');
 
 
     this.albumService.statsUpdatedSource$.subscribe(() => {
@@ -126,7 +128,7 @@ export class DatosSongAlbumComponent implements OnInit {
 
     if (this.isAlbumRoute) {
       this.rutaclick = 'album';
-    } else if (this.isSongRoute) {
+    } else if (this.isSongRoute || this.isListsWithThisSong) {
       this.rutaclick = 'song';
     } else if (this.isListRoute) {
       this.rutaclick = 'list';
@@ -154,7 +156,7 @@ export class DatosSongAlbumComponent implements OnInit {
           this.spinnerService.hide();
         }
       );
-    } else if (this.isSongRoute || this.isSongHeardBy || this.isSongLikedBy || this.isCommentOnReviewSong) {
+    } else if (this.isSongRoute || this.isSongHeardBy || this.isSongLikedBy || this.isCommentOnReviewSong || this.isListsWithThisSong) {
       this.songService.getSongDetails(id).subscribe(
         (response) => {
           this.assignSongData(response);

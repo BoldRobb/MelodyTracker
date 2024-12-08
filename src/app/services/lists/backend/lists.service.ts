@@ -319,4 +319,11 @@ getUsersLiked(id_list: number): Observable<number[]> {
   );
 }
 
+
+getListsWithSong(idSong: number): Observable<any> {
+  this.spinnerService.show(); // Mostrar el spinner mientras se hace la solicitud
+  return this.http.get<any>(`${this.apiUrl}/lists/lists_with_this_song/${idSong}`).pipe(
+    finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando la solicitud termine
+  );
+}
 }
