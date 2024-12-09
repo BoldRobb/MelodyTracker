@@ -762,6 +762,34 @@ def review_song(review_data: ReviewSongSchema, db: Session = Depends(get_db), cu
 
 
 
+@router.delete("/review_song/{review_id}")
+def delete_review_song(
+    review_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    user, role = current_user
+
+    # Verificar si la reseña existe
+    review = db.query(ReviewedSongs).filter(ReviewedSongs.id_reviewed_songs == review_id).first()
+    if not review:
+        raise HTTPException(status_code=404, detail="Review not found")
+
+    # Verificar que el usuario actual sea el creador de la reseña
+    if review.id_user != user.id_user:
+        raise HTTPException(status_code=403, detail="You are not authorized to delete this review")
+
+    # Eliminar registros dependientes en liked_reviewed_songs (si los hubiera)
+    db.query(LikedReviewsSongs).filter(LikedReviewsSongs.id_reviewed_song == review_id).delete()
+
+    # Eliminar la reseña
+    db.delete(review)
+    db.commit()
+
+    return {"msg": "Review deleted successfully"}
+
+
+
 
 
 # Obtener comentarios paginados de una canción

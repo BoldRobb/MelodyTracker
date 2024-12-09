@@ -531,6 +531,35 @@ def review_list(
     return {"msg": "Review created successfully", "review": new_review}
 
 
+@router.delete("/review_list/{review_id}")
+def delete_review_list(
+    review_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    user, role = current_user
+
+    # Verificar si la reseña existe
+    review = db.query(ReviewedLists).filter(ReviewedLists.id_reviewed_lists == review_id).first()
+    if not review:
+        raise HTTPException(status_code=404, detail="Review not found")
+
+    # Verificar que el usuario actual sea el creador de la reseña
+    if review.id_user != user.id_user:
+        raise HTTPException(status_code=403, detail="You are not authorized to delete this review")
+
+    # Eliminar registros dependientes en liked_reviewed_list
+    db.query(LikedReviewedList).filter(LikedReviewedList.id_reviewed_list == review_id).delete()
+
+    # Eliminar la reseña
+    db.delete(review)
+    db.commit()
+
+    return {"msg": "Review deleted successfully"}
+
+
+
+
 
 
 @router.get("/{id_list}/comments_list")

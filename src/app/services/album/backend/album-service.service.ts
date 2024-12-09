@@ -353,6 +353,20 @@ reviewAlbum(id_user: number, id_album: number, comment: string): Observable<{ ms
 }
 
 
+deleteReviewAlbum(review_id: number): Observable<{ msg: string }> {
+  this.spinnerService.show(); // Mostrar el spinner mientras se hace la petición
+
+  return this.http
+    .delete<{ msg: string }>(
+      `${this.apiUrl}/albums/review_album/${review_id}`,  // URL del endpoint del backend
+      { headers: this.getAuthHeaders() }  // Incluir el token de autenticación si es necesario
+    )
+    .pipe(
+      finalize(() => this.spinnerService.hide())  // Ocultar el spinner una vez que la solicitud haya finalizado
+    );
+}
+
+
 
 // Servicio para obtener las canciones de un álbum
 getSongsOnAlbum(id_album: number): Observable<{ songs: any[] }> {

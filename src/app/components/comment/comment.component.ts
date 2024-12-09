@@ -7,6 +7,7 @@ import { SpinnerService } from '../../services/others/spinner.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-comment',
@@ -23,6 +24,13 @@ export class CommentComponent implements OnInit {
   isAlbum: boolean = false;
   isSong: boolean = false;
   isList: boolean = false;
+
+  id_url = this.getIdFromUrl();
+
+
+  showDeleteConfirmation: boolean = false;  // Variable para mostrar el modal
+  commentToDelete: any = null;  // Variable para almacenar el comentario que se va a eliminar
+
 
   constructor(
     private songService: SongService,
@@ -41,6 +49,7 @@ export class CommentComponent implements OnInit {
 
     this.checkIfAlbumSongList();
     this.loadComments(); // Cargar los comentarios inicialmente
+    console.log('ZZZZZZZZZZZZZZZZZZZ',this.id_url);
   }
 
   getUserIdFromToken(): number | undefined {
@@ -222,4 +231,73 @@ export class CommentComponent implements OnInit {
       }
     }
   }
+
+
+  deleteReview(comment: any): void {
+    if (!comment || !this.id_user) {
+      console.error('Comentario inválido o usuario no autenticado');
+      return;
+    }
+  
+    // Guardamos el comentario a eliminar para usarlo después
+    this.commentToDelete = comment;
+  
+    // Mostramos el modal de confirmación
+    this.showDeleteConfirmation = true;
+  }
+
+
+  confirmDelete(): void {
+    if (this.commentToDelete) {
+      let delete$: Observable<{ msg: string } | { message: string }> | null = null;
+  
+      if (this.isSong) {
+        delete$ = this.songService.deleteReviewSong(this.commentToDelete.id_reviewed_songs);
+      } else if (this.isAlbum) {
+        delete$ = this.albumService.deleteReviewAlbum(this.commentToDelete.id_reviewed_albums);
+      } else if (this.isList) {
+        delete$ = this.listsService.deleteReviewList(this.commentToDelete.id_reviewed_lists);
+      }
+  
+      if (delete$ !== null) {
+        this.spinnerService.show(); // Mostrar spinner de carga
+  
+        delete$.pipe(
+          finalize(() => {
+            this.spinnerService.hide(); // Ocultar spinner al finalizar (éxito o error)
+            this.showDeleteConfirmation = false;
+          })
+        ).subscribe({
+          next: (response) => {
+            // Usar type guard para determinar qué propiedad existe
+            const message = 'msg' in response ? response.msg : response.message;
+            console.log('Comentario eliminado exitosamente', message);
+            
+            // Eliminar el comentario de la lista
+            this.comments = this.comments.filter(c => c !== this.commentToDelete);
+            
+            // Opcional: mostrar una notificación al usuario
+            // this.notificationService.success('Comentario eliminado');
+          },
+          error: (error) => {
+            console.error('Error al eliminar el comentario:', error);
+            // Opcional: mostrar un mensaje de error al usuario
+            // this.notificationService.error('No se pudo eliminar el comentario');
+          },
+          complete: () => {
+            this.commentToDelete = null; // Limpiar la referencia
+          }
+        });
+      }
+    }
+  }
+  
+  cancelDelete(): void {
+    // Solo cerrar el modal si el usuario cancela
+    this.showDeleteConfirmation = false;
+    this.commentToDelete = null; // Limpiar la referencia
+  }
+  
+  
+  
 }

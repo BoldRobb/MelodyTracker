@@ -269,6 +269,18 @@ reviewList(id_user: number, id_list: number, comment: string): Observable<{ msg:
 }
 
 
+deleteReviewList(review_id: number): Observable<{ msg: string }> {
+  this.spinnerService.show(); // Mostrar el spinner
+
+  return this.http
+    .delete<{ msg: string }>(
+      `${this.apiUrl}/lists/review_list/${review_id}`,
+      { headers: this.getAuthHeaders() } // Incluir el token en las cabeceras si es necesario
+    )
+    .pipe(finalize(() => this.spinnerService.hide())); // Ocultar el spinner al finalizar
+}
+
+
 
 // Servicio para obtener los comentarios de una lista
 getListComments(id_list: number): Observable<any[]> {

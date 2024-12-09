@@ -703,6 +703,35 @@ def review_album(review_data: ReviewAlbumSchema, db: Session = Depends(get_db), 
     return {"msg": "Review created successfully", "review": new_review}
 
 
+@router.delete("/review_album/{review_id}")
+def delete_review_album(
+    review_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    user, role = current_user
+
+    # Verificar si la reseña existe
+    review = db.query(ReviewedAlbums).filter(ReviewedAlbums.id_reviewed_albums == review_id).first()
+    if not review:
+        raise HTTPException(status_code=404, detail="Review not found")
+
+    # Verificar que el usuario actual sea el creador de la reseña
+    if review.id_user != user.id_user:
+        raise HTTPException(status_code=403, detail="You are not authorized to delete this review")
+
+    # Eliminar registros dependientes en liked_reviewed_albums (si los hubiera)
+    db.query(LikedReviewedAlbum).filter(LikedReviewedAlbum.id_reviewed_album == review_id).delete()
+
+    # Eliminar la reseña
+    db.delete(review)
+    db.commit()
+
+    return {"msg": "Review deleted successfully"}
+
+
+
+
 
 @router.get("/songsOnAlbum/{id_album}")
 def get_songs_by_album(id_album: int, db: Session = Depends(get_db)):
@@ -791,6 +820,8 @@ def like_review_album(id_user: int, id_reviewed_album: int, db: Session = Depend
         raise HTTPException(status_code=400, detail=f"Error al procesar el like: {str(e)}")
 
     return {"message": "Like registrado exitosamente"}
+
+
 
 
 # Quitar like a una review de un álbum

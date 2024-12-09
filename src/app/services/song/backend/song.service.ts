@@ -321,6 +321,22 @@ reviewSong(id_user: number, id_song: number, comment: string): Observable<{ msg:
 }
 
 
+deleteReviewSong(review_id: number): Observable<{ msg: string }> {
+  this.spinnerService.show(); // Mostrar el spinner mientras se hace la petición
+
+  return this.http
+    .delete<{ msg: string }>(
+      `${this.apiUrl}/songs/review_song/${review_id}`,  // URL del endpoint del backend
+      { headers: this.getAuthHeaders() }  // Incluir el token de autenticación si es necesario
+    )
+    .pipe(
+      finalize(() => this.spinnerService.hide())  // Ocultar el spinner una vez que la solicitud haya finalizado
+    );
+}
+
+
+
+
 // Método para obtener los IDs de usuarios que han escuchado una canción
 getUsersListened(id_song: number): Observable<number[]> {
   this.spinnerService.show();

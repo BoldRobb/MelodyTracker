@@ -1,3 +1,13 @@
+<!-- Modal de confirmación -->
+<div *ngIf="showDeleteConfirmation" class="modal">
+  <div class="modal-content">
+    <p class="texto_modal">¿Estás seguro de que quieres eliminar esta reseña?</p>
+    <button (click)="confirmDelete()">Sí</button>
+    <button (click)="cancelDelete()">No</button>
+  </div>
+</div>
+
+<!-- El resto del contenido del comentario -->
 @if (!isLoading) {
     <div>
         @for (comment of comments; track $index) {
@@ -16,8 +26,14 @@
                       </a>
                       <!-- Fecha en formato dd MMM, yyyy -->
                       <p class="listened">Reviewed {{ comment.date | date: 'dd MMM, yyyy' }}.</p>
+                    
+                      <!-- Solo mostrar este div si el id_user es igual al id_user del comentario -->
+                      <div class="contenedor_basura" *ngIf="id_user === comment.id_user">
+                        <img class="foto_basura" src="images/borrar.png" alt="" (click)="deleteReview(comment)"/>
+                        <p class="texto_delete_review" (click)="deleteReview(comment)">Delete review</p>
+                      </div>
                     </div>
-              
+                    
                     <div class="contenedor_rate">
                       <!-- Mostrar las estrellas basadas en el score -->
                        @for (star of getStars(comment.score); track $index) {
@@ -27,7 +43,6 @@
                                  alt="Star" />
                         </ng-container>
                        }
-                      
                     </div>
               
                     <!-- Comentario del usuario -->
@@ -42,23 +57,9 @@
                       />
                       <p class="total_likes">{{ comment.likesCount }} likes</p>
                     </div>
-                    
-                    
-                   
                   </div>
                 </div>
             </div>
         }
     </div>
 }
-
-
-  
-  <!-- Spinner (se muestra mientras isLoading sea true) -->
-@if (isLoading) {
-    <div>
-        <div class="spinner">Loading...</div> <!-- Aquí puedes incluir tu spinner personalizado -->
-    </div>
-}
-  
-  
