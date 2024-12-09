@@ -42,7 +42,7 @@ export class FollowersComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error al obtener seguidores:', err);
+
         this.loading = false;
       }
     });

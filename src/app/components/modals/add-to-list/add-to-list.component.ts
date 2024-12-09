@@ -34,7 +34,7 @@ export class AddToListComponent implements OnInit {
   ngOnInit(): void {
 
     this.listService.UpdateLists$.subscribe(() => {
-      console.log('Lista de Listas Actualizada');
+
       this.loadUserLists();
     });
 
@@ -42,7 +42,7 @@ export class AddToListComponent implements OnInit {
     if (this.userId) {
       this.loadUserLists();
     } else {
-      console.error('No se pudo obtener el ID del usuario desde el token');
+
     }
     this.extractSongIdFromUrl(); // Extraer el ID de la canción desde la URL
   }
@@ -55,10 +55,10 @@ export class AddToListComponent implements OnInit {
         const payload = JSON.parse(atob(token.split('.')[1])); // Decodificar el payload del JWT
         this.userId = payload.id_user; // Cambiar 'id_user' según el nombre real de la clave en tu token
       } catch (error) {
-        console.error('Error al decodificar el token:', error);
+
       }
     } else {
-      console.error('No se encontró el token en el localStorage');
+
     }
   }
 
@@ -66,7 +66,7 @@ export class AddToListComponent implements OnInit {
   extractSongIdFromUrl(): void {
     this.route.paramMap.subscribe(params => {
       this.songId = Number(params.get('id')); // Obtén el ID de la canción de la URL
-      console.log('ID de la canción:', this.songId);
+
     });
   }
 
@@ -79,7 +79,7 @@ export class AddToListComponent implements OnInit {
         console.log('Listas del usuario:', this.userLists); // Depuración
       },
       (error) => {
-        console.error('Error al cargar las listas:', error);
+
         this.isLoading = false;
       }
     );
@@ -114,12 +114,12 @@ export class AddToListComponent implements OnInit {
           this.toast.success('Song added to the playlist');
         },
         (error) => {
-          console.error('Error al agregar la canción a la lista:', error);
+
           this.toast.error('This song is already added to this playlist');
         }
       );
     } else {
-      console.error('No se pudo obtener el ID de la canción');
+
     }
   }
 }

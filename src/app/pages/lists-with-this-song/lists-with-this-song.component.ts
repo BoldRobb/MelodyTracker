@@ -30,7 +30,7 @@ export class ListsWithThisSongComponent implements OnInit {
     if (idSong) {
       this.getListsWithSong(idSong);
     } else {
-      console.error('No se encontró el parámetro id en la URL');
+
     }
   }
 
@@ -54,11 +54,11 @@ export class ListsWithThisSongComponent implements OnInit {
           this.listsData = response.lists;  // Asignar los datos al arreglo si es una lista
           this.totalLists = this.listsData.length;  // Actualizar el total de listas
         } else {
-          console.error('La respuesta no tiene la estructura esperada', response);
+
         }
       },
       error: (err) => {
-        console.error('Error al obtener las listas:', err);
+
       }
     });
   }

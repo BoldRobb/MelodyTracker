@@ -53,7 +53,7 @@ export class ReviewEspecificaComponent implements OnInit {
         this.filterReviews();
       },
       error => {
-        console.error('Error al obtener reseñas:', error);
+
       }
     );
   }

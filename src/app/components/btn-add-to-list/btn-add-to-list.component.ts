@@ -14,12 +14,10 @@ export class BtnAddToListComponent {
   // Método para abrir el modal
   openAddToListModal(): void {
     this.isModalOpen = true;  // Cambia el estado a visible
-    console.log("Se abrió el modal");
   }
 
   // Método para cerrar el modal
   closeModal(): void {
     this.isModalOpen = false;  // Cambia el estado a no visible
-    console.log("Se cerró el modal");
   }
 }

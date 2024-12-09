@@ -92,7 +92,7 @@ export class DatosSongAlbumComponent implements OnInit {
 
 
     this.albumService.statsUpdatedSource$.subscribe(() => {
-      console.log('Stats');
+
       if (this.albumId !== null && this.isAlbumRoute) {
         // this.getDetails(this.albumId);  // Recargar los comentarios
         this.getAlbumLikeCount(this.albumId);
@@ -151,7 +151,7 @@ export class DatosSongAlbumComponent implements OnInit {
           this.spinnerService.hide();
         },
         (error) => {
-          console.error('Error al obtener los detalles del álbum:', error);
+
           this.router.navigate(['/404']);
           this.spinnerService.hide();
         }
@@ -167,7 +167,7 @@ export class DatosSongAlbumComponent implements OnInit {
           this.spinnerService.hide();
         },
         (error) => {
-          console.error('Error al obtener los detalles de la canción:', error);
+
           this.router.navigate(['/404']);
           this.spinnerService.hide();
         }
@@ -179,11 +179,11 @@ export class DatosSongAlbumComponent implements OnInit {
           this.getListLikeCount(id);
           this.getListReviewCount(id);
           this.getListSongsOnListCount(id);
-          console.log('estoooooo: ', response);
+
           this.spinnerService.hide();
         },
         (error) => {
-          console.error('Error al obtener los detalles de la lista:', error);
+
           this.router.navigate(['/404']);
           this.spinnerService.hide();
         }
@@ -199,7 +199,7 @@ export class DatosSongAlbumComponent implements OnInit {
         this.likes = response.likes_count;
       },
       (error) => {
-        console.error('Error al obtener el conteo de likes del álbum:', error);
+
       }
     );
   }
@@ -210,7 +210,7 @@ export class DatosSongAlbumComponent implements OnInit {
         this.reviewCount = response.reviews_count;
       },
       (error) => {
-        console.error('Error al obtener el conteo de reviews del álbum:', error);
+
       }
     );
   }
@@ -221,7 +221,7 @@ export class DatosSongAlbumComponent implements OnInit {
         this.listens = response.user_count;
       },
       (error) => {
-        console.error('Error al obtener el conteo de escuchas del álbum:', error);
+
       }
     );
   }
@@ -233,7 +233,7 @@ export class DatosSongAlbumComponent implements OnInit {
         this.listens = response.user_count;
       },
       (error) => {
-        console.error('Error al obtener el conteo de escuchas de la canción:', error);
+
       }
     );
   }
@@ -244,7 +244,7 @@ export class DatosSongAlbumComponent implements OnInit {
         this.reviewCount = response.reviews_count;
       },
       (error) => {
-        console.error('Error al obtener el conteo de reviews de la canción:', error);
+
       }
     );
   }
@@ -255,7 +255,7 @@ export class DatosSongAlbumComponent implements OnInit {
         this.listsCreated = response.list_count;
       },
       (error) => {
-        console.error('Error al obtener el conteo de listas creadas de la canción:', error);
+
       }
    );
   }
@@ -266,7 +266,7 @@ export class DatosSongAlbumComponent implements OnInit {
         this.likes = response.likes_count;
       },
       (error) => {
-        console.error('Error al obtener el conteo de likes de la canción:', error);
+
       }
     );
   }
@@ -278,7 +278,7 @@ export class DatosSongAlbumComponent implements OnInit {
         this.likes = response.likes_count;
       },
       (error) => {
-        console.error('Error al obtener el conteo de likes de la lista:', error);
+
       }
     );
   }
@@ -289,7 +289,7 @@ export class DatosSongAlbumComponent implements OnInit {
         this.reviewCount = response.reviews_count;
       },
       (error) => {
-        console.error('Error al obtener el conteo de likes de la lista:', error);
+
       }
     );
   }
@@ -300,7 +300,7 @@ export class DatosSongAlbumComponent implements OnInit {
         this.totalSongs = response.songs_count;
       },
       (error) => {
-        console.error('Error al obtener el conteo de likes de la lista:', error);
+
       }
     );
   }

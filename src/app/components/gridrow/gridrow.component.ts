@@ -65,7 +65,7 @@ export class GridrowComponent implements OnInit {
           this.loadListenedAlbums();  // Cargar los álbumes escuchados
           break;
         default:
-          console.error('Tipo no reconocido');
+
       }
     }
   }
@@ -76,7 +76,7 @@ export class GridrowComponent implements OnInit {
         this.bestAlbums = response.best_albums;
       },
       (error) => {
-        console.error('Error loading best albums:', error);
+
       }
     );
   }
@@ -89,7 +89,7 @@ export class GridrowComponent implements OnInit {
         this.watchlistAlbums = response.watchlist_albums;
       },
       (error) => {
-        console.error('Error loading watchlist albums:', error);
+
       }
     );
   }
@@ -102,7 +102,7 @@ export class GridrowComponent implements OnInit {
         this.watchlistSongs = response.watchlist_songs;
       },
       (error) => {
-        console.error('Error loading watchlist songs:', error);
+
       }
     );
   }
@@ -115,7 +115,7 @@ export class GridrowComponent implements OnInit {
         this.listenedSongs = response.songs_info;  // Guardamos las canciones escuchadas
       },
       (error) => {
-        console.error('Error loading listened songs:', error);
+
       }
     );
   }
@@ -128,7 +128,7 @@ export class GridrowComponent implements OnInit {
         this.listenedAlbums = response.albums_info;  // Guardamos los álbumes escuchados
       },
       (error) => {
-        console.error('Error loading listened albums:', error);
+
       }
     );
   }

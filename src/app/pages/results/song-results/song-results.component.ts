@@ -57,7 +57,7 @@ export class SongResultsComponent implements OnInit, OnDestroy {
         this.songs = data;  // Actualiza los resultados de canciones
       },
       (error) => {
-        console.error('Error al buscar canciones:', error);
+
         this.songs = [];  // Si hay un error, asegurarse de que no haya datos
       }
     );

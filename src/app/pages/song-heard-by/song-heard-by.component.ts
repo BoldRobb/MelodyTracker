@@ -43,7 +43,7 @@ export class SongHeardByComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error fetching users:', err);
+
         this.loading = false;
       }
     });

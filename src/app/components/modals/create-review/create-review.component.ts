@@ -73,13 +73,13 @@ export class CreateReviewComponent implements OnInit {
         // Si la ruta es de un álbum (/album/id)
         if (path.startsWith('album')) {
           this.isAlbum = true; // Estás en una ruta de álbum
-          console.log('albumId:', this.albumId);
+
         } else if (path.startsWith('song')) {
           this.isSong = true; // No es un álbum, es una canción
-          console.log('songId:', this.songId);
+
         } else if (path.startsWith('list')) {
           this.isList = true; // Es una lista de reproducción
-          console.log('listId:', this.listId);
+
         }
 
 
@@ -102,7 +102,7 @@ export class CreateReviewComponent implements OnInit {
     if (commentValue.length > 4) {
       // Verificar contenido inapropiado usando Gemini
       this.geminiService.verifyReviewCorrectContent(commentValue).then((response) => {
-        console.log('Respuesta de Gemini:', response);
+
         if (response === 'True') {
           // Si la respuesta es positiva, proceder con la creación de la reseña
           const review$ = this.isAlbum
@@ -126,7 +126,7 @@ export class CreateReviewComponent implements OnInit {
                 this.closeModal(); // Cerrar el modal después de crear la reseña
               },
               error: (error) => {
-                console.error('Error al crear la reseña:', error);
+
               },
             });
           }
@@ -135,7 +135,7 @@ export class CreateReviewComponent implements OnInit {
           this.toast.error('Review contains inappropriate content');
         }
       }).catch(error => {
-        console.error('Error al verificar el contenido del comentario:', error);
+
         this.toast.error('Error al verificar el comentario');
       });
     } else {
@@ -164,13 +164,13 @@ export class CreateReviewComponent implements OnInit {
       this.userId = decodedToken?.id_user;
 
       if (this.userId) {
-        console.log('userId extraído del token:', this.userId);
+
         this.checkIfLiked(); // Verificar si le ha dado like a la canción
       } else {
-        console.error('No se encontró el userId en el token');
+
       }
     } else {
-      console.error('No se encontró el access_token en el localStorage');
+
     }
   }
 
@@ -195,11 +195,11 @@ export class CreateReviewComponent implements OnInit {
       if (checkLike$) {
         checkLike$.subscribe({
           next: (response) => {
-            console.log('Respuesta del servidor:', response);
+
             this.isLiked = response.has_liked;
           },
           error: (error) => {
-            console.error('Error al verificar si el usuario dio like:', error);
+
           }
         });
       }
@@ -208,11 +208,11 @@ export class CreateReviewComponent implements OnInit {
 
   toggleLike(): void {
     if (this.userId) {
-      console.log('Cambiando estado de like');
-      console.log('isLiked:', this.isLiked);
-      console.log('isAlbum:', this.isAlbum);
-      console.log('isSong:', this.isSong);
-      console.log('isList:', this.isList);
+
+
+
+
+
   
       // Verificación para álbumes
       const like$ = this.isAlbum 
@@ -231,15 +231,15 @@ export class CreateReviewComponent implements OnInit {
         like$.subscribe({
           next: (response) => {
             this.isLiked = !this.isLiked; // Cambia el estado de 'like'
-            console.log('Like toggled:', this.isLiked);
+
           },
           error: (error) => {
-            console.error('Error al alternar el like:', error);
+
           }
         });
       }
     } else {
-      console.error('userId no definido');
+
     }
   }
   
@@ -279,7 +279,7 @@ export class CreateReviewComponent implements OnInit {
             this.closeModal(); // Cerrar el modal después de crear la reseña
           },
           error: (error) => {
-            console.error('Error al crear la reseña:', error);
+
           },
         });
       }

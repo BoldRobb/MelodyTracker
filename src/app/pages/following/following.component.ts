@@ -42,7 +42,7 @@ export class FollowingComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error al obtener usuarios seguidos:', err);
+
         this.loading = false;
       }
     });

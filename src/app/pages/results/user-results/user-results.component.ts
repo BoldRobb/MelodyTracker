@@ -56,7 +56,7 @@ export class UserResultsComponent implements OnInit, OnDestroy {
         this.users = data;  // Asignar los resultados de búsqueda a la variable users
       },
       (error) => {
-        console.error('Error al buscar usuarios:', error);  // En caso de error
+        // console.error('Error al buscar usuarios:', error);  // En caso de error
         this.users = [];  // Asegurarse de que la lista de usuarios esté vacía en caso de error
       }
     );

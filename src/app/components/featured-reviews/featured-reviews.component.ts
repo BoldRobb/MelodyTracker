@@ -60,7 +60,7 @@ export class FeaturedReviewsComponent implements OnInit {
           this.topReviews = reviews;
         },
         (error) => {
-          console.error('Error al obtener los reviews:', error);
+
         }
       );
   }
@@ -74,7 +74,7 @@ export class FeaturedReviewsComponent implements OnInit {
           this.topReviews = reviews;
         },
         (error) => {
-          console.error('Error al obtener los reviews del álbum:', error);
+
         }
       );
   }
@@ -88,7 +88,7 @@ export class FeaturedReviewsComponent implements OnInit {
           this.topReviews = reviews;
         },
         (error) => {
-          console.error('Error al obtener los reviews de la lista:', error);
+
         }
       );
   }

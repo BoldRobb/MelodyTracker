@@ -57,7 +57,7 @@ export class ArtistResultsComponent implements OnInit, OnDestroy {
         this.artists = data;  // Actualiza los resultados de artistas
       },
       (error) => {
-        console.error('Error al buscar artistas:', error);
+
         this.artists = [];  // Si hay un error, asegurarse de que no haya datos
       }
     );

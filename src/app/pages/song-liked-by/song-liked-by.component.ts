@@ -44,7 +44,7 @@ export class SongLikedByComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error fetching users who liked song:', err);
+
         this.loading = false;
       }
     });

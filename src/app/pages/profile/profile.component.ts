@@ -74,7 +74,7 @@ export class ProfileComponent implements OnInit {
         this.isFollowed = response.is_following; // Configura el estado inicial
       },
       error: (err) => {
-        console.error('Error checking follow status:', err);
+
         this.errorMessage = 'No se pudo verificar el estado de seguimiento';
       }
     });
@@ -99,7 +99,7 @@ export class ProfileComponent implements OnInit {
         this.userProfile.total_followers += 1; // Incrementa el número de seguidores
       },
       error: err => {
-        console.error('Error following user:', err);
+
         this.errorMessage = 'No se pudo seguir al usuario';
       }
     });
@@ -115,7 +115,7 @@ export class ProfileComponent implements OnInit {
         this.userProfile.total_followers -= 1; // Decrementa el número de seguidores
       },
       error: err => {
-        console.error('Error unfollowing user:', err);
+
         this.errorMessage = 'No se pudo dejar de seguir al usuario';
       }
     });
@@ -133,7 +133,7 @@ export class ProfileComponent implements OnInit {
         this.isLoading = false;
       },
       error => {
-        console.error('Error fetching user profile:', error);
+
         if (error.status === 404) {
           this.router.navigate(['/404']);
         } else {
@@ -150,10 +150,10 @@ export class ProfileComponent implements OnInit {
         this.bio = stats.bio;
         this.totalRanked = stats.total_ranked_songs_albums;
         this.totalReview = stats.total_reviews_songs_albums;
-        console.log('User stats:', stats);
+
       },
       error: err => {
-        console.error('Error fetching user stats:', err);
+
         this.errorMessage = 'No se pudieron cargar las estadísticas del usuario';
       }
     });
@@ -168,7 +168,7 @@ export class ProfileComponent implements OnInit {
       const payload = JSON.parse(atob(payloadBase64)); // Decodificar el payload
       return payload.id_user || null; // Devuelve el `id_user` si existe
     } catch (error) {
-      console.error('Error decoding token:', error);
+
       return null;
     }
   }

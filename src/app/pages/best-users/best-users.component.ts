@@ -43,7 +43,7 @@ export class BestUsersComponent implements OnInit {
         console.log('Remaining User IDs:', this.remainingUserIds); // Verifica los IDs restantes
       },
       (error) => {
-        console.error('Error fetching top users:', error);
+
       }
     );
   }

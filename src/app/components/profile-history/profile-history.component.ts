@@ -42,14 +42,14 @@ export class ProfileHistoryComponent implements OnInit {
     this.usersService.getHistoryProfile(this.id_user).pipe(
       finalize(() => {
         this.loading = false;
-        console.log('Activities: ', this.recentActivities);
+
       })
     ).subscribe(
       (data) => {
         this.recentActivities = data; // Asignamos los datos obtenidos
       },
       (error) => {
-        console.error('Error fetching activities', error);
+
         // Manejo de errores si es necesario
       }
     );

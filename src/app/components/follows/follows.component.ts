@@ -34,7 +34,7 @@ export class FollowsComponent implements OnInit {
           this.usersDetails = details; // Almacena los detalles de los usuarios
         },
         error: (err) => {
-          console.error('Error al cargar detalles de usuarios:', err);
+
         }
       });
   }

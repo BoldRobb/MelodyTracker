@@ -68,7 +68,7 @@ export class YourRatingComponent implements OnInit {
             }
           },
           (error) => {
-            console.error(`Error verificando si el álbum fue calificado`, error);
+
           }
         );
       }
@@ -86,7 +86,7 @@ export class YourRatingComponent implements OnInit {
           }
         },
         (error) => {
-          console.error(`Error verificando si la lista fue calificada`, error);
+
         }
       );
 
@@ -100,7 +100,7 @@ export class YourRatingComponent implements OnInit {
             }
           },
           (error) => {
-            console.error(`Error verificando si la canción fue calificada`, error);
+
           }
         );
     }
@@ -111,11 +111,11 @@ export class YourRatingComponent implements OnInit {
       .subscribe(
         () => {
           this.selectedRating = score;
-          console.log(`Calificación para la lista realizada con éxito`);
+
           this.fillStars(score);
         },
         (error) => {
-          console.error(`Error calificando la lista`, error);
+
         }
       );
   }
@@ -141,11 +141,11 @@ export class YourRatingComponent implements OnInit {
           () => {
             this.selectedRating = score;
             this.albumService.updateComments();
-            console.log(`Calificación para el álbum realizada con éxito`);
+
             this.fillStars(score);
           },
           (error) => {
-            console.error(`Error calificando el álbum`, error);
+
           }
         );
     } else if (this.entityType === 'song') {
@@ -154,11 +154,11 @@ export class YourRatingComponent implements OnInit {
           () => {
             this.selectedRating = score;
             this.albumService.updateComments();
-            console.log(`Calificación para la canción realizada con éxito`);
+
             this.fillStars(score);
           },
           (error) => {
-            console.error(`Error calificando la canción`, error);
+
           }
         );
     } else if (this.entityType === 'list') {

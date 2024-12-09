@@ -38,7 +38,7 @@ export class ArtistComponent implements OnInit {
         this.artist = data;
       },
       error: (err) => {
-        console.error('Error fetching artist details', err);
+
       }
     });
   } 
@@ -49,7 +49,7 @@ export class ArtistComponent implements OnInit {
         this.songs = data; // Asegúrate de que los datos incluyen 'name'
       },
       error: (err) => {
-        console.error('Error fetching artist songs', err);
+
       }
     });
   }
@@ -60,7 +60,7 @@ export class ArtistComponent implements OnInit {
         this.albums = data; // Asegúrate de que los datos incluyen 'name'
       },
       error: (err) => {
-        console.error('Error fetching artist albums', err);
+
       }
     });
   }

@@ -44,7 +44,7 @@ export class AlbumHeardByComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error fetching users who heard the album:', err);
+
         this.loading = false;
       }
     });

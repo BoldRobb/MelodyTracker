@@ -44,7 +44,7 @@ export class AlbumLikedByComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error fetching users who liked this album:', err);
+
         this.loading = false;
       }
     });

@@ -55,11 +55,11 @@ export class SongsOnAlbumComponent implements OnInit {
         if (Array.isArray(response)) {
           this.songs = response;  // Asignar el arreglo directamente a `songs`
         } else {
-          console.error('La respuesta no es un arreglo de canciones');
+
         }
       },
       error: (err) => {
-        console.error('Error al cargar las canciones:', err);
+
       },
       complete: () => {
         this.spinnerService.hide();  // Ocultar el spinner cuando termine la solicitud
@@ -75,11 +75,11 @@ export class SongsOnAlbumComponent implements OnInit {
         if (Array.isArray(response)) {
           this.songs = response;  // Asignar el arreglo directamente a `songs`
         } else {
-          console.error('La respuesta no es un arreglo de canciones');
+
         }
       },
       error: (err) => {
-        console.error('Error al cargar las canciones:', err);
+
       },
       complete: () => {
         this.spinnerService.hide();  // Ocultar el spinner cuando termine la solicitud

@@ -34,14 +34,14 @@ export class LogindataComponent implements OnInit {
 
       this.usersService.login(username, password).subscribe(
         (token) => {
-          console.log('Login successful');
+
           alert('Login successful');
           // Redirigir al usuario a otro componente (por ejemplo, el dashboard)
           this.usersService.isLoggedIn$ = true;
           this.router.navigate(['/homepage']); // Cambia '/dashboard' por la ruta deseada
         },
         (error) => {
-          console.error('Login failed:', error);
+
           alert('Login failed: ' + (error.error.detail || error.message || 'Unknown error'));
         }
       );

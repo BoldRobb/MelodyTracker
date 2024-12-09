@@ -65,7 +65,7 @@ export class CreateListComponent {
     // Verificar nombre de la lista antes de crearla
     try {
       const nameCheckResponse = await this.geminiService.verifyNameList(this.listData.name);
-      console.log('Respuesta de verificación de nombre:', nameCheckResponse);
+
       if (nameCheckResponse === 'true' || nameCheckResponse === 'True') {
         // Verificar la descripción de la lista antes de crearla
         const descriptionCheckResponse = await this.geminiService.verifyDescriptionList(this.listData.comment);
@@ -78,7 +78,7 @@ export class CreateListComponent {
         this.toast.error('The list name contains inappropriate content. Please try again.');
       }
     } catch (error) {
-      console.error('Error al verificar los datos de la lista:', error);
+
       this.toast.error('Error verifying the list data. Please try again.');
     }
   }
@@ -102,12 +102,12 @@ export class CreateListComponent {
           this.toast.success('List created successfully');
         },
         error: (err) => {
-          console.error('Error al crear la lista:', err);
+
           this.toast.error('Error creating the list. Please try again');
         }
       });
     } catch (error) {
-      console.error('Error subiendo la foto:', error);
+
       this.toast.error('Error uploading the photo. Please try again');
     }
   }

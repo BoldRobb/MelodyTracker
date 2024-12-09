@@ -77,13 +77,13 @@ id_user: number | null = null;
     if (observable !== null) {
       observable.subscribe({
         next: (data) => {
-          console.log(`${segments[0].path} data:`, data);
+
           this.userDetails = data;
           this.isLoading = false;
-          console.log('User details:', this.userDetails);
+
         },
         error: (err) => {
-          console.error('Error fetching user details', err);
+
           this.isLoading = false;
         }
       });

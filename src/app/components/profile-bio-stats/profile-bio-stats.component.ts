@@ -56,7 +56,7 @@ export class ProfileBioStatsComponent implements OnInit {
         this.bio = stats.bio || 'Sin biografía disponible.';
       },
       error: err => {
-        console.error('Error fetching user stats:', err);
+
         this.errorMessage = 'No se pudieron cargar las estadísticas del usuario.';
       }
     });
@@ -69,7 +69,7 @@ export class ProfileBioStatsComponent implements OnInit {
         this.totalReview = response.total_reviews;
       },
       error: error => {
-        console.error('Error fetching user stats:', error);
+
       }
     });
 

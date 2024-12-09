@@ -78,7 +78,7 @@ export class ListenLikeWatchComponent implements OnInit {
         
       },
       error: (error) => {
-        console.error('Error al obtener el ID del usuario:', error);
+
       }
     });
   }
@@ -94,10 +94,10 @@ export class ListenLikeWatchComponent implements OnInit {
       checkWatchlist$.subscribe({
         next: (response) => {
           this.isInWatchlist = response.is_in_watchlist;
-          console.log('Estado en Watchlist:', this.isInWatchlist);
+
         },
         error: (error) => {
-          console.error('Error al verificar si está en Watchlist:', error);
+
         }
       });
     }
@@ -106,11 +106,11 @@ export class ListenLikeWatchComponent implements OnInit {
 
   toggleWatchlist(): void {
     if (!this.userId || (!this.songId && !this.albumId)) {
-      console.error('Faltan los IDs necesarios');
+
       return;
     }
     
-    console.log('songId:', this.songId, 'userId:', this.userId);
+
   
     if (this.isInWatchlist) {
       const removeFromWatchlist$ = this.isSong
@@ -120,11 +120,11 @@ export class ListenLikeWatchComponent implements OnInit {
       removeFromWatchlist$.subscribe({
         next: (response: any) => {
           this.isInWatchlist = false;
-          console.log('Respuesta remove:', response);
-          console.log(response.message || response.msg);
+
+
         },
         error: (error) => {
-          console.error('Error al quitar de la Watchlist:', error);
+
           alert('Ocurrió un error, por favor intente nuevamente.');
         }
       });
@@ -136,11 +136,11 @@ export class ListenLikeWatchComponent implements OnInit {
       addToWatchlist$.subscribe({
         next: (response: any) => {
           this.isInWatchlist = true;
-          console.log('Respuesta add:', response);
-          console.log(response.msg || response.message);
+
+
         },
         error: (error) => {
-          console.error('Error al alternar Watchlist:', error);
+
           if (error?.error?.detail === 'Song is already in the watchlist') {
             alert('Esta canción ya está en tu lista de seguimiento.');
           } else {
@@ -166,10 +166,10 @@ export class ListenLikeWatchComponent implements OnInit {
       checkLike$.pipe(finalize(() => this.spinnerService.hide())).subscribe({
         next: (response) => {
           this.isLiked = response.has_liked;
-          console.log('Estado del like del usuario:', this.isLiked);
+
         },
         error: (error) => {
-          console.error('Error al verificar si el usuario dio like:', error);
+
         }
       });
     }
@@ -187,10 +187,10 @@ export class ListenLikeWatchComponent implements OnInit {
       checkListened$.pipe(finalize(() => this.spinnerService.hide())).subscribe({
         next: (response) => {
           this.isListened = response.has_listened;
-          console.log('Estado de escucha del usuario:', this.isListened);
+
         },
         error: (error) => {
-          console.error('Error al verificar si el usuario escuchó:', error);
+
         }
       });
     }
@@ -210,10 +210,10 @@ export class ListenLikeWatchComponent implements OnInit {
         next: (response) => {
           this.isLiked = !this.isLiked;
           this.albumService.updateStats();
-          console.log(response.message);
+
         },
         error: (error) => {
-          console.error('Error al alternar el like:', error);
+
         }
       });
     }
@@ -231,10 +231,10 @@ export class ListenLikeWatchComponent implements OnInit {
         next: (response) => {
           this.isListened = !this.isListened;
           this.albumService.updateStats();
-          console.log('Estado de escucha cambiado:', this.isListened);
+
         },
         error: (error) => {
-          console.error('Error al alternar el estado de escucha:', error);
+
           alert('Ocurrió un error, por favor intente nuevamente.');
         }
       });

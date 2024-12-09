@@ -1,3 +1,11 @@
+<div class="contenedor_principal2">
+  <div class="contenedor_filtros">
+    <p class="texto_encabezado">This User have {{userLists.length}} lists</p>
+    <div class="filtros">
+    </div>
+  </div>
+</div>
+
 <div *ngFor="let list of userLists" class="contenedor_principal" [routerLink]="['/list', list.id_list]" routerLinkActive="router-link-active" >
     <img class="imagen_album" [src]="list.list_photo || 'images/album.jpg'" alt="">
   

@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-comment',
@@ -37,6 +39,7 @@ export class CommentComponent implements OnInit {
     private albumService: AlbumService,
     private spinnerService: SpinnerService,
     private router: Router,
+    private toast: ToastrService,
     private route: ActivatedRoute,
     private listsService: ListsService
   ) {}
@@ -49,13 +52,13 @@ export class CommentComponent implements OnInit {
 
     this.checkIfAlbumSongList();
     this.loadComments(); // Cargar los comentarios inicialmente
-    console.log('ZZZZZZZZZZZZZZZZZZZ',this.id_url);
+
   }
 
   getUserIdFromToken(): number | undefined {
     const token = localStorage.getItem('access_token');
     if (!token) {
-      console.error('No se encontró el access_token en el localStorage');
+
       return undefined;
     }
 
@@ -98,13 +101,13 @@ export class CommentComponent implements OnInit {
       this.userId = comments[0].id_user;
       this.checkLikesForComments();
     } else {
-      console.error('No se recibieron comentarios válidos');
+
     }
     this.isLoading = false;
   }
 
   handleError(error: any) {
-    console.error('Error al cargar los comentarios: ', error);
+
     this.isLoading = false;
   }
 
@@ -127,7 +130,7 @@ export class CommentComponent implements OnInit {
     if (userId) {
       this.router.navigate(['/profile', userId]);
     } else {
-      console.error('El userId es inválido o no está definido');
+
     }
   }
 
@@ -222,10 +225,10 @@ export class CommentComponent implements OnInit {
           next: (response) => {
             comment.isLiked = !comment.isLiked;
             comment.likesCount = comment.isLiked ? comment.likesCount + 1 : comment.likesCount - 1;
-            console.log(response.message);
+
           },
           error: (error) => {
-            console.error(`Error al alternar el like del comentario:`, error);
+
           },
         });
       }
@@ -235,7 +238,7 @@ export class CommentComponent implements OnInit {
 
   deleteReview(comment: any): void {
     if (!comment || !this.id_user) {
-      console.error('Comentario inválido o usuario no autenticado');
+
       return;
     }
   
@@ -271,16 +274,17 @@ export class CommentComponent implements OnInit {
           next: (response) => {
             // Usar type guard para determinar qué propiedad existe
             const message = 'msg' in response ? response.msg : response.message;
-            console.log('Comentario eliminado exitosamente', message);
-            
+
+            this.toast.success('Review deleted successfully');
             // Eliminar el comentario de la lista
             this.comments = this.comments.filter(c => c !== this.commentToDelete);
             
             // Opcional: mostrar una notificación al usuario
             // this.notificationService.success('Comentario eliminado');
+
           },
           error: (error) => {
-            console.error('Error al eliminar el comentario:', error);
+
             // Opcional: mostrar un mensaje de error al usuario
             // this.notificationService.error('No se pudo eliminar el comentario');
           },

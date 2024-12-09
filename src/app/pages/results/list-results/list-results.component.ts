@@ -59,7 +59,7 @@ export class ListResultsComponent implements OnInit, OnDestroy {
         this.lists = data; // Actualiza la lista de resultados
       },
       (error) => {
-        console.error('Error al buscar listas:', error);
+
         this.lists = []; // Limpia los resultados en caso de error
       }
     );

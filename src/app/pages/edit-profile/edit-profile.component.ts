@@ -85,23 +85,23 @@ export class EditProfileComponent implements OnInit {
       this.saveProfile();
       this.toast.success('Profile updated successfully');
     } else {
-      console.error('Componentes no inicializados correctamente.');
+
     }
   }
 
   saveBio(): void {
     if (this.profileBioStatsComponent && this.idUser !== null) {
       const newBio = this.profileBioStatsComponent.bio.trim();
-      console.log('Guardando nueva bio:', newBio);
+
       this.userService.updateBio(this.idUser, newBio).subscribe({
         next: (response) => {
-          console.log('Biografía actualizada:', response.bio);
+
           this.bio = response.bio; // Actualiza la bio localmente
           // alert('Biografía guardada con éxito.');
           // this.toast.success('Profile updated successfully');
         },
         error: (err) => {
-          console.error('Error actualizando la biografía:', err);
+
           alert('Error al guardar la biografía.');
         }
       });
@@ -112,19 +112,19 @@ export class EditProfileComponent implements OnInit {
     if (this.idUser && this.profileDatosUserComponent) {
       this.profileDatosUserComponent.updateUsername(this.idUser);
       const nuevoUsername = this.profileDatosUserComponent.newUsername;
-      console.log('Nuevo username:', nuevoUsername);
+
   
       if (nuevoUsername) {
         this.userService.updateUsername(this.idUser, nuevoUsername).subscribe({
           next: response => {
-            console.log('Username actualizado:', response);
+
           },
           error: err => {
-            console.error('Error actualizando el username:', err);
+
           }
         });
       } else {
-        console.error('El nuevo username está vacío.');
+
       }
     }
   }
@@ -140,7 +140,7 @@ export class EditProfileComponent implements OnInit {
         this.isFollowed = response.is_following;
       },
       error: (err) => {
-        console.error('Error checking follow status:', err);
+
         this.errorMessage = 'No se pudo verificar el estado de seguimiento';
       }
     });
@@ -164,7 +164,7 @@ export class EditProfileComponent implements OnInit {
         this.userProfile.total_followers += 1;
       },
       error: err => {
-        console.error('Error following user:', err);
+
         this.errorMessage = 'No se pudo seguir al usuario';
       }
     });
@@ -180,7 +180,7 @@ export class EditProfileComponent implements OnInit {
         this.userProfile.total_followers -= 1;
       },
       error: err => {
-        console.error('Error unfollowing user:', err);
+
         this.errorMessage = 'No se pudo dejar de seguir al usuario';
       }
     });
@@ -198,7 +198,7 @@ export class EditProfileComponent implements OnInit {
         this.isLoading = false;
       },
       error => {
-        console.error('Error fetching user profile:', error);
+
         if (error.status === 404) {
           this.router.navigate(['/404']);
         } else {
@@ -215,10 +215,10 @@ export class EditProfileComponent implements OnInit {
         this.bio = stats.bio;
         this.totalRanked = stats.total_ranked_songs_albums;
         this.totalReview = stats.total_reviews_songs_albums;
-        console.log('User stats:', stats);
+
       },
       error: err => {
-        console.error('Error fetching user stats:', err);
+
         this.errorMessage = 'No se pudieron cargar las estadísticas del usuario';
       }
     });
@@ -233,7 +233,7 @@ export class EditProfileComponent implements OnInit {
       const payload = JSON.parse(atob(payloadBase64));
       return payload.id_user || null;
     } catch (error) {
-      console.error('Error decoding token:', error);
+
       return null;
     }
   }

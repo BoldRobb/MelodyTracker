@@ -33,14 +33,14 @@ export class NavbarLoginComponent implements OnInit {
             this.photo = data.photo || 'images/teemo.jpg';  
           },
           (error) => {
-            console.error('Error fetching user data:', error);
+
           }
         );
       } else {
-        console.log('No valid user ID found in token');
+
       }
     } else {
-      console.log('No token found');
+
     }
   }
 
@@ -51,7 +51,7 @@ export class NavbarLoginComponent implements OnInit {
       const parsedPayload = JSON.parse(decodedPayload);
       return parsedPayload.id_user; 
     } catch (error) {
-      console.error('Error decoding token:', error);
+
       return null;
     }
   }
@@ -82,7 +82,7 @@ export class NavbarLoginComponent implements OnInit {
   logout(): void {
     localStorage.removeItem('access_token'); // Elimina el token del localStorage
     this.userService.isLoggedIn$ = false; // Cambia el estado de isLoggedIn$
-    console.log('isLoggedIn checkToken1 UserService:', this.userService.isLoggedIn$);
+
     this.router.navigate(['/homepage']); // Cambia '/dashboard' por la ruta deseada
   }
 }

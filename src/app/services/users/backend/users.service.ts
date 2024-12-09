@@ -131,7 +131,7 @@ export class UsersService {
     
       if (!token) {
         this.isLoggedIn$ = false;
-        console.log('isLoggedIn checkToken1 UserService:', this.isLoggedIn$);
+
         return;
       }
     
@@ -141,13 +141,13 @@ export class UsersService {
       this.http.get(`${this.apiUrl}/users/me`, { headers }).subscribe({
         next: () => {
           this.isLoggedIn$ = true;
-          console.log('isLoggedIn checkToken2 UserService:', this.isLoggedIn$);
+
         },
         error: (error) => {
           this.isLoggedIn$ = false;
-          console.log('isLoggedIn checkToken3 UserService:', this.isLoggedIn$);
-          console.log('Token inválido o error en la petición:', error);
-          console.log('isLoggedIn después de set(false):', false);
+
+
+
         }
       });
     }
@@ -159,7 +159,7 @@ export class UsersService {
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.removeItem('access_token');
       this.isLoggedIn$ = false;
-      console.log('isLoggedIn logout UserService:', this.isLoggedIn$);
+
     }
   }
 

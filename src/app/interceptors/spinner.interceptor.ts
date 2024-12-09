@@ -16,7 +16,6 @@ export const spinnerInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, nex
       spinnerService.hide();
     }),
     catchError((error) => {
-      console.error('Petición Fallida: ', error.message);
       return throwError(error);
     })
   );

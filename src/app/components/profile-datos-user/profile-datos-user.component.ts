@@ -78,7 +78,7 @@ export class ProfileDatosUserComponent implements OnInit {
         this.isFollowed = response.is_following;
       },
       error: err => {
-        console.error('Error checking follow status:', err);
+
       }
     });
   }
@@ -100,7 +100,7 @@ export class ProfileDatosUserComponent implements OnInit {
         this.userProfile.total_followers += 1;
       },
       error: err => {
-        console.error('Error following user:', err);
+
       }
     });
   }
@@ -110,7 +110,7 @@ export class ProfileDatosUserComponent implements OnInit {
       // Redirige a /editProfile/:id usando el router
       this.router.navigate([`/editProfile/${this.idUser}`]);
     } else {
-      console.error('No se pudo redirigir: idUser es nulo.');
+
     }
   }
 
@@ -123,7 +123,7 @@ export class ProfileDatosUserComponent implements OnInit {
         this.userProfile.total_followers -= 1;
       },
       error: err => {
-        console.error('Error unfollowing user:', err);
+
       }
     });
   }
@@ -133,9 +133,9 @@ export class ProfileDatosUserComponent implements OnInit {
     const usernameTextarea = document.querySelector('.nombre_user') as HTMLTextAreaElement;
     if (usernameTextarea) {
       this.newUsername = usernameTextarea.value.trim();
-      console.log(`Username actualizado a: ${this.newUsername} para el usuario con ID: ${idUser}`);
+
     } else {
-      console.error('No se encontró el campo de username.');
+
     }
   }
 
@@ -155,7 +155,7 @@ export class ProfileDatosUserComponent implements OnInit {
         }
       },
       error: error => {
-        console.error('Error fetching user profile:', error);
+
         this.router.navigate(['/404']);
       }
     });
@@ -168,7 +168,7 @@ export class ProfileDatosUserComponent implements OnInit {
         this.totalListened = response.total_listened;
       },
       error: error => {
-        console.error('Error fetching user stats:', error);
+
       }
     });
 
@@ -183,7 +183,7 @@ export class ProfileDatosUserComponent implements OnInit {
       const payload = JSON.parse(atob(payloadBase64));
       return payload.id_user || null;
     } catch (error) {
-      console.error('Error decoding token:', error);
+
       return null;
     }
   }

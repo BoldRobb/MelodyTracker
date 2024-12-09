@@ -32,10 +32,9 @@ export class ProfilePopularListsComponent implements OnInit {
     this.userService.getTop4ListsOfUser(this.userId).subscribe(
       (response) => {
         this.topLists = response.top_lists; // Almacenar las listas obtenidas
-        console.log(this.topLists); // Verifica las listas y las imágenes
       },
       (error) => {
-        console.error('Error al obtener las listas más populares', error);
+
       }
     );
   }

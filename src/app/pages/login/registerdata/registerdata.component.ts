@@ -45,24 +45,24 @@ export class RegisterdataComponent {
       // Registramos al usuario
       this.usersService.registerNewUser(formData).subscribe(
         (response) => {
-          console.log('User registered successfully', response);
+
           this.usersService.getNewToken(formData.username, formData.password).subscribe(
             (tokenResponse) => {
               const token = tokenResponse.access_token;
               if (token) {
                 localStorage.setItem('access_token', token);
-                console.log('Token saved in localStorage');
+
                 alert('User registered successfully and token saved');
               }
             },
             (error) => {
-              console.error('Error retrieving token:', error);
+
               alert('Error retrieving token after registration');
             }
           );
         },
         (error) => {
-          console.error('Error registering user:', error);
+
           alert('Error registering user: ' + (error.error.detail || error.message || 'Unknown error'));
         }
       );

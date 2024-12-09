@@ -57,7 +57,7 @@ export class AlbumResultsComponent implements OnInit, OnDestroy {
         this.albums = data;  // Actualiza los resultados de álbumes
       },
       (error) => {
-        console.error('Error al buscar álbumes:', error);
+
         this.albums = [];  // Si hay un error, asegurarse de que no haya datos
       }
     );
