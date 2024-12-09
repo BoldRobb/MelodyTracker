@@ -3,11 +3,12 @@ import { ActivatedRoute } from '@angular/router';  // Para acceder a los paráme
 import { UsersService } from '../../../services/users/backend/users.service';  // Importa el servicio UsersService
 import { Subscription } from 'rxjs';  // Importamos Subscription para manejar las suscripciones
 import { CommonModule } from '@angular/common';  // Si usas alguna directiva de CommonModule
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-user-results',
   standalone: true,
-  imports: [CommonModule],  // Asegúrate de importar CommonModule si utilizas directivas comunes
+  imports: [CommonModule, RouterModule],  // Asegúrate de importar CommonModule si utilizas directivas comunes
   templateUrl: './user-results.component.html',
   styleUrls: ['./user-results.component.css'],
 })

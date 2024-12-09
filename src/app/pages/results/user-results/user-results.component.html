@@ -1,5 +1,5 @@
 <div class="contenedor_principal">
-    <div *ngFor="let user of users" class="contenedor_artista">
+    <div *ngFor="let user of users" class="contenedor_artista" [routerLink]="['/profile', user.id_user]" routerLinkActive="router-link-active">
       <img class="foto_user" [src]="user.photo" alt="fotoUser">
       <div class="contenedor_datos_user">
         <p class="nombre_user">{{ user.username }} <span class="nombre_user texto_user">(user)</span></p>

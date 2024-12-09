@@ -5,11 +5,12 @@ import { ListsService } from '../../../services/lists/backend/lists.service'; //
 import { CommonModule } from '@angular/common';
 import { AlbumService } from '../../../services/album/backend/album-service.service'; // Importamos el servicio
 import { UsersService } from '../../../services/users/backend/users.service'; // Importa el servicio
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-list-results',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './list-results.component.html',
   styleUrls: ['./list-results.component.css']
 })

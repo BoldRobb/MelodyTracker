@@ -1,9 +1,9 @@
 <div class="contenedor_principal"> 
-    <div *ngFor="let song of songs" class="contenedor_artista">
+    <div *ngFor="let song of songs" class="contenedor_artista" [routerLink]="['/song', song.id_song]" routerLinkActive="router-link-active" >
       <img class="foto_user" [src]="song.photo" alt="fotoCancion">
       <div class="contenedor_datos_user">
         <p class="nombre_user">{{ song.name }} <span class="texto_released">{{ song.releases }}</span></p>
-        <p class="rol">{{ song.name_artist }}</p>
+        <p class="rol" [routerLink]="['/artist', song.id_artist]" routerLinkActive="router-link-active" >{{ song.name_artist }}</p>
         <p class="stats">Song</p>
       </div>
     </div>

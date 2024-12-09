@@ -6,6 +6,7 @@
 }
 
 .contenedor_artista{
+    cursor: pointer;
     display: flex;
     gap: 1rem;
     padding: 2rem 3rem;
@@ -31,6 +32,7 @@
 }
 
 .rol{
+    cursor: pointer;
     font-size: 3rem;
     margin: 0;
     color: #C6FF41;

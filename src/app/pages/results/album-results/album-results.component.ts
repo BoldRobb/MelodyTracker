@@ -4,11 +4,12 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AlbumService } from '../../../services/album/backend/album-service.service'; // Importamos el servicio
 import { UsersService } from '../../../services/users/backend/users.service'; // Importa el servicio
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-album-results',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './album-results.component.html',
   styleUrls: ['./album-results.component.css'],
 })

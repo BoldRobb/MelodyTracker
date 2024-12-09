@@ -4,11 +4,12 @@ import { UsersService } from '../../../services/users/backend/users.service'; //
 import { ArtistsService } from '../../../services/artists/backend/artists.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-artist-results',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './artist-results.component.html',
   styleUrls: ['./artist-results.component.css'],
 })

@@ -4,11 +4,12 @@ import { SongService } from '../../../services/song/backend/song.service'; // As
 import { UsersService } from '../../../services/users/backend/users.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common'; // Para usar ngIf y otras directivas
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-song-results',
   standalone: true,
-  imports: [CommonModule], // Asegúrate de importar CommonModule si usas directivas como ngIf
+  imports: [CommonModule, RouterModule], // Asegúrate de importar CommonModule si usas directivas como ngIf
   templateUrl: './song-results.component.html',
   styleUrls: ['./song-results.component.css'],
 })

@@ -6,6 +6,7 @@
 }
 
 .contenedor_artista{
+    cursor: pointer;
     display: flex;
     gap: 1rem;
     padding: 2rem 3rem;
