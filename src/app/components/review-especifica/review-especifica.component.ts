@@ -11,13 +11,15 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-review-especifica',
   standalone: true,
-  imports: [CommonModule, RouterModule], // Agrega CommonModule aquí
+  imports: [CommonModule, RouterModule],
   templateUrl: './review-especifica.component.html',
   styleUrls: ['./review-especifica.component.css']
 })
 export class ReviewEspecificaComponent implements OnInit {
   idUser!: number;
   combinedReviews: any[] = [];
+  filteredReviews: any[] = [];
+  selectedFilter: string = '';  // Filtro seleccionado
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -27,7 +29,8 @@ export class ReviewEspecificaComponent implements OnInit {
 
   ngOnInit(): void {
     this.idUser = +this.activatedRoute.snapshot.paramMap.get('id')!;
-  
+    
+    // Realizar la llamada a las APIs para obtener las reseñas
     forkJoin([
       this.usersService.getReviewsHistory(this.idUser).pipe(catchError(() => of({ reviews_history: [] }))),
       this.usersService.getReviewsHistoryAlbums(this.idUser).pipe(catchError(() => of({ reviews_history_albums: [] }))),
@@ -36,13 +39,18 @@ export class ReviewEspecificaComponent implements OnInit {
       finalize(() => this.spinnerService.hide())
     ).subscribe(
       ([songs, albums, lists]) => {
+        // Unir todas las reseñas en un solo array
         this.combinedReviews = [
           ...songs.reviews_history,
           ...albums.reviews_history_albums,
           ...lists.reviews_history_lists
         ];
-  
+
+        // Ordenarlas por fecha de revisión
         this.combinedReviews.sort((a, b) => new Date(b.date_review).getTime() - new Date(a.date_review).getTime());
+        
+        // Filtrar las reseñas según el filtro seleccionado
+        this.filterReviews();
       },
       error => {
         console.error('Error al obtener reseñas:', error);
@@ -50,47 +58,51 @@ export class ReviewEspecificaComponent implements OnInit {
     );
   }
 
-  /**
-   * Calcula las imágenes de estrellas basado en el score
-   * @param score Puntuación (puede ser null)
-   * @returns Lista de rutas de imágenes de estrellas
-   */
+  // Aplicar el filtro seleccionado
+  applyFilter(filter: string): void {
+    this.selectedFilter = filter;
+    this.filterReviews();  // Filtrar las reseñas
+  }
+
+  // Filtrar las reseñas según el filtro seleccionado
+  filterReviews(): void {
+    if (this.selectedFilter === 'song') {
+      this.filteredReviews = this.combinedReviews.filter(review => review.id_song);
+    } else if (this.selectedFilter === 'album') {
+      this.filteredReviews = this.combinedReviews.filter(review => review.id_album);
+    } else if (this.selectedFilter === 'list') {
+      this.filteredReviews = this.combinedReviews.filter(review => review.id_list);
+    } else {
+      this.filteredReviews = this.combinedReviews;  // Si no hay filtro, mostrar todas
+    }
+  }
+
   calculateStars(score: number | null): string[] {
     const stars: string[] = [];
     if (score === null || score === 0) {
-      // Si no hay puntuación, no se muestran estrellas
       return stars;
     }
 
     for (let i = 0; i < Math.floor(score); i++) {
-      // Agrega estrellas llenas según la puntuación entera
       stars.push('images/star.png');
     }
 
     if (score % 1 !== 0) {
-      // Si hay un decimal, agrega media estrella
       stars.push('images/star-half.png');
     }
 
     return stars;
   }
 
-  /**
-   * Devuelve la ruta para cada tipo de revisión.
-   * @param review Objeto de la revisión.
-   * @returns Ruta correspondiente al tipo de revisión.
-   */
   getReviewLink(review: any): string[] {
     if (review.id_song) {
-      return ['/song', review.id_song]; // Ruta para canción
+      return ['/song', review.id_song];
     } else if (review.id_album) {
-      return ['/album', review.id_album]; // Ruta para álbum
+      return ['/album', review.id_album];
     } else if (review.id_list) {
-      return ['/list', review.id_list]; // Ruta para lista
+      return ['/list', review.id_list];
     } else {
-      return []; // Retorna un array vacío si no tiene un tipo reconocido
+      return [];
     }
   }
-
-  
 }

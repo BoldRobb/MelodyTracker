@@ -1,34 +1,42 @@
-<div class="contenedor_principal">
-    <!-- Itera sobre el array rankedData -->
-    <div *ngFor="let ranked of rankedData" class="contenedor_foto_ranked" [routerLink]="getRankedLink(ranked)">
-      <img class="foto_ranked" [src]="ranked.photo" alt="Imagen del ranking">
-  
-      <div class="datos_ranked">
-        <div class="contenedor_nombre_released">
-          <!-- Si es una lista, imprime 'nombre_list', de lo contrario 'nombre_song' -->
-          <p class="nombre_song" [ngClass]="{'nombre_list': ranked.type === 'list'}">
-            {{ ranked.name }}
-          </p>
-          <p class="released_song">{{ ranked.released | date: 'yyyy' }}</p> <!-- Solo el año -->
-        </div>
-  
-        <!-- Si es una lista, muestra 'List Creator:' seguido de 'user_creator', si no, muestra el 'artist' -->
-        <p class="nombre_artist">
-          <span *ngIf="ranked.type === 'list'" class="texto_list_creator" [routerLink]="['/profile', ranked.id_user_creator]" routerLinkActive="router-link-active" >List Creator: </span>
-          <span [routerLink]="getCreatorLink(ranked)" routerLinkActive="router-link-active">
-            {{ ranked.type === 'list' ? ranked.user_creator : ranked.artist }}
-          </span>
-        </p>
-  
-        <p class="titulo_rate">{{ ranked.score === null || ranked.score === 0 ? 'No rating' : 'Rate' }}</p>
-  
-        <div class="contenedor_rate" *ngIf="ranked.score !== null && ranked.score !== 0">
-          <img *ngFor="let star of calculateStars(ranked.score)" class="imagen_estrella" [src]="star" alt="Estrella">
-        </div>
-  
-        <!-- Aquí mostramos la fecha del ranking (date_score) -->
-        <p class="texto_date_ranked">Ranked on: {{ ranked.date_score | date: 'dd/MM/yyyy' }}</p> <!-- Formato de fecha -->
-      </div>
+<div class="contenedor_principal2">
+  <div class="contenedor_filtros">
+    <p class="texto_encabezado">All Rankeds</p>
+    <div class="filtros">
+      <p class="texto_encabezado texto_search_by">Search By:</p>
+      <p class="filtro" [class.selected]="selectedFilter === 'song'" (click)="applyFilter('song')">Songs</p>
+      <p class="filtro" [class.selected]="selectedFilter === 'album'" (click)="applyFilter('album')">Albums</p>
+      <p class="filtro" [class.selected]="selectedFilter === 'list'" (click)="applyFilter('list')">Lists</p>
     </div>
   </div>
-  
+</div>
+
+<div class="contenedor_principal">
+  <!-- Itera sobre el array rankedData filtrado -->
+  <div *ngFor="let ranked of filteredRankedData" class="contenedor_foto_ranked" [routerLink]="getRankedLink(ranked)">
+    <img class="foto_ranked" [src]="ranked.photo" alt="Imagen del ranking">
+
+    <div class="datos_ranked">
+      <div class="contenedor_nombre_released">
+        <p class="nombre_song" [ngClass]="{'nombre_list': ranked.type === 'list'}">
+          {{ ranked.name }}
+        </p>
+        <p class="released_song">{{ ranked.released | date: 'yyyy' }}</p>
+      </div>
+
+      <p class="nombre_artist">
+        <span *ngIf="ranked.type === 'list'" class="texto_list_creator" [routerLink]="['/profile', ranked.id_user_creator]" routerLinkActive="router-link-active">List Creator: </span>
+        <span [routerLink]="getCreatorLink(ranked)" routerLinkActive="router-link-active">
+          {{ ranked.type === 'list' ? ranked.user_creator : ranked.artist }}
+        </span>
+      </p>
+
+      <p class="titulo_rate">{{ ranked.score === null || ranked.score === 0 ? 'No rating' : 'Rate' }}</p>
+
+      <div class="contenedor_rate" *ngIf="ranked.score !== null && ranked.score !== 0">
+        <img *ngFor="let star of calculateStars(ranked.score)" class="imagen_estrella" [src]="star" alt="Estrella">
+      </div>
+
+      <p class="texto_date_ranked">Ranked on: {{ ranked.date_score | date: 'dd/MM/yyyy' }}</p>
+    </div>
+  </div>
+</div>

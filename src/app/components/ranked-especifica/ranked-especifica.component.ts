@@ -20,6 +20,8 @@ import { RouterModule } from '@angular/router';
 export class RankedEspecificaComponent implements OnInit {
   idUser!: number;
   rankedData: any[] = [];  // Almacena las canciones, álbumes y listas rankeadas
+  filteredRankedData: any[] = []; // Datos filtrados según el filtro seleccionado
+  selectedFilter: string = 'song';  // Filtro seleccionado, por defecto 'song'
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -43,12 +45,26 @@ export class RankedEspecificaComponent implements OnInit {
             ...(albums?.ranked_albums || []).map((album: any) => ({ ...album, type: 'album' })),
             ...(lists?.ranked_lists || []).map((list: any) => ({ ...list, type: 'list' })),
           ];
-          this.rankedData.sort((a, b) => new Date(b.date_score).getTime() - new Date(a.date_score).getTime());
+          this.applyFilter(this.selectedFilter); // Aplica el filtro predeterminado al cargar los datos
         },
         error => console.error('Error al obtener datos rankeados:', error)
       );
   }
-  
+
+  /**
+   * Aplica el filtro seleccionado
+   * @param filter Tipo de filtro ('song', 'album' o 'list')
+   */
+  applyFilter(filter: string): void {
+    this.selectedFilter = filter;
+    if (filter === 'song') {
+      this.filteredRankedData = this.rankedData.filter(ranked => ranked.type === 'song');
+    } else if (filter === 'album') {
+      this.filteredRankedData = this.rankedData.filter(ranked => ranked.type === 'album');
+    } else if (filter === 'list') {
+      this.filteredRankedData = this.rankedData.filter(ranked => ranked.type === 'list');
+    }
+  }
 
   /**
    * Calcula las imágenes de estrellas basado en el score
@@ -58,18 +74,15 @@ export class RankedEspecificaComponent implements OnInit {
   calculateStars(score: number | null): string[] {
     const stars: string[] = [];
     if (score === null || score === 0) {
-      // Si no hay puntuación, no se muestran estrellas
-      return stars;
+      return stars;  // No mostrar estrellas si no hay puntuación
     }
 
     for (let i = 0; i < Math.floor(score); i++) {
-      // Agrega estrellas llenas según la puntuación entera
-      stars.push('images/star.png');
+      stars.push('images/star.png');  // Estrella llena
     }
 
     if (score % 1 !== 0) {
-      // Si hay un decimal, agrega media estrella
-      stars.push('images/star-half.png');
+      stars.push('images/star-half.png');  // Media estrella si tiene decimales
     }
 
     return stars;
@@ -82,13 +95,13 @@ export class RankedEspecificaComponent implements OnInit {
    */
   getRankedLink(ranked: any): string[] {
     if (ranked.type === 'song') {
-      return ['/song', ranked.id_song]; // Ruta para canción
+      return ['/song', ranked.id_song];
     } else if (ranked.type === 'album') {
-      return ['/album', ranked.id_album]; // Ruta para álbum
+      return ['/album', ranked.id_album];
     } else if (ranked.type === 'list') {
-      return ['/list', ranked.id_list]; // Ruta para lista
+      return ['/list', ranked.id_list];
     } else {
-      return []; // Retorna un array vacío si no tiene un tipo reconocido
+      return [];
     }
   }
 
@@ -99,9 +112,9 @@ export class RankedEspecificaComponent implements OnInit {
    */
   getCreatorLink(ranked: any): string[] {
     if (ranked.type === 'list') {
-      return ['/profile', ranked.id_user_creator]; // Ruta para el creador de la lista
+      return ['/profile', ranked.id_user_creator];
     } else {
-      return ['/artist', ranked.id_artist]; // Ruta para el artista
+      return ['/artist', ranked.id_artist];
     }
   }
 }

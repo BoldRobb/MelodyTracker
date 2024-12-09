@@ -1,29 +1,36 @@
-<div class="contenedor_principal">
-  <div *ngFor="let review of combinedReviews" class="contenedor_foto_review" [routerLink]="getReviewLink(review)">
-    <img class="foto_review" [src]="review.photo" alt="Imagen de la reseña">
+<div class="contenedor_principal2">
+  <div class="contenedor_filtros">
+    <p class="texto_encabezado">All Reviews</p>
+    <div class="filtros">
+      <p class="texto_encabezado texto_search_by">Search By:</p>
+      <p class="filtro" [class.selected]="selectedFilter === 'song'" (click)="applyFilter('song')">Songs</p>
+      <p class="filtro" [class.selected]="selectedFilter === 'album'" (click)="applyFilter('album')">Albums</p>
+      <p class="filtro" [class.selected]="selectedFilter === 'list'" (click)="applyFilter('list')">Lists</p>
+    </div>
+  </div>
+</div>
 
+<div class="contenedor_principal">
+  <div *ngFor="let review of filteredReviews" class="contenedor_foto_review" [routerLink]="getReviewLink(review)">
+    <img class="foto_review" [src]="review.photo" alt="Imagen de la reseña">
     <div class="datos_review">
       <div class="contenedor_nombre_released">
         <p class="nombre_song">{{ review.name }}</p>
         <p class="released_song">{{ review.released | date: 'yyyy' }}</p> <!-- Solo el año -->
       </div>
 
-      <!-- Mostrar 'Creator:' si es una lista, caso contrario mostrar 'Artist:' -->
       <p [routerLink]="['/profile', review.id_user_creator]" routerLinkActive="router-link-active" class="nombre_artist" *ngIf="review.user_creator; else artist">
-        <span class="text_creator">List Creator: </span > {{ review.user_creator }} <!-- Mostrar el creador de la lista -->
+        <span class="text_creator">List Creator: </span> {{ review.user_creator }} <!-- Mostrar el creador de la lista -->
       </p>
 
-      <!-- En caso contrario, mostrar el nombre del artista -->
       <ng-template #artist>
         <p [routerLink]="['/artist', review.id_artist]" routerLinkActive="router-link-active" class="nombre_artist">{{ review.artist }}</p>
       </ng-template>
 
-      <!-- Verificar si hay puntuación -->
       <p class="titulo_rate">
         {{ review.score === null || review.score === 0 ? 'No rating' : 'Rate' }}
       </p>
 
-      <!-- Mostrar estrellas solo si hay puntuación -->
       <div class="contenedor_rate" *ngIf="review.score !== null && review.score !== 0">
         <img *ngFor="let star of calculateStars(review.score); let i = index"
              class="imagen_estrella"
@@ -32,7 +39,6 @@
       </div>
 
       <p class="review_user"> {{ review.comment }} </p>
-      <!-- Agregar texto corto en inglés para la fecha -->
       <p class="fecha">Reviewed on: {{ review.date_review | date: 'shortDate' }}</p>
     </div>
   </div>
