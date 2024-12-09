@@ -2,12 +2,13 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CreateListComponent } from "../../modals/create-list/create-list.component";
 import { UsersService } from '../../../services/users/backend/users.service';
-import { Router } from '@angular/router'; // Importa Router
+import { Router } from '@angular/router';
+import { SearchComponent } from "../../search/search.component"; // Importa Router
 
 @Component({
   selector: 'app-navbar-login',
   standalone: true,
-  imports: [RouterModule, CreateListComponent],
+  imports: [RouterModule, CreateListComponent, SearchComponent],
   templateUrl: './navbar-login.component.html',
   styleUrls: ['./navbar-login.component.css']
 })

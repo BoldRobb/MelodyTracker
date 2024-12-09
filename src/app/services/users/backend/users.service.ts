@@ -26,6 +26,10 @@ export class UsersService {
     this.isModalOpen.next(false);
   }
 
+  resetModalWatchlistState(): void {
+    this.isModalOpen.next(false);
+  }
+
 
   // Servicio UsersService
   private currentUserId = new BehaviorSubject<number | null>(null);
@@ -50,6 +54,17 @@ export class UsersService {
   closeModalWatchlist() {
     this.isModalWatchlistOpen.next(false);  // Aquí también
   }
+
+
+  //Servicio para Buscador
+  private searchQuerySubject = new BehaviorSubject<string>(''); // Valor por defecto vacío
+  searchQuery$ = this.searchQuerySubject.asObservable(); // Observable para ser escuchado
+
+  setSearchQuery(query: string): void {
+    this.searchQuerySubject.next(query); // Actualiza el valor de la búsqueda
+  }
+
+  
 
   // Método para obtener el username y la photo del usuario
   getUsernameAndPhoto(id_user: number): Observable<{ username: string, photo: string }> {
@@ -447,5 +462,16 @@ export class UsersService {
     );
   }
 
+
+
+  // Método para buscar usuarios por nombre de usuario
+  searchUsers(query: string): Observable<any[]> {
+    this.spinnerService.show();  // Mostrar el spinner mientras se hace la solicitud
+
+    // Realizamos la solicitud GET al endpoint de búsqueda
+    return this.http.get<any[]>(`${this.apiUrl}/users/search/?query=${query}`).pipe(
+      finalize(() => this.spinnerService.hide())  // Ocultar el spinner cuando la solicitud termine
+    );
+  }
 
 }

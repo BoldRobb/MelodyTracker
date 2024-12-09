@@ -13,6 +13,12 @@ class ArtistResponse(BaseModel):
         from_attributes = True 
 
 
+class ArtistResponseSearch(BaseModel):
+    id_artist: int
+    photo: Optional[str]  # Si la foto es binaria, tal vez debas convertirla a base64 o algo similar
+    name: str
+    num_songs: int
+
 
 class SongResponse(BaseModel):
     id_song: int

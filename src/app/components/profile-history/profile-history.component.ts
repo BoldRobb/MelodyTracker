@@ -25,6 +25,8 @@ export class ProfileHistoryComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.usersService.closeModalWatchlist();
+
     this.route.params.subscribe(params => {
       this.id_user = +params['id'];
     });

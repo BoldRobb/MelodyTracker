@@ -1,4 +1,5 @@
 .contenedor_principal{
+    cursor: pointer;
     font-family: 'jomhuria';
     display: flex;
     width: 130rem;

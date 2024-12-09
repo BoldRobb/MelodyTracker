@@ -63,3 +63,10 @@ class ListDetailsResponse(BaseModel):
     # Puedes agregar configuraciones adicionales si es necesario
     class Config:
         orm_mode = True  # Permite que FastAPI use objetos ORM como modelos Pydantic
+
+
+
+class UserResponseSearch(BaseModel):
+    id_user: int
+    photo: str
+    username: str

@@ -1,0 +1,20 @@
+<div class="contenedor_principal">
+    <!-- Iterar sobre cada lista en el arreglo lists -->
+    <div *ngFor="let list of lists" class="contenedor_artista">
+      <!-- Imagen de la lista -->
+      <img class="foto_user" [src]="list.photo" alt="{{ list.name }}">
+      <div class="contenedor_datos_user">
+        <!-- Nombre de la lista -->
+        <p class="nombre_user">{{ list.name }}</p>
+        <div class="contenedor_datos_user_creator">
+          <!-- Datos del creador -->
+          <p class="username">Creator: </p>
+          <img class="foto_user_creator" [src]="list.photo_creator" alt="{{ list.username }}">
+          <p class="username username_verde">{{ list.username }}</p>
+        </div>
+        <!-- Estadísticas de la lista -->
+        <p class="stats">List with {{ list.total_songs }} song{{ list.total_songs !== 1 ? 's' : '' }}</p>
+      </div>
+    </div>
+  </div>
+  

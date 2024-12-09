@@ -86,3 +86,17 @@ class ReviewWithLikesLists(BaseModel):
     comment: str
     likes_count: int
     score: Optional[float]  # La puntuación de la lista puede ser opcional
+
+
+# Esquema de respuesta para canciones
+class SongResponseSearch(BaseModel):
+    id_song: int
+    photo: str
+    name: str
+    released: date
+    id_artist: int
+    name_artist: str
+
+    # Esto permite convertir el modelo a un diccionario para la respuesta
+    class Config:
+        orm_mode = True 

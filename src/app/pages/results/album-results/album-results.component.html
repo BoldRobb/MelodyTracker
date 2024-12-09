@@ -1,0 +1,10 @@
+<div class="contenedor_principal"> 
+    <div *ngFor="let album of albums" class="contenedor_artista">
+        <img class="foto_user" [src]="album.photo" alt="fotoArtist">
+        <div class="contenedor_datos_user">
+            <p class="nombre_user">{{ album.name }}</p>
+            <p class="rol">{{album.name_artist}}</p>
+            <p class="stats">Album with {{ album.total_songs }} songs</p>
+        </div>
+    </div>
+</div>

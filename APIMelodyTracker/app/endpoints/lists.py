@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, desc
 
 from app.database.database import get_db
-from typing import List
+from typing import Dict, List
 from datetime import date
 from datetime import datetime
 
@@ -197,32 +197,71 @@ def get_list_info(id_list: int, db: Session = Depends(get_db)):
 
 @router.get("/user_lists/{id_user}")
 def get_user_lists(id_user: int, db: Session = Depends(get_db)):
-    # Consultar la información de las listas del usuario y las métricas asociadas, incluyendo el creador de la lista
-    user_lists = db.query(
-    Lists.id_list,
-    Lists.photo.label("list_photo"),
-    Lists.name,
-    Lists.comment.label("description"),
-    func.coalesce(func.count(SongsOnList.id_song.distinct()), 0).label("total_songs"),
-    func.coalesce(func.count(ReviewedLists.id_list), 0).label("total_reviews"),
-    func.coalesce(func.count(LikedLists.id_list), 0).label("total_likes"),
-    func.coalesce(func.avg(RankedLists.score), 0).label("average_score"),
-    func.coalesce(func.count(RankedLists.id_list), 0).label("total_ranks"),
-    User.username.label("creator_name"),
-    Profile.photo.label("creator_photo")
-    ).filter(Lists.id_user == id_user) \
-    .outerjoin(SongsOnList, SongsOnList.id_list == Lists.id_list) \
-    .outerjoin(ReviewedLists, ReviewedLists.id_list == Lists.id_list) \
-    .outerjoin(LikedLists, LikedLists.id_list == Lists.id_list) \
-    .outerjoin(RankedLists, RankedLists.id_list == Lists.id_list) \
-    .join(User, User.id_user == Lists.id_user) \
-    .outerjoin(Profile, Profile.id_user == User.id_user) \
-    .group_by(
-        Lists.id_list, Lists.photo, Lists.name, Lists.comment,
-        User.id_user, User.username,
-        Profile.id_user, Profile.photo
-    ) \
-    .all()
+    # Subconsulta para contar las canciones por lista
+    subquery_total_songs = (
+        db.query(
+            SongsOnList.id_list.label("id_list"),
+            func.count(SongsOnList.id_song.distinct()).label("total_songs_count"),
+        )
+        .group_by(SongsOnList.id_list)
+        .subquery()
+    )
+
+    # Subconsulta para contar las reseñas por lista
+    subquery_total_reviews = (
+        db.query(
+            ReviewedLists.id_list.label("id_list"),
+            func.count(ReviewedLists.id_reviewed_lists).label("total_reviews_count"),
+        )
+        .group_by(ReviewedLists.id_list)
+        .subquery()
+    )
+
+    # Subconsulta para contar el número de rankeds por lista y calcular el puntaje promedio
+    subquery_total_ranked = (
+        db.query(
+            RankedLists.id_list.label("id_list"),
+            func.count(RankedLists.id_list).label("total_ranked_count"),
+            func.avg(RankedLists.score).label("average_score"),
+        )
+        .group_by(RankedLists.id_list)
+        .subquery()
+    )
+
+    # Subconsulta para contar los likes por lista
+    subquery_total_likes = (
+        db.query(
+            LikedLists.id_list.label("id_list"),
+            func.count(LikedLists.id_list).label("total_like_count"),
+        )
+        .group_by(LikedLists.id_list)
+        .subquery()
+    )
+
+    # Consulta principal para obtener las listas del usuario y unirse a las subconsultas
+    user_lists = (
+        db.query(
+            Lists.id_list.label("id_list"),
+            Lists.photo.label("list_photo"),
+            Lists.name,
+            Lists.comment.label("description"),
+            func.coalesce(subquery_total_songs.c.total_songs_count, 0).label("total_songs"),
+            func.coalesce(subquery_total_reviews.c.total_reviews_count, 0).label("total_reviews"),
+            func.coalesce(subquery_total_ranked.c.total_ranked_count, 0).label("total_ranks"),
+            func.coalesce(subquery_total_ranked.c.average_score, 0).label("average_score"),
+            func.coalesce(subquery_total_likes.c.total_like_count, 0).label("total_likes"),
+            User.username.label("creator_name"),
+            Profile.photo.label("creator_photo"),
+        )
+        .join(User, Lists.id_user == User.id_user)
+        .join(Profile, Profile.id_user == User.id_user, isouter=True)
+        .outerjoin(subquery_total_songs, subquery_total_songs.c.id_list == Lists.id_list)
+        .outerjoin(subquery_total_reviews, subquery_total_reviews.c.id_list == Lists.id_list)
+        .outerjoin(subquery_total_ranked, subquery_total_ranked.c.id_list == Lists.id_list)
+        .outerjoin(subquery_total_likes, subquery_total_likes.c.id_list == Lists.id_list)
+        .filter(Lists.id_user == id_user)
+        .all()
+    )
 
     if not user_lists:
         raise HTTPException(status_code=404, detail="No lists found for this user")
@@ -237,15 +276,16 @@ def get_user_lists(id_user: int, db: Session = Depends(get_db)):
             "total_songs": list_info.total_songs,
             "total_reviews": list_info.total_reviews,
             "total_likes": list_info.total_likes,
-            "average_score": round(list_info.average_score, 2) if list_info.average_score is not None else None,  # El promedio redondeado a dos decimales
-            "total_ranks": list_info.total_ranks/3,  # Cantidad de rankings
-            "creator_name": list_info.creator_name,  # Nombre del creador
-            "creator_photo": list_info.creator_photo  # Foto del creador
+            "average_score": round(list_info.average_score, 2) if list_info.average_score is not None else None,
+            "total_ranks": list_info.total_ranks,
+            "creator_name": list_info.creator_name,
+            "creator_photo": list_info.creator_photo,
         }
         for list_info in user_lists
     ]
 
     return result
+
 
 
 @router.get("/info_list/{id_list}")
@@ -775,9 +815,7 @@ def unlike_review_list(id_user: int, id_reviewed_list: int, db: Session = Depend
 # Verificar si un usuario ya ha dado like a una review de una lista
 @router.get("/has_liked_review_list/{id_user}/{id_reviewed_list}")
 def has_liked_review_list(id_user: int, id_reviewed_list: int, db: Session = Depends(get_db)):
-    """
-    Verifica si un usuario ya ha dado "like" a una review de una lista específica.
-    """
+
     # Consultar si existe el like
     existing_like = (
         db.query(LikedReviewedList)
@@ -799,3 +837,36 @@ def get_likes_count_list(id_reviewed_list: int, db: Session = Depends(get_db)):
     likes_count = db.query(LikedReviewedList).filter(LikedReviewedList.id_reviewed_list == id_reviewed_list).count()
 
     return {"likes_count": likes_count}
+
+
+
+# SEARCH
+@router.get("/search_lists/", response_model=List[Dict])
+def search_lists(query: str, db: Session = Depends(get_db)):
+    # Buscar listas por nombre insensible a mayúsculas/minúsculas
+    lists = db.query(Lists).filter(Lists.name.ilike(f"%{query}%")).all()
+
+    if not lists:
+        raise HTTPException(status_code=404, detail="No lists found")
+
+    result = []
+    for list_item in lists:
+        # Contar el total de canciones en la lista
+        total_songs = db.query(func.count(SongsOnList.id_song)).filter(SongsOnList.id_list == list_item.id_list).scalar()
+
+        # Obtener información del creador de la lista
+        user = list_item.user
+        profile = user.profile[0] if user.profile else None  # Tomar el primer perfil si existe
+
+        list_data = {
+            "id_list": list_item.id_list,
+            "photo": list_item.photo,
+            "name": list_item.name,
+            "total_songs": total_songs,
+            "id_user_creator": user.id_user,
+            "photo_creator": profile.photo if profile else None,  # Foto del perfil si existe
+            "username": user.username,
+        }
+        result.append(list_data)
+
+    return result

@@ -20,7 +20,7 @@ from app.models.albums import Album, LikedAlbums, ListenedAlbums, RankedAlbums, 
 
 from app.models.artists import Artist
 
-from app.schemas.users import BioUpdateRequest, ListDetailsResponse, UserCreate, UserIdsRequest, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse, UsernameUpdateRequest 
+from app.schemas.users import BioUpdateRequest, ListDetailsResponse, UserCreate, UserIdsRequest, UserResponseSearch, UserStatsResponse, ProfileResponse, FollowUserRequest, UserProfileUpdate, UserProfileResponse, UsernameUpdateRequest 
 
 from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_current_user  # Asegúrate de importar hash_password
 
@@ -1023,43 +1023,101 @@ def get_user_follow_stats(user_id: int, db: Session = Depends(get_db)):
 
 
 
-# Endpoint para obtener las 4 listas más populares
 @router.get("/top_lists/{user_id}")
 async def get_top_lists(user_id: int, db: Session = Depends(get_db)):
     try:
-        # Consulta principal
-        top_lists = db.query(
-            Lists.id_list,
-            Lists.name,
-            func.count(SongsOnList.id_song).label("song_count"),
-            func.count(LikedLists.id_list).label("like_count"),
-            func.count(ReviewedLists.id_list).label("review_count"),
-            func.count(RankedLists.id_list).label("ranked_count"),
-        ).join(SongsOnList, SongsOnList.id_list == Lists.id_list, isouter=True) \
-        .join(LikedLists, LikedLists.id_list == Lists.id_list, isouter=True) \
-        .join(ReviewedLists, ReviewedLists.id_list == Lists.id_list, isouter=True) \
-        .join(RankedLists, RankedLists.id_list == Lists.id_list, isouter=True) \
-        .filter(Lists.id_user == user_id) \
-        .group_by(Lists.id_list) \
-        .order_by(
-            func.count(LikedLists.id_list).desc(),  # Ordenar por popularidad
-            func.count(ReviewedLists.id_list).desc(),
-            func.count(RankedLists.id_list).desc()
-        ) \
-        .limit(4) \
-        .all()
+        # Subconsulta para contar canciones por lista
+        subquery_song_count = (
+            db.query(
+                SongsOnList.id_list.label("id_list"),
+                func.count(SongsOnList.id_song).label("song_count"),
+            )
+            .group_by(SongsOnList.id_list)
+            .subquery()
+        )
 
-        # Crear la lista de resultados con las 4 listas más populares
+        # Subconsulta para contar likes por lista
+        subquery_like_count = (
+            db.query(
+                LikedLists.id_list.label("id_list"),
+                func.count(LikedLists.id_list).label("like_count"),
+            )
+            .group_by(LikedLists.id_list)
+            .subquery()
+        )
+
+        # Subconsulta para contar reseñas por lista
+        subquery_review_count = (
+            db.query(
+                ReviewedLists.id_list.label("id_list"),
+                func.count(ReviewedLists.id_reviewed_lists).label("review_count"),
+            )
+            .group_by(ReviewedLists.id_list)
+            .subquery()
+        )
+
+        # Subconsulta para contar rankeos por lista
+        subquery_ranked_count = (
+            db.query(
+                RankedLists.id_list.label("id_list"),
+                func.count(RankedLists.id_list).label("ranked_count"),
+            )
+            .group_by(RankedLists.id_list)
+            .subquery()
+        )
+
+        # Consulta principal para obtener las listas más populares
+        top_lists_query = (
+            db.query(
+                Lists.id_list,
+                Lists.name,
+                func.coalesce(subquery_song_count.c.song_count, 0).label("song_count"),
+                func.coalesce(subquery_like_count.c.like_count, 0).label("like_count"),
+                func.coalesce(subquery_review_count.c.review_count, 0).label("review_count"),
+                func.coalesce(subquery_ranked_count.c.ranked_count, 0).label("ranked_count"),
+            )
+            .join(subquery_song_count, subquery_song_count.c.id_list == Lists.id_list, isouter=True)
+            .join(subquery_like_count, subquery_like_count.c.id_list == Lists.id_list, isouter=True)
+            .join(subquery_review_count, subquery_review_count.c.id_list == Lists.id_list, isouter=True)
+            .join(subquery_ranked_count, subquery_ranked_count.c.id_list == Lists.id_list, isouter=True)
+            .filter(Lists.id_user == user_id)
+            .group_by(
+                Lists.id_list,
+                Lists.name,
+                subquery_song_count.c.song_count,
+                subquery_like_count.c.like_count,
+                subquery_review_count.c.review_count,
+                subquery_ranked_count.c.ranked_count,
+            )
+            .order_by(
+                func.coalesce(subquery_like_count.c.like_count, 0).desc(),
+                func.coalesce(subquery_review_count.c.review_count, 0).desc(),
+                func.coalesce(subquery_ranked_count.c.ranked_count, 0).desc(),
+            )
+            .limit(4)
+            .all()
+        )
+
+        # Formatear el resultado
         result = []
-        for list_item in top_lists:
-            # Obtener las últimas 4 canciones para cada lista
-            last_songs_query = db.query(SongsOnList.id_song).filter(SongsOnList.id_list == list_item.id_list) \
-                .order_by(SongsOnList.date.desc()).limit(4).all()
+        for list_item in top_lists_query:
+            # Obtener las últimas 4 canciones de cada lista
+            last_songs_query = (
+                db.query(
+                    SongsOnList.id_song,
+                    Song.photo.label("photo"),
+                )
+                .join(Song, Song.id_song == SongsOnList.id_song)
+                .filter(SongsOnList.id_list == list_item.id_list)
+                .order_by(SongsOnList.date.desc())
+                .limit(4)
+                .all()
+            )
 
-            # Obtener las fotos de las canciones
-            last_4_songs_photos = [db.query(Song.photo).filter(Song.id_song == song.id_song).scalar() for song in last_songs_query]
+            # Formatear las fotos de las canciones
+            last_4_songs_photos = [song.photo for song in last_songs_query]
 
-            # Formatear el resultado como un diccionario
+            # Agregar al resultado
             result.append({
                 "id_list": list_item.id_list,
                 "name": list_item.name,
@@ -1067,13 +1125,43 @@ async def get_top_lists(user_id: int, db: Session = Depends(get_db)):
                 "like_count": list_item.like_count,
                 "review_count": list_item.review_count,
                 "ranked_count": list_item.ranked_count,
-                "last_4_songs_photos": last_4_songs_photos
+                "last_4_songs_photos": last_4_songs_photos,
             })
 
+        # Verificar si hay resultados
         if not result:
-            raise HTTPException(status_code=404, detail="No top lists found for the user")
+            raise HTTPException(status_code=404, detail="No top lists found for this user")
 
         return {"top_lists": result}
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+
+
+# SEARCH
+@router.get("/search/", response_model=List[UserResponseSearch])
+def search_users(query: str, db: Session = Depends(get_db)):
+    # Realizamos la búsqueda del nombre de usuario con una comparación insensible a mayúsculas/minúsculas
+    users = (
+        db.query(User.id_user, Profile.photo, User.username)
+        .join(Profile, User.id_user == Profile.id_user)
+        .filter(User.username.ilike(f"%{query}%"))
+        .all()
+    )
+
+    # Si no encontramos usuarios, retornamos un error 404
+    if not users:
+        raise HTTPException(status_code=404, detail="No users found")
+
+    # Preparamos el resultado para devolverlo
+    result = [
+        {
+            "id_user": user.id_user,
+            "photo": user.photo if user.photo else "",  # Si no tiene foto, enviamos un string vacío
+            "username": user.username,
+        }
+        for user in users
+    ]
+
+    return result

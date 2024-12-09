@@ -16,7 +16,7 @@ from sqlalchemy.orm import aliased
 
 
 from app.schemas.users import UserCreate
-from app.schemas.albums import RankedAlbum, ReviewAlbumSchema, WatchlistAlbumRequest, BestAlbumsResponse, AlbumResponse, AlbumListened, FavoriteAlbumCreate, LikeAlbumRequest
+from app.schemas.albums import AlbumResponseSearch, RankedAlbum, ReviewAlbumSchema, WatchlistAlbumRequest, BestAlbumsResponse, AlbumResponse, AlbumListened, FavoriteAlbumCreate, LikeAlbumRequest
 
 from app.jwt.auth import create_jwt_token, verify_password, hash_password, get_current_user  # Asegúrate de importar hash_password
 import traceback
@@ -846,3 +846,48 @@ def get_likes_count_album(id_reviewed_album: int, db: Session = Depends(get_db))
     return {"likes_count": likes_count}
 
 
+
+
+# SEARCH ALBUMS
+@router.get("/search_albums/", response_model=List[AlbumResponseSearch])
+def search_albums(query: str, db: Session = Depends(get_db)):
+    # Buscamos álbumes por nombre (insensible a mayúsculas)
+    albums_by_name = db.query(Album).filter(Album.name.ilike(f"%{query}%")).all()
+
+    # También buscamos artistas cuyo nombre coincida
+    artists = db.query(Artist).filter(Artist.name.ilike(f"%{query}%")).all()
+
+    # Agregamos los álbumes de los artistas encontrados
+    albums_by_artist = []
+    for artist in artists:
+        albums_by_artist.extend(artist.albums)  # Obtenemos los álbumes relacionados al artista
+
+    # Combinamos los resultados eliminando duplicados
+    combined_albums = {album.id_album: album for album in albums_by_name + albums_by_artist}.values()
+
+    # Preparamos la respuesta
+    result = []
+    for album in combined_albums:
+        # Recuperamos el artista relacionado
+        artist = album.artist  # Relación con el modelo Artist
+        
+        # Contamos el número de canciones en el álbum
+        total_songs = len(db.query(SongsOnAlbum).filter(SongsOnAlbum.id_album == album.id_album).all())
+
+        # Armamos la respuesta para cada álbum
+        album_data = {
+            "id_album": album.id_album,
+            "photo": album.photo,  # Foto del álbum
+            "name": album.name,  # Nombre del álbum
+            "id_artist": album.id_artist,  # ID del artista
+            "name_artist": artist.name,  # Nombre del artista
+            "total_songs": total_songs,  # Total de canciones en el álbum
+        }
+
+        result.append(album_data)
+
+    # Si no hay resultados, retornamos un error 404
+    if not result:
+        raise HTTPException(status_code=404, detail="No albums found")
+
+    return result

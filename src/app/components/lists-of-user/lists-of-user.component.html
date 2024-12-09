@@ -1,8 +1,8 @@
-<div *ngFor="let list of userLists" class="contenedor_principal">
+<div *ngFor="let list of userLists" class="contenedor_principal" [routerLink]="['/list', list.id_list]" routerLinkActive="router-link-active" >
     <img class="imagen_album" [src]="list.list_photo || 'images/album.jpg'" alt="">
   
     <div class="contenedor_datos">
-      <div class="contenedor_user_name">
+      <div class="contenedor_user_name" [routerLink]="['/profile', id_user]" routerLinkActive="router-link-active" >
         <img class="foto_user" [src]="list.creator_photo || 'images/steve.png'" alt="">
         <p class="nombre_user">{{ list.creator_name }} created the list</p>
       </div>

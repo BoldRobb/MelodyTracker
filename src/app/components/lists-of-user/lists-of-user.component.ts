@@ -5,11 +5,12 @@ import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { ListsService } from '../../services/lists/backend/lists.service';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-lists-of-user',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './lists-of-user.component.html',
   styleUrls: ['./lists-of-user.component.css']
 })

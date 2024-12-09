@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.database.database import get_db
+from sqlalchemy import func
 from typing import List
 
 from app.models.users import User, Profile, Followers
@@ -11,7 +12,7 @@ from app.models.albums import Album
 
 
 from app.schemas.users import UserCreate, ProfileResponse, FollowUserRequest
-from app.schemas.artists import AlbumsArtistResponse, ArtistResponse, SongResponse, AlbumResponse, SongsArtistResponse
+from app.schemas.artists import AlbumsArtistResponse, ArtistResponse, ArtistResponseSearch, SongResponse, AlbumResponse, SongsArtistResponse
 
 
 router = APIRouter()
@@ -140,10 +141,34 @@ def get_artist_albums(id_artist: int, db: Session = Depends(get_db)):
 
 
 
+# Endpoint para buscar artistas por nombre
+@router.get("/search/", response_model=List[ArtistResponseSearch])
+def search_artists(query: str, db: Session = Depends(get_db)):
+    # Realizamos la búsqueda del nombre del artista con una comparación insensible a mayúsculas/minúsculas
+    artists = db.query(Artist).filter(Artist.name.ilike(f"%{query}%")).all()
 
+    # Si no encontramos artistas, retornamos un error 404
+    if not artists:
+        raise HTTPException(status_code=404, detail="No artists found")
 
+    # Preparamos la respuesta con los datos que necesitas
+    result = []
+    for artist in artists:
+        # Contamos cuántas canciones tiene el artista
+        num_songs = db.query(func.count(Song.id_song)).filter(Song.id_artist == artist.id_artist).scalar()
 
+        # Armamos la respuesta para cada artista
+        artist_data = {
+            "id_artist": artist.id_artist,
+            "photo": artist.photo,  # Foto es un string con la URL
+            "name": artist.name,
+            "num_songs": num_songs
+        }
 
+        result.append(artist_data)
+
+    # Devolvemos la lista de artistas encontrados
+    return result
 
 
 

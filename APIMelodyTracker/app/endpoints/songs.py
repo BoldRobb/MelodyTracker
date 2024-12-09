@@ -15,7 +15,7 @@ from app.models.artists import Artist
 from app.models.lists import LikedReviewedList, RankedLists, ReviewedLists, SongsOnList
 from app.models.albums import LikedAlbums, LikedReviewedAlbum, RankedAlbums, ReviewedAlbums
 
-from app.schemas.Schemasongs import CreateSong, RankSongRequest, ReviewSongSchema, ReviewWithLikes, ReviewWithLikesAlbums, ReviewWithLikesLists, UpdateSong, SongListened, WatchlistSongRequest, LikeSongRequest, SongResponse, FavoriteSongCreate
+from app.schemas.Schemasongs import CreateSong, RankSongRequest, ReviewSongSchema, ReviewWithLikes, ReviewWithLikesAlbums, ReviewWithLikesLists, SongResponseSearch, UpdateSong, SongListened, WatchlistSongRequest, LikeSongRequest, SongResponse, FavoriteSongCreate
 
 
 from app.jwt.auth import get_current_user
@@ -1164,3 +1164,43 @@ def has_rank_song(id_user: int, id_song: int, db: Session = Depends(get_db)):
             "score": None,
             "date": None
         }
+
+
+# SEARCH SONGS
+@router.get("/search_songs/", response_model=List[SongResponseSearch])
+def search_songs(query: str, db: Session = Depends(get_db)):
+    # Realizamos la búsqueda de canciones por nombre (insensible a mayúsculas)
+    songs_by_name = db.query(Song).filter(Song.name.ilike(f"%{query}%")).all()
+
+    # También buscamos artistas cuyo nombre coincida
+    artists = db.query(Artist).filter(Artist.name.ilike(f"%{query}%")).all()
+
+    # Agregamos las canciones de los artistas encontrados
+    songs_by_artist = []
+    for artist in artists:
+        songs_by_artist.extend(artist.songs)  # Obtenemos las canciones relacionadas al artista
+
+    # Combinamos los resultados eliminando duplicados
+    combined_songs = {song.id_song: song for song in songs_by_name + songs_by_artist}.values()
+
+    # Preparamos la respuesta
+    result = []
+    for song in combined_songs:
+        artist = song.artist  # Obtenemos la relación con el modelo Artist
+
+        song_data = {
+            "id_song": song.id_song,
+            "photo": song.photo,  # Foto de la canción
+            "name": song.name,  # Nombre de la canción
+            "released": song.released,  # Fecha de lanzamiento de la canción
+            "id_artist": song.id_artist,  # ID del artista
+            "name_artist": artist.name,  # Nombre del artista
+        }
+
+        result.append(song_data)
+
+    # Si no hay resultados, retornamos un error 404
+    if not result:
+        raise HTTPException(status_code=404, detail="No songs found")
+
+    return result

@@ -46,6 +46,16 @@ export class ArtistsService {
   }
   
 
+  //SEARCH
+  // Método para buscar artistas por nombre
+  searchArtists(query: string): Observable<any[]> {
+    this.spinnerService.show(); // Mostrar el spinner mientras se hace la solicitud
+    // Combinamos apiUrl con el endpoint y el parámetro query
+    return this.http.get<any[]>(`${this.apiUrl}/artists/search/?query=${query}`).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando la solicitud termine
+    );
+  }
+
 
 
 

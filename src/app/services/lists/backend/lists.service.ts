@@ -374,6 +374,13 @@ getLikesCountList(id_reviewed_list: number): Observable<{ likes_count: number }>
 }
 
 
+// Método para buscar listas por nombre
+searchLists(query: string): Observable<any[]> {
+  this.spinnerService.show(); // Mostrar el spinner mientras se hace la solicitud
 
+  return this.http.get<any[]>(`${this.apiUrl}/lists/search_lists/?query=${query}`).pipe(
+    finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando la solicitud termine
+  );
+}
 
 }

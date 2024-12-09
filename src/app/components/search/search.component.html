@@ -1,0 +1,14 @@
+<div class="contenedor_input">
+  <i
+    class="fa-solid fa-magnifying-glass logo_lupa"
+    (click)="search(inputSearch.value)"
+    style="cursor: pointer;"
+  ></i>
+  <input
+    type="text"
+    class="input_search"
+    #inputSearch
+    spellcheck="false"
+    (keyup.enter)="search(inputSearch.value)"
+  />
+</div>

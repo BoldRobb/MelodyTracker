@@ -1,0 +1,49 @@
+.contenedor_principal{
+    display: flex;
+    flex-direction: column;
+    font-family: 'jomhuria', cursive;
+    row-gap: 2rem;
+}
+
+.contenedor_artista{
+    display: flex;
+    gap: 1rem;
+    padding: 2rem 3rem;
+    width: 100%;
+    background-color: #0D0B29;
+    border-radius: 1.5rem;
+}
+
+.foto_user{
+    width: 9rem;
+    height: 9rem;
+    border-radius: 1rem;
+}
+
+
+.contenedor_datos_user{
+    line-height: 0.7;
+}
+
+.nombre_user{
+    font-size: 6rem;
+    margin: 0;
+}
+
+.rol{
+    font-size: 3rem;
+    margin: 0;
+    color: #C6FF41;
+}
+
+.stats{
+    font-size: 2.5rem;
+    margin: 0;
+    margin-top: 0.5rem;
+}
+
+.texto_released{
+    font-size: 4.5rem;
+    opacity: 50%;
+    margin-left: 1rem;
+}

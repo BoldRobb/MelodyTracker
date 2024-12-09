@@ -1,0 +1,35 @@
+<div class="contenedor_principal">
+    <div class="contenedor_filtros">
+      <p class="texto_encabezado">Results found</p>
+      <div class="filtros">
+        <p 
+          class="texto_encabezado filtro"
+          [class.selected]="selectedFilter === 'artist'"
+          (click)="toggleFilter('artist')">Artists</p>
+        <p 
+          class="texto_encabezado filtro"
+          [class.selected]="selectedFilter === 'song'"
+          (click)="toggleFilter('song')">Songs</p>
+        <p 
+          class="texto_encabezado filtro"
+          [class.selected]="selectedFilter === 'album'"
+          (click)="toggleFilter('album')">Albums</p>
+        <p 
+          class="texto_encabezado filtro"
+          [class.selected]="selectedFilter === 'list'"
+          (click)="toggleFilter('list')">Lists</p>
+        <p 
+          class="texto_encabezado filtro"
+          [class.selected]="selectedFilter === 'user'"
+          (click)="toggleFilter('user')">Users</p>
+      </div>
+    </div>
+  
+    <!-- Mostrar todos los resultados si no hay filtro seleccionado -->
+    <app-artist-results *ngIf="selectedFilter === 'artist' || selectedFilter === ''"></app-artist-results>
+    <app-song-results *ngIf="selectedFilter === 'song' || selectedFilter === ''"></app-song-results>
+    <app-album-results *ngIf="selectedFilter === 'album' || selectedFilter === ''"></app-album-results>
+    <app-list-results *ngIf="selectedFilter === 'list' || selectedFilter === ''"></app-list-results>
+    <app-user-results *ngIf="selectedFilter === 'user' || selectedFilter === ''"></app-user-results>
+  </div>
+  

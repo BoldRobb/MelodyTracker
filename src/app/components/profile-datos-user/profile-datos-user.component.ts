@@ -37,6 +37,9 @@ export class ProfileDatosUserComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+    this.userService.closeModalListenedOptions();
+
     this.idUser = this.getUserIdFromToken(); // Extraer el id del token
   
     // Obtener el parámetro 'id' de la URL y verificar el path

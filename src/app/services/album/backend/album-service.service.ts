@@ -426,4 +426,15 @@ getLikesCountAlbum(id_reviewed_album: number): Observable<{ likes_count: number 
 }
 
 
+// Método para buscar álbumes por nombre
+searchAlbums(query: string): Observable<any[]> {
+  this.spinnerService.show(); // Mostrar el spinner mientras se hace la solicitud
+
+  // Combinamos apiUrl con el endpoint y el parámetro query
+  return this.http.get<any[]>(`${this.apiUrl}/albums/search_albums/?query=${query}`).pipe(
+    finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando la solicitud termine
+  );
+}
+
+
 }

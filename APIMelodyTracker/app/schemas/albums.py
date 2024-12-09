@@ -47,3 +47,15 @@ class ReviewAlbumSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class AlbumResponseSearch(BaseModel):
+    id_album: int
+    photo: str
+    name: str
+    id_artist: int
+    name_artist: str
+    total_songs: int
+
+    class Config:
+        orm_mode = True
