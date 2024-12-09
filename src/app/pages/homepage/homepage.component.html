@@ -1,6 +1,32 @@
 
 <app-spinner></app-spinner>
-<app-welcome></app-welcome>
+<app-welcome class="welcomeee"></app-welcome>
 
-<app-gridrow [type]="'top10RankedAlbums'" [columns]="5" [rows]="2"></app-gridrow>
+<div class="contenedor80">
+    <app-new-songs class="new_songs"></app-new-songs>
+</div>
 
+<div class="contenedor80 contenedor_text_10_ranked">
+    <p class="text">Top 10 ranked songs</p>
+</div>
+
+<app-gridrow [type]="'top10RankedSongs'" [columns]="5" [rows]="2"></app-gridrow>
+
+
+<div class="contenedor80">
+    <app-new-albums class="new_albums"></app-new-albums>
+</div>
+
+<div class="contenedor80 contenedor_text_10_ranked">
+    <p class="text">Top 10 ranked albums</p>
+</div>
+
+<app-gridrow class="top_10_rankeds" [type]="'top10RankedAlbums'" [columns]="5" [rows]="2"></app-gridrow>
+
+<div class="separacion10rem"></div>
+
+<app-best-users class="best_users_component"></app-best-users>
+
+<div class="contenedor80 contenedor_text_10_ranked">
+    <p class="text" style="cursor: pointer;" [routerLink]="['/bestUsers']" routerLinkActive="router-link-active" >Click here to view more featured users.</p>
+</div>

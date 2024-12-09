@@ -5,6 +5,7 @@ import { EncabezadoComponent } from "../../components/encabezado/encabezado.comp
 import { BestUserComponent } from "../../components/best-user/best-user.component";
 import { BtnViewMoreComponent } from "../../components/btn-view-more/btn-view-more.component";
 import { ListenedOptionsComponent } from "../../components/modals/listened-options/listened-options.component";
+import { ActivatedRoute, Router } from '@angular/router'; // Importamos estos servicios
 
 @Component({
   selector: 'app-best-users',
@@ -23,10 +24,14 @@ export class BestUsersComponent implements OnInit {
   topUsers: any[] = []; // Para almacenar los top users
   remainingUserIds: number[] = []; // IDs de los usuarios restantes
   selectedUserId: number | null = null; // Guardará el id del usuario seleccionado para mostrar el modal
+  isHomepage: boolean = false; // Variable para verificar si estamos en la ruta de homepage
 
-  constructor(private userService: UsersService) {}
+  constructor(private userService: UsersService, private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
+    // Verificar si estamos en la ruta /homepage
+    this.isHomepage = this.router.url === '/homepage'; // Comparar la ruta actual
+
     this.loadTopUsers(); // Cargar los usuarios más activos cuando el componente se inicializa
   }
 
@@ -43,7 +48,7 @@ export class BestUsersComponent implements OnInit {
         console.log('Remaining User IDs:', this.remainingUserIds); // Verifica los IDs restantes
       },
       (error) => {
-
+        // Manejar error
       }
     );
   }

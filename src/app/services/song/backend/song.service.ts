@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SpinnerService } from '../../others/spinner.service';
 import { finalize, tap } from 'rxjs/operators';
-import { SongDetailsResponse } from '../../../interfaces/song';
+import { BestSongsResponse, SongDetailsResponse } from '../../../interfaces/song';
 
 @Injectable({
   providedIn: 'root'
@@ -450,5 +450,33 @@ searchSongs(query: string): Observable<any[]> {
     finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando la solicitud termine
   );
 }
+
+
+
+getNewSongs(): Observable<any[]> {
+  this.spinnerService.show(); // Mostrar el spinner mientras se hace la solicitud
+
+  // Combinamos apiUrl con el endpoint de nuevas canciones
+  return this.http.get<any[]>(`${this.apiUrl}/songs/new_songs`).pipe(
+    finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando la solicitud termine
+  );
+}
+
+
+
+
+  // Servicio para obtener las mejores canciones (8 más populares)
+  getBestSongs(): Observable<BestSongsResponse> {
+    this.spinnerService.show();  // Muestra el spinner antes de hacer la petición
+
+    // Realiza la petición HTTP
+    return this.http.get<BestSongsResponse>(`${this.apiUrl}/songs/home_best_songs`).pipe(
+      finalize(() => {
+        this.spinnerService.hide();  // Oculta el spinner cuando la solicitud termine
+      })
+    );
+  }
+
+
 
 }

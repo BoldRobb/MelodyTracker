@@ -24,3 +24,16 @@ export interface WatchlistSong {
   album: string;         
   photo: string;           
 }
+
+
+export interface SongResponse {
+  id_song: number;
+  name: string;
+  artist: string;
+  score: number;
+  photo: string;
+}
+
+export interface BestSongsResponse {
+  best_songs: SongResponse[];
+}

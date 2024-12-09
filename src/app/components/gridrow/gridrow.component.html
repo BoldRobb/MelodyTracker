@@ -25,9 +25,24 @@
   }
   
 }
-@else if (this.type == 'null') {
-  <p>Hola</p>
+
+
+@if (this.type == 'top10RankedSongs') {
+  @for (song of top10RankedSongs; track $index) {
+    <a [routerLink]="['/song', song.id_song]">
+      <img
+        [ngClass]="{
+            'imagenPrueba-8x1': columns === 8 && rows === 1,
+            'imagenPrueba-4x2': columns === 4 && rows === 2,
+            'imagenPrueba-5x2': columns === 5 && rows === 2,
+            'imagen_watchlist': columns === 8 && rows === 4,
+          }" 
+        [src]="song.photo" alt="{{ song.title }}">
+    </a>
+  }
+  
 }
+
 
 
   <!-- ----------------- WATCHLIST ------------------ -->

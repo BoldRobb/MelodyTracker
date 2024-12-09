@@ -15,7 +15,7 @@ from app.models.artists import Artist
 from app.models.lists import LikedReviewedList, RankedLists, ReviewedLists, SongsOnList
 from app.models.albums import LikedAlbums, LikedReviewedAlbum, RankedAlbums, ReviewedAlbums
 
-from app.schemas.Schemasongs import CreateSong, RankSongRequest, ReviewSongSchema, ReviewWithLikes, ReviewWithLikesAlbums, ReviewWithLikesLists, SongResponseSearch, UpdateSong, SongListened, WatchlistSongRequest, LikeSongRequest, SongResponse, FavoriteSongCreate
+from app.schemas.Schemasongs import BestSongsResponse, CreateSong, RankSongRequest, ReviewSongSchema, ReviewWithLikes, ReviewWithLikesAlbums, ReviewWithLikesLists, SongResponseSearch, UpdateSong, SongListened, WatchlistSongRequest, LikeSongRequest, SongResponse, FavoriteSongCreate
 
 
 from app.jwt.auth import get_current_user
@@ -1260,3 +1260,58 @@ def get_users_liked(id_song: int, db: Session = Depends(get_db)):
     # Convierte la salida en una lista de IDs
     user_ids = [user.id_user for user in users_liked]
     return user_ids
+
+
+
+
+
+@router.get("/new_songs", response_model=List[dict])
+def get_new_songs(db: Session = Depends(get_db)):
+    # Obtener las 8 canciones más nuevas, ordenadas por id_song en orden descendente
+    new_songs = db.query(Song.id_song, Song.photo).order_by(Song.id_song.desc()).limit(8).all()
+
+    # Si no se encuentran canciones
+    if not new_songs:
+        raise HTTPException(status_code=404, detail="No new songs found")
+    
+    # Formatear la salida como una lista de diccionarios
+    return [{"id_song": song[0], "photo": song[1]} for song in new_songs]
+
+
+
+
+# Endpoint para obtener las 8 canciones más populares (sumando los puntajes)
+@router.get("/home_best_songs", response_model=BestSongsResponse)
+def home_best_songs(db: Session = Depends(get_db)):
+    try:
+        best_songs = (
+            db.query(
+                RankedSongs.id_song,
+                Song.name,
+                Artist.name.label("artist"),
+                func.sum(RankedSongs.score).label("total_score"),  # Sumar los puntajes
+                Song.photo  # Incluir el campo `photo`
+            )
+            .join(Song, RankedSongs.id_song == Song.id_song)  # Unimos la tabla de canciones
+            .join(Artist, Song.id_artist == Artist.id_artist)  # Unimos la tabla de artistas
+            .group_by(RankedSongs.id_song, Song.name, Artist.name, Song.photo)  # Agrupamos por canción
+            .order_by(desc("total_score"))  # Ordenamos por la suma total de los puntajes
+            .limit(10)  # Limitamos a las 8 canciones más populares
+            .all()
+        )
+
+        # Formateamos los datos para que coincidan con la estructura de respuesta
+        best_songs_list = [
+            SongResponse(
+                id_song=song.id_song,
+                name=song.name,
+                artist=song.artist,
+                score=song.total_score,  # Usamos el puntaje total
+                photo=song.photo  # Incluir el campo `photo` en la respuesta
+            ) for song in best_songs
+        ]
+
+        return BestSongsResponse(best_songs=best_songs_list)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al obtener las mejores canciones: {str(e)}")

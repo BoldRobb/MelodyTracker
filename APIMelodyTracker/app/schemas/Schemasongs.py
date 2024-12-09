@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import date
-from typing import Optional
+from typing import List, Optional
 
 class CreateSong(BaseModel):
     name: str
@@ -100,3 +100,17 @@ class SongResponseSearch(BaseModel):
     # Esto permite convertir el modelo a un diccionario para la respuesta
     class Config:
         orm_mode = True 
+
+
+class SongResponse(BaseModel):
+    id_song: int
+    name: str
+    artist: str
+    score: float
+    photo: str  # Foto de la canción
+
+    class Config:
+        orm_mode = True
+
+class BestSongsResponse(BaseModel):
+    best_songs: List[SongResponse]

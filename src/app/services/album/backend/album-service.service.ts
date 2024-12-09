@@ -451,4 +451,14 @@ searchAlbums(query: string): Observable<any[]> {
 }
 
 
+// Método para obtener los 8 álbumes más nuevos
+getNewAlbums(): Observable<any[]> {
+  this.spinnerService.show();  // Mostrar el spinner mientras se hace la solicitud
+
+  // Combinamos apiUrl con el endpoint de álbumes nuevos
+  return this.http.get<any[]>(`${this.apiUrl}/albums/new_albums`).pipe(
+    finalize(() => this.spinnerService.hide())  // Ocultar el spinner cuando la solicitud termine
+  );
+}
+
 }

@@ -1,0 +1,6 @@
+<p class="text">New Songs</p>
+<div class="contenedor_imagenes">
+  <div *ngFor="let song of newSongs">
+    <img class="foto_song" [src]="song.photo" alt="Song Image" [routerLink]="['/song', song.id_song]" routerLinkActive="router-link-active" >
+  </div>
+</div>

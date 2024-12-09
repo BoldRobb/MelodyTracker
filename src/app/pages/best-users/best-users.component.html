@@ -15,11 +15,13 @@
        }
     </div>
   </div>
+  @if (!isHomepage) {
+    <div class="contenedor_follows">
+      @if (remainingUserIds.length > 0) {
+        <app-follows [userIds]="remainingUserIds"></app-follows>
+      }
+      
+    </div>
+  }
   
-  <div class="contenedor_follows">
-    @if (remainingUserIds.length > 0) {
-      <app-follows [userIds]="remainingUserIds"></app-follows>
-    }
-    
-  </div>
 

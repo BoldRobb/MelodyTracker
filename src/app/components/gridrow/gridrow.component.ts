@@ -23,6 +23,7 @@ export class GridrowComponent implements OnInit {
   watchlistAlbums: Album[] = [];     // Array para los álbumes en la watchlist
   listenedSongs: any[] = [];  // Array para las canciones escuchadas
   listenedAlbums: any[] = [];  // Array para los álbumes escuchados
+  top10RankedSongs: any[] = [];  // Array para las 10 mejores canciones
   userId: string | null = null;  // Variable para almacenar el userId
 
   constructor(
@@ -44,6 +45,11 @@ export class GridrowComponent implements OnInit {
     if (!this.userId && this.type === 'top10RankedAlbums') {
       this.loadBestAlbums();
     }
+
+    // Si no hay un userId y el tipo es 'top10RankedSongs', cargamos las mejores canciones
+    if (!this.userId && this.type === 'top10RankedSongs') {
+      this.loadTop10RankedSongs();
+    }
   }
 
   loadContentBasedOnType(): void {
@@ -63,6 +69,9 @@ export class GridrowComponent implements OnInit {
           break;
         case 'listenedAlbums':
           this.loadListenedAlbums();  // Cargar los álbumes escuchados
+          break;
+        case 'top10RankedSongs':
+          this.loadTop10RankedSongs();  // Cargar las mejores canciones
           break;
         default:
 
@@ -126,6 +135,18 @@ export class GridrowComponent implements OnInit {
     this.albumService.getTotalAlbumsListenedInfo(Number(this.userId)).subscribe(
       (response: any) => {
         this.listenedAlbums = response.albums_info;  // Guardamos los álbumes escuchados
+      },
+      (error) => {
+
+      }
+    );
+  }
+
+  // Método para cargar las 10 mejores canciones
+  loadTop10RankedSongs(): void {
+    this.songService.getBestSongs().subscribe(
+      (response) => {
+        this.top10RankedSongs = response.best_songs;  // Guardamos las mejores canciones
       },
       (error) => {
 

@@ -220,7 +220,7 @@ def has_rank_album(id_user: int, id_album: int, db: Session = Depends(get_db), c
         return {"has_rank": False, "score": None}  # Retornar False si no existe el ranking
 
 
-# Sacar los Top 10 Ranked Albums
+# Endpoint para obtener los 10 álbumes más populares (sumando los puntajes)
 @router.get("/home_best_albums", response_model=BestAlbumsResponse)
 def home_best_albums(db: Session = Depends(get_db)):
     try:
@@ -229,22 +229,24 @@ def home_best_albums(db: Session = Depends(get_db)):
                 RankedAlbums.id_album,
                 Album.name,
                 Artist.name.label("artist"),
-                RankedAlbums.score,
+                func.sum(RankedAlbums.score).label("total_score"),  # Sumar los puntajes
                 Album.photo  # Incluir el campo `photo`
             )
-            .join(Album, RankedAlbums.id_album == Album.id_album)  
-            .join(Artist, Album.id_artist == Artist.id_artist)  
-            .order_by(desc(RankedAlbums.score))
-            .limit(10)
+            .join(Album, RankedAlbums.id_album == Album.id_album)  # Unimos la tabla de álbumes
+            .join(Artist, Album.id_artist == Artist.id_artist)  # Unimos la tabla de artistas
+            .group_by(RankedAlbums.id_album, Album.name, Artist.name, Album.photo)  # Agrupamos por álbum
+            .order_by(desc("total_score"))  # Ordenamos por la suma total de los puntajes
+            .limit(10)  # Limitamos a los 10 álbumes más populares
             .all()
         )
 
+        # Formateamos los datos para que coincidan con la estructura de respuesta
         best_albums_list = [
             AlbumResponse(
                 id_album=album.id_album,
                 name=album.name,
                 artist=album.artist,
-                score=album.score,
+                score=album.total_score,  # Usamos el puntaje total
                 photo=album.photo  # Incluir el campo `photo` en la respuesta
             ) for album in best_albums
         ]
@@ -922,3 +924,18 @@ def search_albums(query: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="No albums found")
 
     return result
+
+
+
+
+@router.get("/new_albums", response_model=List[dict])
+def get_new_albums(db: Session = Depends(get_db)):
+    # Obtener los 8 álbumes más nuevos, ordenados por id_album en orden descendente
+    new_albums = db.query(Album.id_album, Album.name, Album.photo).order_by(Album.id_album.desc()).limit(8).all()
+
+    # Si no se encuentran álbumes
+    if not new_albums:
+        raise HTTPException(status_code=404, detail="No new albums found")
+    
+    # Formatear la salida como una lista de diccionarios
+    return [{"id_album": album[0], "name": album[1], "photo": album[2]} for album in new_albums]
