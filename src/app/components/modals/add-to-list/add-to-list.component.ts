@@ -4,6 +4,8 @@ import { ListsService } from '../../../services/lists/backend/lists.service'; //
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { AlbumService } from '../../../services/album/backend/album-service.service';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-add-to-list',
@@ -25,7 +27,8 @@ export class AddToListComponent implements OnInit {
   constructor(
     private listService: ListsService,
     private route: ActivatedRoute, // Inyectar ActivatedRoute para obtener los parámetros de la URL
-    private albumService: AlbumService
+    private albumService: AlbumService,
+    private toast: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -105,12 +108,14 @@ export class AddToListComponent implements OnInit {
     if (this.songId !== null) {
       this.listService.addSongToList(id_list, this.songId).subscribe(
         (response) => {
-          console.log('Canción agregada a la lista:', response);
+          // console.log('Canción agregada a la lista:', response);
           this.albumService.updateStats();
           this.closeAddToListModal(); // Cerrar el modal solo si la canción fue agregada correctamente
+          this.toast.success('Song added to the playlist');
         },
         (error) => {
           console.error('Error al agregar la canción a la lista:', error);
+          this.toast.error('This song is already added to this playlist');
         }
       );
     } else {

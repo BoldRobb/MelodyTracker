@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users/backend/users.service'; // Servicio para manejar al usuario
 import { ActivatedRoute } from '@angular/router'; // Importar ActivatedRoute
 
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-create-review',
   standalone: true,
@@ -41,6 +43,7 @@ export class CreateReviewComponent implements OnInit {
     private usersService: UsersService,
     private albumService: AlbumService,
     private listsService: ListsService, // Inyectar el servicio de listas
+    private toast: ToastrService, // Inyectar ToastrService
     private route: ActivatedRoute // Inyectar ActivatedRoute
   ) {}
 
@@ -213,7 +216,8 @@ export class CreateReviewComponent implements OnInit {
       if (review$) {
         review$.subscribe({
           next: (response) => {
-            console.log('Reseña creada:', response);
+            this.toast.success('Review successfully created');
+            // console.log('Reseña creada:', response);
   
             // Emite la señal de actualización de comentarios
             if (this.isAlbum || this.isSong || this.isList) {
@@ -229,7 +233,8 @@ export class CreateReviewComponent implements OnInit {
         });
       }
     } else {
-      console.error('El comentario debe tener más de 4 caracteres');
+      this.toast.error('The review must have more than 4 characters');
+      // console.error('El comentario debe tener más de 4 caracteres');
     }
   }
   

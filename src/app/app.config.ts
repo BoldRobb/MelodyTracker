@@ -5,6 +5,10 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { spinnerInterceptor } from './interceptors/spinner.interceptor';
 
+// Importar los proveedores necesarios
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideToastr } from 'ngx-toastr';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
@@ -23,6 +27,8 @@ export const appConfig: ApplicationConfig = {
         });
       },
       deps: [Router]
-    }
+    },
+    provideAnimations(), // Proveedores requeridos para animaciones
+    provideToastr({timeOut: 6000, positionClass: 'toast-top-left', preventDuplicates: true}) // Proveedores requeridos para Toastr
   ]
 };

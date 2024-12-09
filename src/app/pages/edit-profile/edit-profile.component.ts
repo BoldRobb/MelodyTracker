@@ -7,6 +7,8 @@ import { ProfileDatosUserComponent } from "../../components/profile-datos-user/p
 import { ProfileBioStatsComponent } from "../../components/profile-bio-stats/profile-bio-stats.component";
 import { ProfileHistoryComponent } from "../../components/profile-history/profile-history.component";
 import { ProfilePopularListsComponent } from "../../components/profile-popular-lists/profile-popular-lists.component";
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-edit-profile',
@@ -48,6 +50,7 @@ export class EditProfileComponent implements OnInit {
   constructor(
     private userService: UsersService,
     private route: ActivatedRoute,
+    private toast: ToastrService,
     private router: Router,
     private location: Location // Inyectamos Location para poder usar la navegación atrás
   ) {}
@@ -80,6 +83,7 @@ export class EditProfileComponent implements OnInit {
     if (this.profileBioStatsComponent && this.profileDatosUserComponent) {
       this.saveBio();
       this.saveProfile();
+      this.toast.success('Profile updated successfully');
     } else {
       console.error('Componentes no inicializados correctamente.');
     }
@@ -93,7 +97,8 @@ export class EditProfileComponent implements OnInit {
         next: (response) => {
           console.log('Biografía actualizada:', response.bio);
           this.bio = response.bio; // Actualiza la bio localmente
-          alert('Biografía guardada con éxito.');
+          // alert('Biografía guardada con éxito.');
+          // this.toast.success('Profile updated successfully');
         },
         error: (err) => {
           console.error('Error actualizando la biografía:', err);

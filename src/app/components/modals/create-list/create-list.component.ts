@@ -4,6 +4,7 @@ import { ListsService } from '../../../services/lists/backend/lists.service';
 import { ListCreateRequest } from '../../../interfaces/lists';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-list',
@@ -24,7 +25,7 @@ export class CreateListComponent {
 
   photoFile: File | null = null;
 
-  constructor(private listService: ListsService) {}
+  constructor(private listService: ListsService, private toast: ToastrService) {}
 
   closeModal(): void {
     this.close.emit();
@@ -42,27 +43,54 @@ export class CreateListComponent {
   }
 
   async createList(): Promise<void> {
-    console.log('id_user:', this.listData.user_id);
-    if (this.photoFile) {
-      try {
-        const downloadURL = await uploadFile(this.photoFile);
-        this.listData.photo = downloadURL;
-
-        // Llama al servicio para crear la lista
-        this.listService.createList(this.listData).subscribe({
-          next: (response) => {
-            console.log('Lista creada con éxito:', response);
-            this.listService.updateLists();
-            this.closeModal();
-          },
-          error: (err) => {
-            console.error('Error al crear la lista:', err);
-            console.log('info:', this.listData);
-          }
-        });
-      } catch (error) {
-        console.error('Error subiendo la foto:', error);
-      }
+    console.log("Botón de crear presionado"); // Verificar si la función se ejecuta
+    
+    // Validación de campos vacíos o longitud mínima
+    if (this.listData.name.trim() === '') {
+      this.toast.error('Please enter a name for the list');
+      return;
+    }
+    
+    if (this.listData.name.trim().length < 4) { // Verificar si el nombre tiene al menos 4 caracteres
+      this.toast.error('Name must be at least 4 characters long');
+      return;
+    }
+  
+    if (this.listData.comment.trim() === '') {
+      this.toast.error('Please enter a description for the list');
+      return;
+    }
+  
+    if (this.listData.comment.trim().length < 4) { // Verificar si la descripción tiene al menos 4 caracteres
+      this.toast.error('Description must be at least 4 characters long');
+      return;
+    }
+  
+    if (!this.photoFile) {
+      this.toast.error('Please upload a photo for the list');
+      return;
+    }
+  
+    try {
+      const downloadURL = await uploadFile(this.photoFile);
+      this.listData.photo = downloadURL;
+  
+      // Llama al servicio para crear la lista
+      this.listService.createList(this.listData).subscribe({
+        next: (response) => {
+          this.listService.updateLists();
+          this.closeModal();
+          this.toast.success('List created successfully');
+        },
+        error: (err) => {
+          console.error('Error al crear la lista:', err);
+          this.toast.error('Error creating the list. Please try again');
+        }
+      });
+    } catch (error) {
+      console.error('Error subiendo la foto:', error);
+      this.toast.error('Error uploading the photo. Please try again');
     }
   }
+  
 }
