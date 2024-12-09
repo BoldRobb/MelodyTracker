@@ -6,6 +6,7 @@ import { YourRatingComponent } from "../../your-rating/your-rating.component";
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users/backend/users.service'; // Servicio para manejar al usuario
 import { ActivatedRoute } from '@angular/router'; // Importar ActivatedRoute
+import { GoogleGeminiProService } from '../../../services/google-gemini-pro-service.service';
 
 import { ToastrService } from 'ngx-toastr';
 
@@ -44,7 +45,8 @@ export class CreateReviewComponent implements OnInit {
     private albumService: AlbumService,
     private listsService: ListsService, // Inyectar el servicio de listas
     private toast: ToastrService, // Inyectar ToastrService
-    private route: ActivatedRoute // Inyectar ActivatedRoute
+    private route: ActivatedRoute, // Inyectar ActivatedRoute
+    private geminiService: GoogleGeminiProService, // Inyectar el servicio de Google Gemini Pro
   ) {}
 
   ngOnInit() {
@@ -92,6 +94,55 @@ export class CreateReviewComponent implements OnInit {
     // Obtener el userId desde el token
     this.getUserDataFromToken();
   }
+
+
+  createReviewWithVerification(commentInput: HTMLTextAreaElement) {
+    const commentValue = commentInput.value.trim();
+  
+    if (commentValue.length > 4) {
+      // Verificar contenido inapropiado usando Gemini
+      this.geminiService.verifyReviewCorrectContent(commentValue).then((response) => {
+        console.log('Respuesta de Gemini:', response);
+        if (response === 'True') {
+          // Si la respuesta es positiva, proceder con la creación de la reseña
+          const review$ = this.isAlbum
+            ? this.albumService.reviewAlbum(this.userId!, this.albumId!, commentValue)
+            : this.isSong
+            ? this.songService.reviewSong(this.userId!, this.songId!, commentValue)
+            : this.isList
+            ? this.listsService.reviewList(this.userId!, this.listId!, commentValue)
+            : null;
+
+          if (review$) {
+            review$.subscribe({
+              next: (response) => {
+                this.toast.success('Review successfully created');
+                // Emite la señal de actualización de comentarios
+                if (this.isAlbum || this.isSong || this.isList) {
+                  this.albumService.updateComments();
+                  this.albumService.updateStats();
+                }
+
+                this.closeModal(); // Cerrar el modal después de crear la reseña
+              },
+              error: (error) => {
+                console.error('Error al crear la reseña:', error);
+              },
+            });
+          }
+        } else {
+          // Si la respuesta es negativa, mostrar un error de contenido inapropiado
+          this.toast.error('Review contains inappropriate content');
+        }
+      }).catch(error => {
+        console.error('Error al verificar el contenido del comentario:', error);
+        this.toast.error('Error al verificar el comentario');
+      });
+    } else {
+      this.toast.error('The review must have more than 4 characters');
+    }
+  }
+
 
   loadSongData() {
     // Suscribirse a los datos del servicio
@@ -239,3 +290,6 @@ export class CreateReviewComponent implements OnInit {
   }
   
 }
+
+
+
