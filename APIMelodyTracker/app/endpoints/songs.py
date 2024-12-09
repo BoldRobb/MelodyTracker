@@ -1315,3 +1315,17 @@ def home_best_songs(db: Session = Depends(get_db)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al obtener las mejores canciones: {str(e)}")
+
+
+
+@router.get("/all_songs", response_model=List[dict])
+def get_all_songs(db: Session = Depends(get_db)):
+    # Obtener todas las canciones, ordenadas por id_song en orden descendente
+    all_songs = db.query(Song.id_song, Song.photo, Song.name).order_by(Song.id_song.desc()).all()
+
+    # Si no se encuentran canciones
+    if not all_songs:
+        raise HTTPException(status_code=404, detail="No songs found")
+    
+    # Formatear la salida como una lista de diccionarios
+    return [{"id_song": song[0], "photo": song[1], "name": song[2]} for song in all_songs]

@@ -1,0 +1,27 @@
+<div class="contenedor_principal">
+    <div class="contenedor_canciones">
+        <div 
+            *ngFor="let song of allSongs" 
+            class="foto_song_container"
+        >
+            <img
+                class="foto_song"
+                [src]="song.photo"
+                [alt]="song.name"
+                [routerLink]="['/song', song.id_song]" routerLinkActive="router-link-active" 
+            />
+            <div class="song_name_overlay">
+                {{ song.name }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Button to load more songs -->
+    <button
+        class="boton_cargar_mas"
+        (click)="loadSongs()"
+        [disabled]="loading || allSongsLoaded"
+    >
+        {{ loading ? 'Cargando...' : (allSongsLoaded ? 'Todas las canciones cargadas' : 'More Songs') }}
+    </button>
+</div>

@@ -340,6 +340,14 @@ getListsWithSong(idSong: number): Observable<any> {
 }
 
 
+getTop4PopularLists(): Observable<any> {
+  this.spinnerService.show(); // Mostrar el spinner mientras se hace la solicitud
+  return this.http.get<any>(`${this.apiUrl}/lists/top_4_popular_lists`).pipe(
+    finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando la solicitud termine
+  );
+}
+
+
 likeReviewList(id_user: number, id_reviewed_list: number): Observable<{ message: string }> {
   this.spinnerService.show(); // Mostrar spinner mientras se realiza la solicitud
 
@@ -391,6 +399,16 @@ searchLists(query: string): Observable<any[]> {
   this.spinnerService.show(); // Mostrar el spinner mientras se hace la solicitud
 
   return this.http.get<any[]>(`${this.apiUrl}/lists/search_lists/?query=${query}`).pipe(
+    finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando la solicitud termine
+  );
+}
+
+
+getAllLists(): Observable<any[]> {
+  this.spinnerService.show(); // Mostrar el spinner mientras se hace la solicitud
+
+  // Combinar apiUrl con el endpoint de todas las listas
+  return this.http.get<any[]>(`${this.apiUrl}/lists/all_lists`).pipe(
     finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando la solicitud termine
   );
 }

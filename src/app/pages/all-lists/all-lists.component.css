@@ -1,0 +1,102 @@
+.contenedor_principal {
+
+    width: 90%;
+    margin: 4rem auto 2rem auto;
+}
+
+
+.contenedor_canciones {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: 2rem;
+    justify-content: center;
+}
+
+.foto_song {
+    width: 22rem;
+    height: 22rem;
+    object-fit: cover; /* Ensures image covers the entire area */
+    border-radius: 1rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Hover effect for song photo */
+.foto_song:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Song name as overlay */
+.foto_song_container {
+    position: relative;
+    width: 100%;
+}
+
+.song_name_overlay {
+    font-family: 'jomhuria', sans-serif;
+    font-size: 3rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.foto_song_container:hover .song_name_overlay {
+    opacity: 1;
+}
+
+/* Load more button */
+.boton_cargar_mas {
+    font-family: 'jomhuria', sans-serif;
+    margin: 2rem auto;
+    display: block;
+    padding: 1rem 2rem;
+    font-size: 4rem;
+    color: white;
+    background-color: #020927;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.boton_cargar_mas:hover {
+    background-color: #032549;
+}
+
+.boton_cargar_mas:disabled {
+    background-color: #000000;
+    cursor: not-allowed;
+}
+
+.encabezado{
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 6rem;
+    border-radius: 1.2rem;
+    background-color: #0D0B29;
+    margin: 4rem 0;
+}
+
+.totallistas{
+    margin: 0;
+    font-family: 'jockey one', sans-serif;
+    font-size: 4rem;
+}

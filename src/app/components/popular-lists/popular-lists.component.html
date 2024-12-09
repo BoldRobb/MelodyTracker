@@ -1,0 +1,26 @@
+<div *ngIf="loading">
+    <p>Cargando...</p>
+  </div>
+  
+  <div *ngIf="!loading && listsData.length">
+    <div class="contenedor_listas">
+      <app-list-with-this-song 
+        *ngFor="let list of listsData"
+        [id_list]="list.id_list"
+        [userPhoto]="list.photo_creator"
+        [username]="list.username"
+        [listTitle]="list.title"
+        [songPhotos]="list.songs_photos"
+        [totalSongsCount]="list.total_songs_count"
+        [reviewsCount]="list.total_reviews_count"
+        [likesCount]="list.total_like_count"
+        [rankedCount]="list.total_ranked_count"
+        [totalScore]="list.total_score">
+      </app-list-with-this-song>
+    </div>
+  </div>
+  
+  <div *ngIf="!loading && !listsData.length">
+    <p>No se encontraron listas populares.</p>
+  </div>
+  

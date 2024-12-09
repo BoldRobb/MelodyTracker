@@ -26,3 +26,12 @@
 .separacion10rem{
     margin: 15rem 0;
 }
+
+
+.contenedor800{
+    width: 80%;
+    display: flex;
+    margin: 0 auto;
+    align-content: center;
+    justify-content: center;
+}

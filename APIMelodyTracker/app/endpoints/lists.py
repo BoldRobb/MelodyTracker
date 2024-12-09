@@ -899,3 +899,156 @@ def search_lists(query: str, db: Session = Depends(get_db)):
         result.append(list_data)
 
     return result
+
+
+
+@router.get("/top_4_popular_lists")
+async def get_top_4_popular_lists(db: Session = Depends(get_db)):
+    # Subconsulta para contar las canciones por lista
+    subquery_total_songs = (
+        db.query(
+            SongsOnList.id_list.label("id_list"),
+            func.count(SongsOnList.id_song).label("total_songs_count"),
+        )
+        .group_by(SongsOnList.id_list)
+        .subquery()
+    )
+
+    # Subconsulta para contar las reseñas por lista
+    subquery_total_reviews = (
+        db.query(
+            ReviewedLists.id_list.label("id_list"),
+            func.count(ReviewedLists.id_reviewed_lists).label("total_reviews_count"),
+        )
+        .group_by(ReviewedLists.id_list)
+        .subquery()
+    )
+
+    # Subconsulta para contar el número de rankeds por lista
+    subquery_total_ranked = (
+        db.query(
+            RankedLists.id_list.label("id_list"),
+            func.count(RankedLists.id_list).label("total_ranked_count"),
+            func.sum(RankedLists.score).label("total_score"),
+        )
+        .group_by(RankedLists.id_list)
+        .subquery()
+    )
+
+    # Subconsulta para contar los likes por lista
+    subquery_total_likes = (
+        db.query(
+            LikedLists.id_list.label("id_list"),
+            func.count(LikedLists.id_list).label("total_like_count"),
+        )
+        .group_by(LikedLists.id_list)
+        .subquery()
+    )
+
+    # Obtener todas las listas con los detalles necesarios
+    all_lists = (
+        db.query(
+            Lists.id_list.label("id_list"),
+            User.id_user.label("id_creator_user"),
+            User.username.label("username"),
+            Profile.photo.label("photo_creator"),
+            Lists.name.label("title"),
+            func.coalesce(subquery_total_songs.c.total_songs_count, 0).label("total_songs_count"),
+            func.coalesce(subquery_total_reviews.c.total_reviews_count, 0).label("total_reviews_count"),
+            func.coalesce(subquery_total_ranked.c.total_ranked_count, 0).label("total_ranked_count"),
+            func.coalesce(subquery_total_ranked.c.total_score, 0).label("total_score"),
+            func.coalesce(subquery_total_likes.c.total_like_count, 0).label("total_like_count"),
+        )
+        .join(User, Lists.id_user == User.id_user)
+        .join(Profile, Profile.id_user == User.id_user, isouter=True)
+        .outerjoin(subquery_total_songs, subquery_total_songs.c.id_list == Lists.id_list)
+        .outerjoin(subquery_total_reviews, subquery_total_reviews.c.id_list == Lists.id_list)
+        .outerjoin(subquery_total_ranked, subquery_total_ranked.c.id_list == Lists.id_list)
+        .outerjoin(subquery_total_likes, subquery_total_likes.c.id_list == Lists.id_list)
+        .group_by(
+            Lists.id_list,
+            User.id_user,
+            User.username,
+            Profile.photo,
+            Lists.name,
+            subquery_total_songs.c.total_songs_count,
+            subquery_total_reviews.c.total_reviews_count,
+            subquery_total_ranked.c.total_ranked_count,
+            subquery_total_ranked.c.total_score,
+            subquery_total_likes.c.total_like_count,
+        )
+        .all()
+    )
+
+    # Calcular el índice de popularidad para cada lista
+    result = []
+    for list_info in all_lists:
+        # Obtener fotos de canciones en la lista
+        songs_in_list = (
+            db.query(
+                SongsOnList.id_song.label("id_song"),
+                Song.photo.label("photo"),
+            )
+            .join(Song, Song.id_song == SongsOnList.id_song)
+            .filter(SongsOnList.id_list == list_info.id_list)
+            .limit(5)
+            .all()
+        )
+
+        # Asegurar que los valores no sean None
+        total_songs_count = list_info.total_songs_count or 0
+        total_reviews_count = list_info.total_reviews_count or 0
+        total_ranked_count = list_info.total_ranked_count or 0
+        total_like_count = list_info.total_like_count or 0
+
+        # Calcular el índice de popularidad
+        popularity_index = (
+            total_songs_count +
+            total_reviews_count +
+            total_ranked_count +
+            total_like_count
+        )
+
+        # Crear la estructura del resultado
+        result.append({
+            "id_list": list_info.id_list,
+            "id_creator_user": list_info.id_creator_user,
+            "username": list_info.username,
+            "photo_creator": list_info.photo_creator,
+            "title": list_info.title,
+            "songs_photos": [{"id_song": song.id_song, "photo": song.photo} for song in songs_in_list],
+            "total_songs_count": total_songs_count,
+            "total_reviews_count": total_reviews_count,
+            "total_ranked_count": total_ranked_count,
+            "total_score": list_info.total_score,
+            "total_like_count": total_like_count,
+            "popularity_index": popularity_index,
+        })
+
+    # Ordenar por el índice de popularidad (de mayor a menor) y tomar las primeras 4 listas
+    result = sorted(result, key=lambda x: x['popularity_index'], reverse=True)[:4]
+
+    return {"top_4_lists": result}
+
+
+
+@router.get("/all_lists", response_model=List[dict])
+def get_all_lists(db: Session = Depends(get_db)):
+    # Obtener todas las listas, ordenadas por id_list en orden descendente
+    all_lists = db.query(Lists.id_list, Lists.name, Lists.comment, Lists.photo, Lists.id_user).order_by(Lists.id_list.desc()).all()
+
+    # Si no se encuentran listas
+    if not all_lists:
+        raise HTTPException(status_code=404, detail="No lists found")
+    
+    # Formatear la salida como una lista de diccionarios
+    return [
+        {
+            "id_list": lst[0], 
+            "name": lst[1], 
+            "comment": lst[2], 
+            "photo": lst[3],
+            "id_user": lst[4]
+        }
+        for lst in all_lists
+    ]

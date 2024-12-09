@@ -1,0 +1,29 @@
+<div class="contenedor_principal">
+  <!-- <div class="encabezado">
+    <h1 class="totallistas">{{allLists.length}} List</h1>
+  </div> -->
+    <div class="contenedor_canciones">
+      <div *ngFor="let list of allLists" class="foto_song_container">
+        <img
+          class="foto_song"
+          [src]="list.photo"
+          [alt]="list.name"
+          [routerLink]="['/list', list.id_list]"
+          routerLinkActive="router-link-active"
+        />
+        <div class="song_name_overlay">
+          {{ list.name }}
+        </div>
+      </div>
+    </div>
+  
+    <!-- Botón para cargar más listas -->
+    <button
+      class="boton_cargar_mas"
+      (click)="loadLists()"
+      [disabled]="loading || allListsLoaded"
+    >
+      {{ loading ? 'Cargando...' : (allListsLoaded ? 'Todas las listas cargadas' : 'Más Listas') }}
+    </button>
+  </div>
+  

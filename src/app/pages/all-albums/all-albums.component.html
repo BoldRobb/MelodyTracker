@@ -1,0 +1,30 @@
+<div class="contenedor_principal">
+    <!-- <div class="encabezado">
+        <h1 class="totallistas">{{allAlbums.length}} Albums</h1>
+      </div> -->
+    <div class="contenedor_canciones">
+        <div 
+            *ngFor="let album of allAlbums" 
+            class="foto_song_container"
+        >
+            <img
+                class="foto_song"
+                [src]="album.photo"
+                [alt]="album.name"
+                [routerLink]="['/album', album.id_album]" routerLinkActive="router-link-active" 
+            />
+            <div class="song_name_overlay">
+                {{ album.name }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón para cargar más álbumes -->
+    <button
+        class="boton_cargar_mas"
+        (click)="loadAlbums()"
+        [disabled]="loading || allAlbumsLoaded"
+    >
+        {{ loading ? 'Cargando...' : (allAlbumsLoaded ? 'Todos los álbumes cargados' : 'Más álbumes') }}
+    </button>
+</div>

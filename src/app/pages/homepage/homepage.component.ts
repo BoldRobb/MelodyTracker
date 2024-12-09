@@ -7,11 +7,12 @@ import { NewSongsComponent } from "../../components/new-songs/new-songs.componen
 import { NewAlbumsComponent } from "../../components/new-albums/new-albums.component";
 import { BestUsersComponent } from "../best-users/best-users.component";  // Asegúrate de que la ruta sea correcta
 import { RouterModule } from '@angular/router';
+import { PopularListsComponent } from "../../components/popular-lists/popular-lists.component";
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [GridrowComponent, WelcomeComponent, SpinnerComponent, AddToListComponent, NewSongsComponent, NewAlbumsComponent, BestUsersComponent, RouterModule],
+  imports: [GridrowComponent, WelcomeComponent, SpinnerComponent, AddToListComponent, NewSongsComponent, NewAlbumsComponent, BestUsersComponent, RouterModule, PopularListsComponent],
   templateUrl: './homepage.component.html',
   styleUrls: ['./homepage.component.css']
 })

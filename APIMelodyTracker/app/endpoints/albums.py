@@ -939,3 +939,17 @@ def get_new_albums(db: Session = Depends(get_db)):
     
     # Formatear la salida como una lista de diccionarios
     return [{"id_album": album[0], "name": album[1], "photo": album[2]} for album in new_albums]
+
+
+
+@router.get("/all_albums", response_model=List[dict])
+def get_all_albums(db: Session = Depends(get_db)):
+    # Obtener todos los álbumes, ordenados por id_album en orden descendente
+    all_albums = db.query(Album.id_album, Album.name, Album.photo, Album.released).order_by(Album.id_album.desc()).all()
+
+    # Si no se encuentran álbumes
+    if not all_albums:
+        raise HTTPException(status_code=404, detail="No albums found")
+    
+    # Formatear la salida como una lista de diccionarios
+    return [{"id_album": album[0], "name": album[1], "photo": album[2], "released": album[3]} for album in all_albums]

@@ -479,4 +479,14 @@ getNewSongs(): Observable<any[]> {
 
 
 
+  getAllSongs(): Observable<any[]> {
+    this.spinnerService.show(); // Mostrar el spinner mientras se hace la solicitud
+  
+    // Combinar apiUrl con el endpoint de todas las canciones
+    return this.http.get<any[]>(`${this.apiUrl}/songs/all_songs`).pipe(
+      finalize(() => this.spinnerService.hide()) // Ocultar el spinner cuando la solicitud termine
+    );
+  }
+
+
 }

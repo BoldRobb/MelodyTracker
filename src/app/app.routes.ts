@@ -56,10 +56,16 @@ import { ListLikedByComponent } from './pages/list-liked-by/list-liked-by.compon
 import { ListenedOptionsComponent } from './components/modals/listened-options/listened-options.component';
 import { ListsWithThisSongComponent } from './pages/lists-with-this-song/lists-with-this-song.component';
 import { ResultsComponent } from './pages/results/results.component';
+import { AllSongsComponent } from './pages/all-songs/all-songs.component';
+import { AllAlbumsComponent } from './pages/all-albums/all-albums.component';
+import { AllListsComponent } from './pages/all-lists/all-lists.component';
 
 export const routes: Routes = [
     /* PAGINAS */
     { path: 'homepage', component: HomepageComponent},
+    { path: 'allSongs', component: AllSongsComponent},
+    { path: 'allAlbums', component: AllAlbumsComponent},
+    { path: 'allLists', component: AllListsComponent},
     { path: 'login', component: LoginComponent},
     { path: 'profile/:id', component: ProfileComponent, pathMatch: 'full', data: { idPattern: '\\d+' } },
     { path: 'editProfile/:id', component: EditProfileComponent, pathMatch: 'full', data: { idPattern: '\\d+' } },
