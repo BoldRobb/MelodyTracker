@@ -1204,3 +1204,31 @@ def search_songs(query: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="No songs found")
 
     return result
+
+
+# Endpoint para Obtener que usuarios han escuchado tal canción
+@router.get("/{id_song}/users_listened")
+def get_users_listened(id_song: int, db: Session = Depends(get_db)):
+    # Verifica si la canción tiene usuarios relacionados
+    users_listened = db.query(ListenedSongs.id_user).filter(ListenedSongs.id_song == id_song).all()
+    
+    if not users_listened:
+        raise HTTPException(status_code=404, detail="No se encontraron usuarios para esta canción.")
+    
+    # Convierte la salida en una lista de IDs
+    user_ids = [user.id_user for user in users_listened]
+
+    return user_ids
+
+
+# Endpoint para obtener los usuarios que han dado "like" a una canción
+@router.get("/{id_song}/users_liked", response_model=List[int])
+def get_users_liked(id_song: int, db: Session = Depends(get_db)):
+    # Verifica si la canción tiene usuarios relacionados que le han dado "like"
+    users_liked = db.query(LikedSongs.id_user).filter(LikedSongs.id_song == id_song).all()
+    if not users_liked:
+        raise HTTPException(status_code=404, detail="No se encontraron usuarios que hayan dado like a esta canción.")
+
+    # Convierte la salida en una lista de IDs
+    user_ids = [user.id_user for user in users_liked]
+    return user_ids
