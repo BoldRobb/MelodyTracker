@@ -474,4 +474,16 @@ export class UsersService {
     );
   }
 
+
+  // Servicio para obtener recomendaciones de canciones
+  getRecommendedSongs(userId: number): Observable<any[]> {
+    this.spinnerService.show(); // Muestra el spinner mientras se hace la solicitud
+
+    // Realizamos la solicitud GET al endpoint de recomendaciones
+    return this.http.get<any[]>(`${this.apiUrl}/users/recomendaciones/${userId}`).pipe(
+      finalize(() => this.spinnerService.hide()) // Oculta el spinner al finalizar la solicitud
+    );
+  }
+
+
 }

@@ -1,0 +1,24 @@
+<div *ngIf="recommendedSongs.length > 0; else noRecommendations" class="contenedor80 contenedor_text_10_ranked" style="margin-top: 5rem;">
+    <p class="text">Personalized recommendations for you</p>
+</div>
+
+<div class="contenedoor_principal">
+    <div *ngIf="recommendedSongs.length > 0; else noRecommendations" class="contenedor_fotos">
+      <div class="foto_container" *ngFor="let song of recommendedSongs">
+        <img
+          class="foto_song"
+          [src]="song.photo || 'default-image.jpg'"
+          [alt]="song.name"
+          [routerLink]="['/song', song.id_song]"
+          routerLinkActive="router-link-active" 
+        />
+        <div class="hover_overlay">
+          <p>{{ song.name }}</p>
+        </div>
+      </div>
+    </div>
+  
+    <ng-template #noRecommendations>
+      <p></p>
+    </ng-template>
+</div>

@@ -1165,3 +1165,102 @@ def search_users(query: str, db: Session = Depends(get_db)):
     ]
 
     return result
+
+
+
+@router.get("/5-listened-songs/{user_id}", response_model=List[dict])
+def get_random_songs(user_id: int, db: Session = Depends(get_db)):
+    # Obtenemos canciones escuchadas por el usuario
+    listened_songs = (
+        db.query(ListenedSongs.id_song)
+        .filter(ListenedSongs.id_user == user_id)
+        .subquery()
+    )
+
+    # Seleccionamos 5 canciones aleatorias de las escuchadas
+    random_songs = (
+        db.query(Song.id_song, Song.name, Song.photo, Song.released, Song.language, Song.genre)
+        .filter(Song.id_song.in_(listened_songs))
+        .order_by(func.random())  # Función para seleccionar aleatoriamente
+        .limit(5)
+        .all()
+    )
+
+    if not random_songs:
+        raise HTTPException(status_code=404, detail="No songs found for this user")
+
+    # Preparamos el resultado para devolverlo
+    result = [
+        {
+            "id_song": song.id_song,
+            "name": song.name,
+            "photo": song.photo if song.photo else "",
+            "released": song.released,
+            "language": song.language,
+            "genre": song.genre,
+        }
+        for song in random_songs
+    ]
+
+    return result
+
+
+from sqlalchemy import and_
+
+@router.get("/recomendaciones/{user_id}", response_model=List[dict])
+def get_recommended_songs(user_id: int, db: Session = Depends(get_db)):
+    # Obtenemos canciones escuchadas por el usuario
+    listened_songs = (
+        db.query(ListenedSongs.id_song)
+        .filter(ListenedSongs.id_user == user_id)
+        .subquery()
+    )
+
+    # Obtenemos 5 canciones aleatorias escuchadas por el usuario
+    random_songs = (
+        db.query(Song.genre)
+        .filter(Song.id_song.in_(listened_songs))
+        .order_by(func.random())
+        .limit(5)
+        .all()
+    )
+
+    if not random_songs:
+        raise HTTPException(status_code=404, detail="No songs found for this user")
+
+    # Extraemos los géneros de las canciones obtenidas
+    genres = [song.genre for song in random_songs]
+
+    # Obtenemos 10 canciones recomendadas basadas en esos géneros que el usuario no haya escuchado
+    recommended_songs = (
+        db.query(Song.id_song, Song.name, Song.photo, Song.released, Song.language, Song.genre)
+        .filter(
+            and_(
+                Song.genre.in_(genres),
+                ~Song.id_song.in_(listened_songs),  # Excluimos las canciones ya escuchadas
+                Song.photo.isnot(None),            # Excluye canciones sin URL en 'photo'
+                Song.photo != ""                   # Excluye canciones con un 'photo' vacío
+            )
+        )
+        .order_by(func.random())  # Seleccionamos aleatoriamente
+        .limit(10)
+        .all()
+    )
+
+    if not recommended_songs:
+        raise HTTPException(status_code=404, detail="No recommendations available")
+
+    # Preparamos el resultado para devolverlo
+    result = [
+        {
+            "id_song": song.id_song,
+            "name": song.name,
+            "photo": song.photo,
+            "released": song.released,
+            "language": song.language,
+            "genre": song.genre,
+        }
+        for song in recommended_songs
+    ]
+
+    return result

@@ -59,6 +59,7 @@ import { ResultsComponent } from './pages/results/results.component';
 import { AllSongsComponent } from './pages/all-songs/all-songs.component';
 import { AllAlbumsComponent } from './pages/all-albums/all-albums.component';
 import { AllListsComponent } from './pages/all-lists/all-lists.component';
+import { RecomendationsComponent } from './components/recomendations/recomendations.component';
 
 export const routes: Routes = [
     /* PAGINAS */
@@ -129,6 +130,7 @@ export const routes: Routes = [
     // { path: 'profileHistory', component: ProfileHistoryComponent},
     // { path: 'profilePopularLists', component: ProfilePopularListsComponent},
     // { path: 'listenedOptions', component: ListenedOptionsComponent},
+    { path: 'recomendations', component: RecomendationsComponent},
 
     { path: '**', pathMatch: 'full', redirectTo: '404' }
 ];
